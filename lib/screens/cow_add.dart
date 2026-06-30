@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cow/abstract/image_source.dart'; // abstracted file path
 import 'package:cow/database/app_database.dart';
+import 'package:cow/screens/daily_record.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -102,6 +103,7 @@ class _CowAddState extends State<CowAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MainDashboard.primaryNavy,
       appBar: AppBar(title: const Text('Add Cow'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -116,7 +118,7 @@ class _CowAddState extends State<CowAdd> {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: MainDashboard.cardNavy,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey[400]!),
                   ),
@@ -131,12 +133,12 @@ class _CowAddState extends State<CowAdd> {
                             Icon(
                               Icons.camera_alt,
                               size: 40,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Tap to Upload Cow Image',
-                              style: TextStyle(color: Colors.grey[600]),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
@@ -146,6 +148,7 @@ class _CowAddState extends State<CowAdd> {
 
               // Tag Input Field
               TextFormField(
+                cursorColor: Colors.white,
                 decoration: const InputDecoration(
                   labelText: 'Tag Number',
                   border: OutlineInputBorder(),
@@ -158,6 +161,7 @@ class _CowAddState extends State<CowAdd> {
 
               // Name Input Field
               TextFormField(
+                cursorColor: Colors.white,
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Cow Name',
@@ -204,6 +208,7 @@ class _CowAddState extends State<CowAdd> {
 
               // Age Input Field
               TextFormField(
+                cursorColor: Colors.white,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Age (Years)',
@@ -228,9 +233,16 @@ class _CowAddState extends State<CowAdd> {
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
+                  foregroundColor: MainDashboard.cardNavy,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text('Save Cow', style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'Save Cow',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color.fromARGB(26, 220, 26, 26),
+                  ),
+                ),
               ),
             ],
           ),
