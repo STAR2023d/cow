@@ -1,9 +1,10 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/daily_record.dart';
+import 'package:cow/services/ai_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:drift/drift.dart' as d; // Added safe alias for drift types
+import 'package:drift/drift.dart' as d;
 
 class AnalyticsDashboard extends StatefulWidget {
   const AnalyticsDashboard({super.key});
@@ -15,26 +16,22 @@ class AnalyticsDashboard extends StatefulWidget {
 class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   @override
   Widget build(BuildContext context) {
-    // Retrieve database instance using Provider
     final database = Provider.of<AppDatabase>(context);
 
     return Scaffold(
       backgroundColor: MainDashboard.primaryNavy,
       appBar: AppBar(
-        // FIX: Moved style inside the Text widget constructor parameters correctly
         title: const Text(
           "Daily Production Analytics",
           style: TextStyle(
             color: Colors.white,
-            fontSize:
-                28, // Shrunk slightly from 40 to fit normal device widths perfectly
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
         ),
         centerTitle: true,
       ),
-      // watchEntriesWithCowNames stream to show actual cow names
       body: StreamBuilder<List<d.TypedResult>>(
         stream: database.watchEntriesWithCowNames(),
         builder: (context, snapshot) {
@@ -67,9 +64,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Card(
                   color: MainDashboard.cardNavy,
                   elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
@@ -95,16 +90,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.trending_up,
-                              color: Colors.green,
-                              size: 18,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              "+8% vs yesterday",
-                              style: TextStyle(color: Colors.green[300]),
-                            ),
+                            const Icon(Icons.trending_up, color: Colors.green, size: 18),
+                            const SizedBox(width: 4),
+                            Text("+8% vs yesterday", style: TextStyle(color: Colors.green[300])),
                           ],
                         ),
                       ],
@@ -114,74 +102,103 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
                 const SizedBox(height: 16),
 
+                // AI ADVISORY INSIGHTS CARD
+                const Text(
+                  "AI Farm Insights",
+                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                FutureBuilder<String>(
+                  future: AIService.getProductionInsights(
+                    joinedEntries: joinedEntries,
+                    morning: morningTotal,
+                    midday: middayTotal,
+                    evening: eveningTotal,
+                    total: grandTotal,
+                    milkTable: database.milkTable,
+                    cowTable: database.cow,
+                  ),
+                  builder: (context, aiSnapshot) {
+                    if (aiSnapshot.connectionState == ConnectionState.waiting) {
+                      return Card(
+                        color: MainDashboard.cardNavy,
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.purpleAccent)),
+                                SizedBox(width: 12),
+                                Text("Analyzing production data with AI...", style: TextStyle(color: Colors.white70)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final insightText = aiSnapshot.data ?? "No advice available.";
+
+                    return Card(
+                      color: MainDashboard.cardNavy,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: const BorderSide(color: Colors.purpleAccent, width: 1.5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.psychology, color: Colors.purpleAccent, size: 28),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Gemini Veterinary Advisory",
+                                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            const Divider(color: Colors.purpleAccent, height: 20),
+                            Text(
+                              insightText,
+                              style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.4),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 24),
                 const Text(
                   "Session Breakdown",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
-                // SESSION METRIC CARDS GRID
                 Row(
                   children: [
-                    // Morning Card
-                    Expanded(
-                      child: _buildSessionBar(
-                        title: "Morning",
-                        amount: morningTotal,
-                        total: grandTotal,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    // Midday Card
-                    Expanded(
-                      child: _buildSessionBar(
-                        title: "Afternoon",
-                        amount: middayTotal,
-                        total: grandTotal,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    // Evening Card
-                    Expanded(
-                      child: _buildSessionBar(
-                        title: "Evening",
-                        amount: eveningTotal,
-                        total: grandTotal,
-                        color: Colors.amber,
-                      ),
-                    ),
+                    Expanded(child: _buildSessionBar(title: "Morning", amount: morningTotal, total: grandTotal, color: Colors.amber)),
+                    Expanded(child: _buildSessionBar(title: "Afternoon", amount: middayTotal, total: grandTotal, color: Colors.amber)),
+                    Expanded(child: _buildSessionBar(title: "Evening", amount: eveningTotal, total: grandTotal, color: Colors.amber)),
                   ],
                 ),
 
                 const Divider(height: 32),
-
                 const Text(
                   "Today's Live Logs",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
-                // LIVE DATA LOGS LIST
                 if (joinedEntries.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 32.0),
-                    child: Center(
-                      child: Text(
-                        "No milk has been logged yet today.",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
+                    child: Center(child: Text("No milk has been logged yet today.", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic))),
                   )
                 else
                   ListView.builder(
@@ -190,7 +207,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     itemCount: joinedEntries.length,
                     itemBuilder: (context, index) {
                       final row = joinedEntries[index];
-                      // Extract both components from the joined Drift Row
                       final entry = row.readTable(database.milkTable);
                       final cow = row.readTable(database.cow);
 
@@ -198,53 +214,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         color: MainDashboard.cardNavy,
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.opacity, color: Colors.white),
-                          ),
-                          title: Text(
-                            cow.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                              fontSize: 30.0,
-                            ),
-                          ),
+                          leading: const CircleAvatar(backgroundColor: Colors.blue, child: Icon(Icons.opacity, color: Colors.white)),
+                          title: Text(cow.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 30.0)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Amount: ${entry.amount.toStringAsFixed(2)} Liters",
-                                style: const TextStyle(
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightGreen,
-                                ),
-                              ),
-                              Text(
-                                "Session: ${entry.session.toUpperCase()}",
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                DateFormat.jm().format(
-                                  entry.entryDate,
-                                ), // format time
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),
-                              ),
+                              Text("Amount: ${entry.amount.toStringAsFixed(2)} Liters", style: const TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Colors.lightGreen)),
+                              Text("Session: ${entry.session.toUpperCase()}", style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                              Text(DateFormat.jm().format(entry.entryDate), style: const TextStyle(color: Colors.grey, fontSize: 14)),
                             ],
                           ),
-
-                          trailing: const Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 18,
-                          ),
+                          trailing: const Icon(Icons.check_circle, color: Colors.green, size: 18),
                         ),
                       );
                     },
@@ -257,19 +237,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     );
   }
 
-  String getStatus(double amount, double target) {
-    if (amount >= target) return "On Target";
-    if (amount >= target * 0.8) return "Below Target";
-    return "Needs Attention";
-  }
-
-  //helper method for sessions
-  Widget _buildSessionBar({
-    required String title,
-    required double amount,
-    required double total,
-    required Color color,
-  }) {
+  Widget _buildSessionBar({required String title, required double amount, required double total, required Color color}) {
     final percent = total == 0 ? 0.0 : amount / total;
     return Card(
       color: MainDashboard.cardNavy,
@@ -277,25 +245,11 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4),
-            LinearProgressIndicator(
-              value: percent,
-              backgroundColor: Colors.grey[700],
-              color: color,
-              minHeight: 8,
-            ),
-            SizedBox(height: 4),
-            Text(
-              "${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)",
-              style: TextStyle(color: Colors.white70),
-            ),
+            Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            LinearProgressIndicator(value: percent, backgroundColor: Colors.grey[700], color: color, minHeight: 8),
+            const SizedBox(height: 4),
+            Text("${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)", style: const TextStyle(color: Colors.white70)),
           ],
         ),
       ),
