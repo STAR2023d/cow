@@ -1,6 +1,10 @@
+import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/analytics_dashboard.dart';
 import 'package:cow/screens/cow_add.dart';
 import 'package:cow/screens/cow_dashboard.dart';
+import 'package:cow/screens/expenses_screen.dart';
+import 'package:cow/screens/financial_statement_screen.dart';
+import 'package:cow/screens/milk_screen.dart';
 import 'package:cow/screens/widgets/hover_action_button.dart';
 import 'package:flutter/material.dart';
 
@@ -56,6 +60,16 @@ class MainDashboard extends StatelessWidget {
               onTap: () => Navigator.pop(context),
             ),
             _buildDrawerItem(
+              icon: Icons.money,
+              title: 'Expenses',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExpenseEntryScreen(db: AppDatabase()),
+                ),
+              ),
+            ),
+            _buildDrawerItem(
               icon: Icons.dashboard,
               title: 'Dashboard',
               onTap: () => Navigator.pop(context),
@@ -76,7 +90,9 @@ class MainDashboard extends StatelessWidget {
               onTap: () async {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AnalyticsDashboard()),
+                  MaterialPageRoute(
+                    builder: (context) => const AnalyticsDashboard(),
+                  ),
                 );
               },
             ),
@@ -398,17 +414,58 @@ class MainDashboard extends StatelessWidget {
                   ),
                 ],
               ),
+
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.timelapse, size: 28, color: Colors.white),
+                  SizedBox(
+                    height: 26,
+                    child: HoverActionButton(
+                      icon: Icons.receipt_long,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                StatementScreen(db: AppDatabase()),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 4.0),
                   Text(
-                    'Milking',
-                    style: const TextStyle(fontSize: 12, color: Colors.white70),
+                    'statement',
+                    style: TextStyle(fontSize: 12, color: Colors.white70),
                   ),
                 ],
               ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 26,
+                    child: HoverActionButton(
+                      icon: Icons.timelapse,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MilkEntryScreen(db: AppDatabase()),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    'milking',
+                    style: TextStyle(fontSize: 12, color: Colors.white70),
+                  ),
+                ],
+              ),
+
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

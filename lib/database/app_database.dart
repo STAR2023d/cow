@@ -27,14 +27,31 @@ class MilkTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+// --- TABLE 2: MILK RECORDS ----
+
+class MilkRecords extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get date => dateTime()();
+  RealColumn get litres => real()();
+  RealColumn get pricePerLitre => real().withDefault(const Constant(50.0))();
+
+  // Cash is derived, not stored, to avoid drift between stored/derived values.
+}
+
+class Expenses extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get date => dateTime()();
+  TextColumn get description => text().withLength(min: 1, max: 200)();
+  RealColumn get amount => real()();
+}
+
 // --- UNIFIED DATABASE CLASS ---
-@DriftDatabase(tables: [Cow, MilkTable])
+@DriftDatabase(tables: [Cow, MilkTable, MilkRecords, Expenses])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
-  
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   // Custom migration strategy to automatically build the new table on user devices
   @override
@@ -45,12 +62,18 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
-          // Creates the milk table when upgrading an existing app installation
           await m.createTable(milkTable);
+        }
+        if (from < 3) {
+          await m.createTable(milkRecords);
+        }
+        if (from < 4) {
+          await m.createTable(expenses); // This fixes your crash!
         }
       },
     );
   }
+
   // === ANALYTICS FOR TODAY ===
 
   // Watches only entries logged TODAY (from midnight to midnight)
@@ -98,6 +121,51 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertMilkEntry(MilkTableCompanion entry) =>
       into(milkTable).insert(entry);
   Stream<List<MilkTableData>> watchAllEntries() => select(milkTable).watch();
+
+  // -------- Milk records-------
+  Future<int> insertMilkRecord(MilkRecordsCompanion entry) =>
+      into(milkRecords).insert(entry);
+
+  Future<bool> updateMilkRecord(MilkRecordsCompanion entry) =>
+      update(milkRecords).replace(entry);
+
+  Future<int> deleteMilkRecord(int id) =>
+      (delete(milkRecords)..where((t) => t.id.equals(id))).go();
+
+  Stream<List<MilkRecord>> watchMilkRecords() => (select(
+    milkRecords,
+  )..orderBy([(t) => OrderingTerm.desc(t.date)])).watch();
+
+  Future<List<MilkRecord>> milkRecordsInRange(DateTime start, DateTime end) =>
+      (select(milkRecords)
+            ..where(
+              (t) =>
+                  t.date.isBiggerOrEqualValue(start) &
+                  t.date.isSmallerOrEqualValue(end),
+            )
+            ..orderBy([(t) => OrderingTerm.asc(t.date)]))
+          .get();
+
+  // ----- Expenses ------
+
+  Future<int> insertExpense(ExpensesCompanion entry) =>
+      into(expenses).insert(entry);
+
+  Future<int> deleteExpense(int id) =>
+      (delete(expenses)..where((t) => t.id.equals(id))).go();
+
+  Stream<List<Expense>> watchExpenses() =>
+      (select(expenses)..orderBy([(t) => OrderingTerm.desc(t.date)])).watch();
+
+  Future<List<Expense>> expensesInRange(DateTime start, DateTime end) =>
+      (select(expenses)
+            ..where(
+              (t) =>
+                  t.date.isBiggerOrEqualValue(start) &
+                  t.date.isSmallerOrEqualValue(end),
+            )
+            ..orderBy([(t) => OrderingTerm.asc(t.date)]))
+          .get();
 
   // Unified Connection File
   static QueryExecutor _openConnection() {

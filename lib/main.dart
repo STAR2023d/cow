@@ -1,10 +1,5 @@
 import 'package:cow/database/app_database.dart';
-import 'package:cow/models/milk.dart';
-import 'package:cow/screens/analytics_dashboard.dart';
-import 'package:cow/screens/cow_dashboard.dart';
 import 'package:cow/screens/daily_record.dart';
-import 'package:cow/screens/main_dashboard.dart';
-import 'package:cow/screens/milk_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
 
         //colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-        scaffoldBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: MainDashboard(),
     );

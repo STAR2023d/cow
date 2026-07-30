@@ -745,16 +745,626 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
   }
 }
 
+class $MilkRecordsTable extends MilkRecords
+    with TableInfo<$MilkRecordsTable, MilkRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MilkRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _litresMeta = const VerificationMeta('litres');
+  @override
+  late final GeneratedColumn<double> litres = GeneratedColumn<double>(
+    'litres',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pricePerLitreMeta = const VerificationMeta(
+    'pricePerLitre',
+  );
+  @override
+  late final GeneratedColumn<double> pricePerLitre = GeneratedColumn<double>(
+    'price_per_litre',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(50.0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, date, litres, pricePerLitre];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'milk_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MilkRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('litres')) {
+      context.handle(
+        _litresMeta,
+        litres.isAcceptableOrUnknown(data['litres']!, _litresMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_litresMeta);
+    }
+    if (data.containsKey('price_per_litre')) {
+      context.handle(
+        _pricePerLitreMeta,
+        pricePerLitre.isAcceptableOrUnknown(
+          data['price_per_litre']!,
+          _pricePerLitreMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MilkRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MilkRecord(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      litres: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}litres'],
+      )!,
+      pricePerLitre: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}price_per_litre'],
+      )!,
+    );
+  }
+
+  @override
+  $MilkRecordsTable createAlias(String alias) {
+    return $MilkRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class MilkRecord extends DataClass implements Insertable<MilkRecord> {
+  final int id;
+  final DateTime date;
+  final double litres;
+  final double pricePerLitre;
+  const MilkRecord({
+    required this.id,
+    required this.date,
+    required this.litres,
+    required this.pricePerLitre,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['date'] = Variable<DateTime>(date);
+    map['litres'] = Variable<double>(litres);
+    map['price_per_litre'] = Variable<double>(pricePerLitre);
+    return map;
+  }
+
+  MilkRecordsCompanion toCompanion(bool nullToAbsent) {
+    return MilkRecordsCompanion(
+      id: Value(id),
+      date: Value(date),
+      litres: Value(litres),
+      pricePerLitre: Value(pricePerLitre),
+    );
+  }
+
+  factory MilkRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MilkRecord(
+      id: serializer.fromJson<int>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      litres: serializer.fromJson<double>(json['litres']),
+      pricePerLitre: serializer.fromJson<double>(json['pricePerLitre']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'litres': serializer.toJson<double>(litres),
+      'pricePerLitre': serializer.toJson<double>(pricePerLitre),
+    };
+  }
+
+  MilkRecord copyWith({
+    int? id,
+    DateTime? date,
+    double? litres,
+    double? pricePerLitre,
+  }) => MilkRecord(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    litres: litres ?? this.litres,
+    pricePerLitre: pricePerLitre ?? this.pricePerLitre,
+  );
+  MilkRecord copyWithCompanion(MilkRecordsCompanion data) {
+    return MilkRecord(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+      litres: data.litres.present ? data.litres.value : this.litres,
+      pricePerLitre: data.pricePerLitre.present
+          ? data.pricePerLitre.value
+          : this.pricePerLitre,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MilkRecord(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('litres: $litres, ')
+          ..write('pricePerLitre: $pricePerLitre')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, date, litres, pricePerLitre);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MilkRecord &&
+          other.id == this.id &&
+          other.date == this.date &&
+          other.litres == this.litres &&
+          other.pricePerLitre == this.pricePerLitre);
+}
+
+class MilkRecordsCompanion extends UpdateCompanion<MilkRecord> {
+  final Value<int> id;
+  final Value<DateTime> date;
+  final Value<double> litres;
+  final Value<double> pricePerLitre;
+  const MilkRecordsCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.litres = const Value.absent(),
+    this.pricePerLitre = const Value.absent(),
+  });
+  MilkRecordsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime date,
+    required double litres,
+    this.pricePerLitre = const Value.absent(),
+  }) : date = Value(date),
+       litres = Value(litres);
+  static Insertable<MilkRecord> custom({
+    Expression<int>? id,
+    Expression<DateTime>? date,
+    Expression<double>? litres,
+    Expression<double>? pricePerLitre,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (litres != null) 'litres': litres,
+      if (pricePerLitre != null) 'price_per_litre': pricePerLitre,
+    });
+  }
+
+  MilkRecordsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? date,
+    Value<double>? litres,
+    Value<double>? pricePerLitre,
+  }) {
+    return MilkRecordsCompanion(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      litres: litres ?? this.litres,
+      pricePerLitre: pricePerLitre ?? this.pricePerLitre,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (litres.present) {
+      map['litres'] = Variable<double>(litres.value);
+    }
+    if (pricePerLitre.present) {
+      map['price_per_litre'] = Variable<double>(pricePerLitre.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MilkRecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('litres: $litres, ')
+          ..write('pricePerLitre: $pricePerLitre')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExpensesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 200,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, date, description, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'expenses';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Expense> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Expense map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Expense(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $ExpensesTable createAlias(String alias) {
+    return $ExpensesTable(attachedDatabase, alias);
+  }
+}
+
+class Expense extends DataClass implements Insertable<Expense> {
+  final int id;
+  final DateTime date;
+  final String description;
+  final double amount;
+  const Expense({
+    required this.id,
+    required this.date,
+    required this.description,
+    required this.amount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['date'] = Variable<DateTime>(date);
+    map['description'] = Variable<String>(description);
+    map['amount'] = Variable<double>(amount);
+    return map;
+  }
+
+  ExpensesCompanion toCompanion(bool nullToAbsent) {
+    return ExpensesCompanion(
+      id: Value(id),
+      date: Value(date),
+      description: Value(description),
+      amount: Value(amount),
+    );
+  }
+
+  factory Expense.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Expense(
+      id: serializer.fromJson<int>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      description: serializer.fromJson<String>(json['description']),
+      amount: serializer.fromJson<double>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'date': serializer.toJson<DateTime>(date),
+      'description': serializer.toJson<String>(description),
+      'amount': serializer.toJson<double>(amount),
+    };
+  }
+
+  Expense copyWith({
+    int? id,
+    DateTime? date,
+    String? description,
+    double? amount,
+  }) => Expense(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    description: description ?? this.description,
+    amount: amount ?? this.amount,
+  );
+  Expense copyWithCompanion(ExpensesCompanion data) {
+    return Expense(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Expense(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('description: $description, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, date, description, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Expense &&
+          other.id == this.id &&
+          other.date == this.date &&
+          other.description == this.description &&
+          other.amount == this.amount);
+}
+
+class ExpensesCompanion extends UpdateCompanion<Expense> {
+  final Value<int> id;
+  final Value<DateTime> date;
+  final Value<String> description;
+  final Value<double> amount;
+  const ExpensesCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+    this.description = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  ExpensesCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime date,
+    required String description,
+    required double amount,
+  }) : date = Value(date),
+       description = Value(description),
+       amount = Value(amount);
+  static Insertable<Expense> custom({
+    Expression<int>? id,
+    Expression<DateTime>? date,
+    Expression<String>? description,
+    Expression<double>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+      if (description != null) 'description': description,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  ExpensesCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? date,
+    Value<String>? description,
+    Value<double>? amount,
+  }) {
+    return ExpensesCompanion(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      description: description ?? this.description,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpensesCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date, ')
+          ..write('description: $description, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $CowTable cow = $CowTable(this);
   late final $MilkTableTable milkTable = $MilkTableTable(this);
+  late final $MilkRecordsTable milkRecords = $MilkRecordsTable(this);
+  late final $ExpensesTable expenses = $ExpensesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [cow, milkTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    cow,
+    milkTable,
+    milkRecords,
+    expenses,
+  ];
 }
 
 typedef $$CowTableCreateCompanionBuilder =
@@ -1379,6 +1989,354 @@ typedef $$MilkTableTableProcessedTableManager =
       MilkTableData,
       PrefetchHooks Function({bool cowId})
     >;
+typedef $$MilkRecordsTableCreateCompanionBuilder =
+    MilkRecordsCompanion Function({
+      Value<int> id,
+      required DateTime date,
+      required double litres,
+      Value<double> pricePerLitre,
+    });
+typedef $$MilkRecordsTableUpdateCompanionBuilder =
+    MilkRecordsCompanion Function({
+      Value<int> id,
+      Value<DateTime> date,
+      Value<double> litres,
+      Value<double> pricePerLitre,
+    });
+
+class $$MilkRecordsTableFilterComposer
+    extends Composer<_$AppDatabase, $MilkRecordsTable> {
+  $$MilkRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get litres => $composableBuilder(
+    column: $table.litres,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get pricePerLitre => $composableBuilder(
+    column: $table.pricePerLitre,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MilkRecordsTableOrderingComposer
+    extends Composer<_$AppDatabase, $MilkRecordsTable> {
+  $$MilkRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get litres => $composableBuilder(
+    column: $table.litres,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get pricePerLitre => $composableBuilder(
+    column: $table.pricePerLitre,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MilkRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MilkRecordsTable> {
+  $$MilkRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<double> get litres =>
+      $composableBuilder(column: $table.litres, builder: (column) => column);
+
+  GeneratedColumn<double> get pricePerLitre => $composableBuilder(
+    column: $table.pricePerLitre,
+    builder: (column) => column,
+  );
+}
+
+class $$MilkRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MilkRecordsTable,
+          MilkRecord,
+          $$MilkRecordsTableFilterComposer,
+          $$MilkRecordsTableOrderingComposer,
+          $$MilkRecordsTableAnnotationComposer,
+          $$MilkRecordsTableCreateCompanionBuilder,
+          $$MilkRecordsTableUpdateCompanionBuilder,
+          (
+            MilkRecord,
+            BaseReferences<_$AppDatabase, $MilkRecordsTable, MilkRecord>,
+          ),
+          MilkRecord,
+          PrefetchHooks Function()
+        > {
+  $$MilkRecordsTableTableManager(_$AppDatabase db, $MilkRecordsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MilkRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MilkRecordsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MilkRecordsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<double> litres = const Value.absent(),
+                Value<double> pricePerLitre = const Value.absent(),
+              }) => MilkRecordsCompanion(
+                id: id,
+                date: date,
+                litres: litres,
+                pricePerLitre: pricePerLitre,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime date,
+                required double litres,
+                Value<double> pricePerLitre = const Value.absent(),
+              }) => MilkRecordsCompanion.insert(
+                id: id,
+                date: date,
+                litres: litres,
+                pricePerLitre: pricePerLitre,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MilkRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MilkRecordsTable,
+      MilkRecord,
+      $$MilkRecordsTableFilterComposer,
+      $$MilkRecordsTableOrderingComposer,
+      $$MilkRecordsTableAnnotationComposer,
+      $$MilkRecordsTableCreateCompanionBuilder,
+      $$MilkRecordsTableUpdateCompanionBuilder,
+      (
+        MilkRecord,
+        BaseReferences<_$AppDatabase, $MilkRecordsTable, MilkRecord>,
+      ),
+      MilkRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$ExpensesTableCreateCompanionBuilder =
+    ExpensesCompanion Function({
+      Value<int> id,
+      required DateTime date,
+      required String description,
+      required double amount,
+    });
+typedef $$ExpensesTableUpdateCompanionBuilder =
+    ExpensesCompanion Function({
+      Value<int> id,
+      Value<DateTime> date,
+      Value<String> description,
+      Value<double> amount,
+    });
+
+class $$ExpensesTableFilterComposer
+    extends Composer<_$AppDatabase, $ExpensesTable> {
+  $$ExpensesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ExpensesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExpensesTable> {
+  $$ExpensesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ExpensesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExpensesTable> {
+  $$ExpensesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+}
+
+class $$ExpensesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExpensesTable,
+          Expense,
+          $$ExpensesTableFilterComposer,
+          $$ExpensesTableOrderingComposer,
+          $$ExpensesTableAnnotationComposer,
+          $$ExpensesTableCreateCompanionBuilder,
+          $$ExpensesTableUpdateCompanionBuilder,
+          (Expense, BaseReferences<_$AppDatabase, $ExpensesTable, Expense>),
+          Expense,
+          PrefetchHooks Function()
+        > {
+  $$ExpensesTableTableManager(_$AppDatabase db, $ExpensesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExpensesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ExpensesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ExpensesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<String> description = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+              }) => ExpensesCompanion(
+                id: id,
+                date: date,
+                description: description,
+                amount: amount,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime date,
+                required String description,
+                required double amount,
+              }) => ExpensesCompanion.insert(
+                id: id,
+                date: date,
+                description: description,
+                amount: amount,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ExpensesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExpensesTable,
+      Expense,
+      $$ExpensesTableFilterComposer,
+      $$ExpensesTableOrderingComposer,
+      $$ExpensesTableAnnotationComposer,
+      $$ExpensesTableCreateCompanionBuilder,
+      $$ExpensesTableUpdateCompanionBuilder,
+      (Expense, BaseReferences<_$AppDatabase, $ExpensesTable, Expense>),
+      Expense,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1386,4 +2344,8 @@ class $AppDatabaseManager {
   $$CowTableTableManager get cow => $$CowTableTableManager(_db, _db.cow);
   $$MilkTableTableTableManager get milkTable =>
       $$MilkTableTableTableManager(_db, _db.milkTable);
+  $$MilkRecordsTableTableManager get milkRecords =>
+      $$MilkRecordsTableTableManager(_db, _db.milkRecords);
+  $$ExpensesTableTableManager get expenses =>
+      $$ExpensesTableTableManager(_db, _db.expenses);
 }
