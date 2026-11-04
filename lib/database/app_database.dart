@@ -12,8 +12,9 @@ part 'app_database.g.dart';
 // --- SESSION CONSTANTS ---
 class MilkSession {
   static const morning = 'Morning';
+  static const afternoon = 'Afternoon';
   static const evening = 'Evening';
-  static const all = [morning, evening];
+  static const all = [morning, afternoon, evening];
 }
 
 // --- TABLE 1: COW ---

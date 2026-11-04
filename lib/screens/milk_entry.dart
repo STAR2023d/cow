@@ -39,7 +39,7 @@ class _MilkDataState extends State<MilkData> {
       case MilkingSession.morning:
         return MilkSession.morning;
       case MilkingSession.afternoon:
-        return 'Afternoon';
+        return MilkSession.afternoon;
       case MilkingSession.evening:
         return MilkSession.evening;
     }

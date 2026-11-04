@@ -48,9 +48,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
           for (var row in joinedEntries) {
             final entry = row.readTable(database.milkTable);
-            if (entry.session == 'morning') morningTotal += entry.amount;
-            if (entry.session == 'midday') middayTotal += entry.amount;
-            if (entry.session == 'evening') eveningTotal += entry.amount;
+            if (entry.session == MilkSession.morning) morningTotal += entry.amount;
+            if (entry.session == MilkSession.afternoon) middayTotal += entry.amount;
+            if (entry.session == MilkSession.evening) eveningTotal += entry.amount;
           }
 
           double grandTotal = morningTotal + middayTotal + eveningTotal;
