@@ -2226,6 +2226,9 @@ class $BreedingCyclesTable extends BreedingCycles
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cow (id)',
+    ),
   );
   static const VerificationMeta _heatDateMeta = const VerificationMeta(
     'heatDate',
@@ -2380,6 +2383,9 @@ class $BreedingCyclesTable extends BreedingCycles
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cow (id)',
+    ),
   );
   static const VerificationMeta _soldMeta = const VerificationMeta('sold');
   @override
@@ -3439,6 +3445,9 @@ class $LedgerEntriesTable extends LedgerEntries
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cow (id)',
+    ),
   );
   static const VerificationMeta _breedingCycleIdMeta = const VerificationMeta(
     'breedingCycleId',
@@ -4035,6 +4044,24 @@ final class $$CowTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$LedgerEntriesTable, List<LedgerEntry>>
+  _ledgerEntriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.ledgerEntries,
+    aliasName: 'cow__id__ledger_entries__cow_id',
+  );
+
+  $$LedgerEntriesTableProcessedTableManager get ledgerEntriesRefs {
+    final manager = $$LedgerEntriesTableTableManager(
+      $_db,
+      $_db.ledgerEntries,
+    ).filter((f) => f.cowId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_ledgerEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CowTableFilterComposer extends Composer<_$AppDatabase, $CowTable> {
@@ -4164,6 +4191,31 @@ class $$CowTableFilterComposer extends Composer<_$AppDatabase, $CowTable> {
           }) => $$HealthRecordTableFilterComposer(
             $db: $db,
             $table: $db.healthRecord,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> ledgerEntriesRefs(
+    Expression<bool> Function($$LedgerEntriesTableFilterComposer f) f,
+  ) {
+    final $$LedgerEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ledgerEntries,
+      getReferencedColumn: (t) => t.cowId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LedgerEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.ledgerEntries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4359,6 +4411,31 @@ class $$CowTableAnnotationComposer extends Composer<_$AppDatabase, $CowTable> {
     );
     return f(composer);
   }
+
+  Expression<T> ledgerEntriesRefs<T extends Object>(
+    Expression<T> Function($$LedgerEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$LedgerEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.ledgerEntries,
+      getReferencedColumn: (t) => t.cowId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LedgerEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.ledgerEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CowTableTableManager
@@ -4379,6 +4456,7 @@ class $$CowTableTableManager
             bool milkTableRefs,
             bool feedingLogRefs,
             bool healthRecordRefs,
+            bool ledgerEntriesRefs,
           })
         > {
   $$CowTableTableManager(_$AppDatabase db, $CowTable table)
@@ -4439,6 +4517,7 @@ class $$CowTableTableManager
                 milkTableRefs = false,
                 feedingLogRefs = false,
                 healthRecordRefs = false,
+                ledgerEntriesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4446,6 +4525,7 @@ class $$CowTableTableManager
                     if (milkTableRefs) db.milkTable,
                     if (feedingLogRefs) db.feedingLog,
                     if (healthRecordRefs) db.healthRecord,
+                    if (ledgerEntriesRefs) db.ledgerEntries,
                   ],
                   addJoins:
                       <
@@ -4538,6 +4618,26 @@ class $$CowTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (ledgerEntriesRefs)
+                        await $_getPrefetchedData<
+                          CowData,
+                          $CowTable,
+                          LedgerEntry
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CowTableReferences
+                              ._ledgerEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) => $$CowTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).ledgerEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.cowId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4563,6 +4663,7 @@ typedef $$CowTableProcessedTableManager =
         bool milkTableRefs,
         bool feedingLogRefs,
         bool healthRecordRefs,
+        bool ledgerEntriesRefs,
       })
     >;
 typedef $$MilkTableTableCreateCompanionBuilder =
@@ -5939,6 +6040,40 @@ final class $$BreedingCyclesTableReferences
     super.$_typedResult,
   );
 
+  static $CowTable _cowIdTable(_$AppDatabase db) =>
+      db.cow.createAlias('breeding_cycles__cow_id__cow__id');
+
+  $$CowTableProcessedTableManager get cowId {
+    final $_column = $_itemColumn<int>('cow_id')!;
+
+    final manager = $$CowTableTableManager(
+      $_db,
+      $_db.cow,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_cowIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CowTable _calfCowIdTable(_$AppDatabase db) =>
+      db.cow.createAlias('breeding_cycles__calf_cow_id__cow__id');
+
+  $$CowTableProcessedTableManager? get calfCowId {
+    final $_column = $_itemColumn<int>('calf_cow_id');
+    if ($_column == null) return null;
+    final manager = $$CowTableTableManager(
+      $_db,
+      $_db.cow,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_calfCowIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
   static MultiTypedResultKey<$LedgerEntriesTable, List<LedgerEntry>>
   _ledgerEntriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.ledgerEntries,
@@ -5969,11 +6104,6 @@ class $$BreedingCyclesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get cowId => $composableBuilder(
-    column: $table.cowId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6037,11 +6167,6 @@ class $$BreedingCyclesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get calfCowId => $composableBuilder(
-    column: $table.calfCowId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<bool> get sold => $composableBuilder(
     column: $table.sold,
     builder: (column) => ColumnFilters(column),
@@ -6072,6 +6197,52 @@ class $$BreedingCyclesTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CowTableFilterComposer get cowId {
+    final $$CowTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableFilterComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableFilterComposer get calfCowId {
+    final $$CowTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.calfCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableFilterComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<bool> ledgerEntriesRefs(
     Expression<bool> Function($$LedgerEntriesTableFilterComposer f) f,
@@ -6110,11 +6281,6 @@ class $$BreedingCyclesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get cowId => $composableBuilder(
-    column: $table.cowId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -6178,11 +6344,6 @@ class $$BreedingCyclesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get calfCowId => $composableBuilder(
-    column: $table.calfCowId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<bool> get sold => $composableBuilder(
     column: $table.sold,
     builder: (column) => ColumnOrderings(column),
@@ -6212,6 +6373,52 @@ class $$BreedingCyclesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CowTableOrderingComposer get cowId {
+    final $$CowTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableOrderingComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableOrderingComposer get calfCowId {
+    final $$CowTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.calfCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableOrderingComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BreedingCyclesTableAnnotationComposer
@@ -6225,9 +6432,6 @@ class $$BreedingCyclesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get cowId =>
-      $composableBuilder(column: $table.cowId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get heatDate =>
       $composableBuilder(column: $table.heatDate, builder: (column) => column);
@@ -6285,9 +6489,6 @@ class $$BreedingCyclesTableAnnotationComposer
   GeneratedColumn<String> get calfSex =>
       $composableBuilder(column: $table.calfSex, builder: (column) => column);
 
-  GeneratedColumn<int> get calfCowId =>
-      $composableBuilder(column: $table.calfCowId, builder: (column) => column);
-
   GeneratedColumn<bool> get sold =>
       $composableBuilder(column: $table.sold, builder: (column) => column);
 
@@ -6307,6 +6508,52 @@ class $$BreedingCyclesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$CowTableAnnotationComposer get cowId {
+    final $$CowTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableAnnotationComposer get calfCowId {
+    final $$CowTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.calfCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<T> ledgerEntriesRefs<T extends Object>(
     Expression<T> Function($$LedgerEntriesTableAnnotationComposer a) f,
@@ -6347,7 +6594,11 @@ class $$BreedingCyclesTableTableManager
           $$BreedingCyclesTableUpdateCompanionBuilder,
           (BreedingCycle, $$BreedingCyclesTableReferences),
           BreedingCycle,
-          PrefetchHooks Function({bool ledgerEntriesRefs})
+          PrefetchHooks Function({
+            bool cowId,
+            bool calfCowId,
+            bool ledgerEntriesRefs,
+          })
         > {
   $$BreedingCyclesTableTableManager(
     _$AppDatabase db,
@@ -6462,40 +6713,89 @@ class $$BreedingCyclesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({ledgerEntriesRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (ledgerEntriesRefs) db.ledgerEntries,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (ledgerEntriesRefs)
-                    await $_getPrefetchedData<
-                      BreedingCycle,
-                      $BreedingCyclesTable,
-                      LedgerEntry
-                    >(
-                      currentTable: table,
-                      referencedTable: $$BreedingCyclesTableReferences
-                          ._ledgerEntriesRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$BreedingCyclesTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).ledgerEntriesRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.breedingCycleId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({cowId = false, calfCowId = false, ledgerEntriesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (ledgerEntriesRefs) db.ledgerEntries,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (cowId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.cowId,
+                                    referencedTable:
+                                        $$BreedingCyclesTableReferences
+                                            ._cowIdTable(db),
+                                    referencedColumn:
+                                        $$BreedingCyclesTableReferences
+                                            ._cowIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (calfCowId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.calfCowId,
+                                    referencedTable:
+                                        $$BreedingCyclesTableReferences
+                                            ._calfCowIdTable(db),
+                                    referencedColumn:
+                                        $$BreedingCyclesTableReferences
+                                            ._calfCowIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (ledgerEntriesRefs)
+                        await $_getPrefetchedData<
+                          BreedingCycle,
+                          $BreedingCyclesTable,
+                          LedgerEntry
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BreedingCyclesTableReferences
+                              ._ledgerEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BreedingCyclesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).ledgerEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.breedingCycleId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -6512,7 +6812,11 @@ typedef $$BreedingCyclesTableProcessedTableManager =
       $$BreedingCyclesTableUpdateCompanionBuilder,
       (BreedingCycle, $$BreedingCyclesTableReferences),
       BreedingCycle,
-      PrefetchHooks Function({bool ledgerEntriesRefs})
+      PrefetchHooks Function({
+        bool cowId,
+        bool calfCowId,
+        bool ledgerEntriesRefs,
+      })
     >;
 typedef $$LedgerEntriesTableCreateCompanionBuilder =
     LedgerEntriesCompanion Function({
@@ -6544,6 +6848,23 @@ final class $$LedgerEntriesTableReferences
     super.$_table,
     super.$_typedResult,
   );
+
+  static $CowTable _cowIdTable(_$AppDatabase db) =>
+      db.cow.createAlias('ledger_entries__cow_id__cow__id');
+
+  $$CowTableProcessedTableManager? get cowId {
+    final $_column = $_itemColumn<int>('cow_id');
+    if ($_column == null) return null;
+    final manager = $$CowTableTableManager(
+      $_db,
+      $_db.cow,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_cowIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static $BreedingCyclesTable _breedingCycleIdTable(_$AppDatabase db) => db
       .breedingCycles
@@ -6578,11 +6899,6 @@ class $$LedgerEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get cowId => $composableBuilder(
-    column: $table.cowId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get type => $composableBuilder(
     column: $table.type,
     builder: (column) => ColumnFilters(column),
@@ -6607,6 +6923,29 @@ class $$LedgerEntriesTableFilterComposer
     column: $table.date,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CowTableFilterComposer get cowId {
+    final $$CowTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableFilterComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$BreedingCyclesTableFilterComposer get breedingCycleId {
     final $$BreedingCyclesTableFilterComposer composer = $composerBuilder(
@@ -6646,11 +6985,6 @@ class $$LedgerEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get cowId => $composableBuilder(
-    column: $table.cowId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get type => $composableBuilder(
     column: $table.type,
     builder: (column) => ColumnOrderings(column),
@@ -6675,6 +7009,29 @@ class $$LedgerEntriesTableOrderingComposer
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CowTableOrderingComposer get cowId {
+    final $$CowTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableOrderingComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$BreedingCyclesTableOrderingComposer get breedingCycleId {
     final $$BreedingCyclesTableOrderingComposer composer = $composerBuilder(
@@ -6712,9 +7069,6 @@ class $$LedgerEntriesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get cowId =>
-      $composableBuilder(column: $table.cowId, builder: (column) => column);
-
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
@@ -6729,6 +7083,29 @@ class $$LedgerEntriesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
+
+  $$CowTableAnnotationComposer get cowId {
+    final $$CowTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$BreedingCyclesTableAnnotationComposer get breedingCycleId {
     final $$BreedingCyclesTableAnnotationComposer composer = $composerBuilder(
@@ -6767,7 +7144,7 @@ class $$LedgerEntriesTableTableManager
           $$LedgerEntriesTableUpdateCompanionBuilder,
           (LedgerEntry, $$LedgerEntriesTableReferences),
           LedgerEntry,
-          PrefetchHooks Function({bool breedingCycleId})
+          PrefetchHooks Function({bool cowId, bool breedingCycleId})
         > {
   $$LedgerEntriesTableTableManager(_$AppDatabase db, $LedgerEntriesTable table)
     : super(
@@ -6828,7 +7205,7 @@ class $$LedgerEntriesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({breedingCycleId = false}) {
+          prefetchHooksCallback: ({cowId = false, breedingCycleId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -6848,6 +7225,19 @@ class $$LedgerEntriesTableTableManager
                       dynamic
                     >
                   >(state) {
+                    if (cowId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.cowId,
+                                referencedTable: $$LedgerEntriesTableReferences
+                                    ._cowIdTable(db),
+                                referencedColumn: $$LedgerEntriesTableReferences
+                                    ._cowIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
                     if (breedingCycleId) {
                       state =
                           state.withJoin(
@@ -6885,7 +7275,7 @@ typedef $$LedgerEntriesTableProcessedTableManager =
       $$LedgerEntriesTableUpdateCompanionBuilder,
       (LedgerEntry, $$LedgerEntriesTableReferences),
       LedgerEntry,
-      PrefetchHooks Function({bool breedingCycleId})
+      PrefetchHooks Function({bool cowId, bool breedingCycleId})
     >;
 
 class $AppDatabaseManager {

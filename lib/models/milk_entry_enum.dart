@@ -1,1 +1,5 @@
-enum MilkingSession { morning, midday, evening }
+enum MilkingSession {
+  morning,
+  afternoon,
+  evening,
+}

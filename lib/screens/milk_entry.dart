@@ -38,8 +38,8 @@ class _MilkDataState extends State<MilkData> {
     switch (session) {
       case MilkingSession.morning:
         return MilkSession.morning;
-      case MilkingSession.midday:
-        return 'Midday';
+      case MilkingSession.afternoon:
+        return 'Afternoon';
       case MilkingSession.evening:
         return MilkSession.evening;
     }
@@ -85,8 +85,8 @@ class _MilkDataState extends State<MilkData> {
                               icon: Icon(Icons.wb_sunny_outlined),
                             ),
                             ButtonSegment<MilkingSession>(
-                              value: MilkingSession.midday,
-                              label: Text('Midday'),
+                              value: MilkingSession.afternoon,
+                              label: Text('Afternoon'),
                               icon: Icon(Icons.wb_sunny),
                             ),
                             ButtonSegment<MilkingSession>(

@@ -1,22 +1,58 @@
-# cow
+# Mwaura's Farm 🐄
 
-<<<<<<< HEAD
+A dairy farm management app for small-scale Kenyan farmers, built with Flutter.
+It works offline-first: all data is stored on the device in SQLite.
 
-A new Flutter project.
+## Features
 
-## Getting Started
+- **Cow register** with photos and tags, and mother-to-heifer links
+- **Milk recording** per cow, per session (Morning / Evening), with daily totals
+- **Price history** with effective dates, and cash worked out from litres sold
+- **Expenses and financial statements** in 15-day half-periods
+- **Feeding log** for herd-wide or per-cow feeding
+- **Health records** (vaccination, illness, checkups) with follow-up dates
+- **Breeding tracker** from heat to service, pregnancy checks (day 21/42/63), dry-off, calving, and calf outcome _(in progress)_
+- **AI insights** on milk production using Gemini
 
-This project is a starting point for a Flutter application.
+## Tech stack
 
-A few resources to get you started if this is your first Flutter project:
+| Area       | Package                                   |
+| ---------- | ----------------------------------------- |
+| Database   | `drift` + `drift_flutter` (SQLite)        |
+| State / DI | `provider`                                |
+| Charts     | `fl_chart`                                |
+| AI         | `google_generative_ai` (Gemini 2.5 Flash) |
+| Other      | `image_picker`, `intl`, `lucide_icons`    |
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Getting started
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-my dairy management cow flutter app
+```bash
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter run --dart-define=GEMINI_API_KEY=your_key_here
+```
 
-> > > > > > > db27725cbcc383229b7e95cc25a955a4e11f549b
+The app runs without a key, but AI features return nothing.
+Never commit your API key.
+
+## Project structure
+
+```
+lib/
+  main.dart            App entry point, provides the single AppDatabase
+  database/            Drift tables, migrations and queries
+  breeding/            Breeding schema, date logic, status card
+  screens/             App screens
+  services/            AI service
+  models/              Helpers such as financial period calculations
+  abstract/            Shared dialogs and image picking
+```
+
+## Documentation
+
+- [Roadmap](docs/ROADMAP.md)
+- [Changelog](CHANGELOG.md)
+
+## License
+
+See [LICENSE](LICENSE).
