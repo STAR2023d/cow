@@ -4,8 +4,6 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-
-
 // Generates a single unified file for all tables
 part 'app_database.g.dart';
 
@@ -214,10 +212,20 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
-  Stream<List<TypedResult>> watchEntriesWithCowNames() {
-    return select(
+  /// Today's milk entries (midnight to midnight) joined with cow names.
+  Stream<List<TypedResult>> watchTodayEntriesWithCowNames() {
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, now.day);
+    final end = start.add(const Duration(days: 1));
+
+    final query = select(
       milkTable,
-    ).join([innerJoin(cow, cow.id.equalsExp(milkTable.cowId))]).watch();
+    ).join([innerJoin(cow, cow.id.equalsExp(milkTable.cowId))]);
+    query.where(
+      milkTable.entryDate.isBiggerOrEqualValue(start) &
+          milkTable.entryDate.isSmallerThanValue(end),
+    );
+    return query.watch();
   }
 
   /// Most recent N milk entries, joined with the cow's name.
@@ -518,23 +526,28 @@ class AppDatabase extends _$AppDatabase {
     assert(checkNumber >= 1 && checkNumber <= 3);
 
     if (!passed) {
-      await (update(breedingCycles)..where((t) => t.id.equals(cycleId)))
-          .write(
+      await (update(breedingCycles)..where((t) => t.id.equals(cycleId))).write(
         BreedingCyclesCompanion(
           stage: const Value(BreedingStage.failed),
           isActive: const Value(false),
-          check1Date:
-              checkNumber == 1 ? Value(checkDate) : const Value.absent(),
-          check1Result:
-              checkNumber == 1 ? const Value(false) : const Value.absent(),
-          check2Date:
-              checkNumber == 2 ? Value(checkDate) : const Value.absent(),
-          check2Result:
-              checkNumber == 2 ? const Value(false) : const Value.absent(),
-          check3Date:
-              checkNumber == 3 ? Value(checkDate) : const Value.absent(),
-          check3Result:
-              checkNumber == 3 ? const Value(false) : const Value.absent(),
+          check1Date: checkNumber == 1
+              ? Value(checkDate)
+              : const Value.absent(),
+          check1Result: checkNumber == 1
+              ? const Value(false)
+              : const Value.absent(),
+          check2Date: checkNumber == 2
+              ? Value(checkDate)
+              : const Value.absent(),
+          check2Result: checkNumber == 2
+              ? const Value(false)
+              : const Value.absent(),
+          check3Date: checkNumber == 3
+              ? Value(checkDate)
+              : const Value.absent(),
+          check3Result: checkNumber == 3
+              ? const Value(false)
+              : const Value.absent(),
         ),
       );
       return;
@@ -566,9 +579,9 @@ class AppDatabase extends _$AppDatabase {
 
       // Check 3 passed -> pregnancy confirmed. Compute the entire calving
       // run-up (dry-off, prep milestones) in one shot.
-      final cycle = await (select(breedingCycles)
-            ..where((t) => t.id.equals(cycleId)))
-          .getSingle();
+      final cycle = await (select(
+        breedingCycles,
+      )..where((t) => t.id.equals(cycleId))).getSingle();
       if (cycle.serviceDate != null) {
         final schedule = BreedingSchedule(
           serviceDate: cycle.serviceDate!,
@@ -580,8 +593,9 @@ class AppDatabase extends _$AppDatabase {
       }
     }
 
-    await (update(breedingCycles)..where((t) => t.id.equals(cycleId)))
-        .write(companion);
+    await (update(
+      breedingCycles,
+    )..where((t) => t.id.equals(cycleId))).write(companion);
   }
 
   /// "Calving date" reached.
@@ -600,12 +614,9 @@ class AppDatabase extends _$AppDatabase {
     required int damCowId,
     required String calfName,
   }) async {
-    final calfId = await into(cow).insert(
-      CowCompanion.insert(
-        name: calfName,
-        parentCowId: Value(damCowId),
-      ),
-    );
+    final calfId = await into(
+      cow,
+    ).insert(CowCompanion.insert(name: calfName, parentCowId: Value(damCowId)));
 
     await (update(breedingCycles)..where((t) => t.id.equals(cycleId))).write(
       BreedingCyclesCompanion(
@@ -629,8 +640,7 @@ class AppDatabase extends _$AppDatabase {
     String? note,
   }) async {
     await transaction(() async {
-      await (update(breedingCycles)..where((t) => t.id.equals(cycleId)))
-          .write(
+      await (update(breedingCycles)..where((t) => t.id.equals(cycleId))).write(
         BreedingCyclesCompanion(
           calfSex: const Value('male'),
           sold: const Value(true),
@@ -667,8 +677,9 @@ class AppDatabase extends _$AppDatabase {
   /// All open cycles, for a dashboard. Combine with `deriveDisplayStage`
   /// from breeding_logic.dart in the UI layer to know what's due today.
   Stream<List<BreedingCycle>> watchAllActiveBreedingCycles() {
-    return (select(breedingCycles)..where((t) => t.isActive.equals(true)))
-        .watch();
+    return (select(
+      breedingCycles,
+    )..where((t) => t.isActive.equals(true))).watch();
   }
 
   // Unified Connection File

@@ -33,7 +33,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         centerTitle: true,
       ),
       body: StreamBuilder<List<d.TypedResult>>(
-        stream: database.watchEntriesWithCowNames(),
+        stream: database.watchTodayEntriesWithCowNames(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -48,9 +48,15 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
           for (var row in joinedEntries) {
             final entry = row.readTable(database.milkTable);
-            if (entry.session == MilkSession.morning) morningTotal += entry.amount;
-            if (entry.session == MilkSession.afternoon) middayTotal += entry.amount;
-            if (entry.session == MilkSession.evening) eveningTotal += entry.amount;
+            if (entry.session == MilkSession.morning) {
+              morningTotal += entry.amount;
+            }
+            if (entry.session == MilkSession.afternoon) {
+              middayTotal += entry.amount;
+            }
+            if (entry.session == MilkSession.evening) {
+              eveningTotal += entry.amount;
+            }
           }
 
           double grandTotal = morningTotal + middayTotal + eveningTotal;
@@ -64,7 +70,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 Card(
                   color: MainDashboard.cardNavy,
                   elevation: 4,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
@@ -90,9 +98,16 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.trending_up, color: Colors.green, size: 18),
+                            const Icon(
+                              Icons.trending_up,
+                              color: Colors.green,
+                              size: 18,
+                            ),
                             const SizedBox(width: 4),
-                            Text("+8% vs yesterday", style: TextStyle(color: Colors.green[300])),
+                            Text(
+                              "+8% vs yesterday",
+                              style: TextStyle(color: Colors.green[300]),
+                            ),
                           ],
                         ),
                       ],
@@ -105,7 +120,11 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 // AI ADVISORY INSIGHTS CARD
                 const Text(
                   "AI Farm Insights",
-                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 FutureBuilder<String>(
@@ -128,9 +147,19 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.purpleAccent)),
+                                SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.purpleAccent,
+                                  ),
+                                ),
                                 SizedBox(width: 12),
-                                Text("Analyzing production data with AI...", style: TextStyle(color: Colors.white70)),
+                                Text(
+                                  "Analyzing production data with AI...",
+                                  style: TextStyle(color: Colors.white70),
+                                ),
                               ],
                             ),
                           ),
@@ -138,13 +167,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       );
                     }
 
-                    final insightText = aiSnapshot.data ?? "No advice available.";
+                    final insightText =
+                        aiSnapshot.data ?? "No advice available.";
 
                     return Card(
                       color: MainDashboard.cardNavy,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: const BorderSide(color: Colors.purpleAccent, width: 1.5),
+                        side: const BorderSide(
+                          color: Colors.purpleAccent,
+                          width: 1.5,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -153,18 +186,33 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                           children: [
                             const Row(
                               children: [
-                                Icon(Icons.psychology, color: Colors.purpleAccent, size: 28),
+                                Icon(
+                                  Icons.psychology,
+                                  color: Colors.purpleAccent,
+                                  size: 28,
+                                ),
                                 SizedBox(width: 8),
                                 Text(
                                   "Gemini Veterinary Advisory",
-                                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
-                            const Divider(color: Colors.purpleAccent, height: 20),
+                            const Divider(
+                              color: Colors.purpleAccent,
+                              height: 20,
+                            ),
                             Text(
                               insightText,
-                              style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.4),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 1.4,
+                              ),
                             ),
                           ],
                         ),
@@ -176,29 +224,66 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const SizedBox(height: 24),
                 const Text(
                   "Session Breakdown",
-                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
 
                 Row(
                   children: [
-                    Expanded(child: _buildSessionBar(title: "Morning", amount: morningTotal, total: grandTotal, color: Colors.amber)),
-                    Expanded(child: _buildSessionBar(title: "Afternoon", amount: middayTotal, total: grandTotal, color: Colors.amber)),
-                    Expanded(child: _buildSessionBar(title: "Evening", amount: eveningTotal, total: grandTotal, color: Colors.amber)),
+                    Expanded(
+                      child: _buildSessionBar(
+                        title: "Morning",
+                        amount: morningTotal,
+                        total: grandTotal,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildSessionBar(
+                        title: "Afternoon",
+                        amount: middayTotal,
+                        total: grandTotal,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildSessionBar(
+                        title: "Evening",
+                        amount: eveningTotal,
+                        total: grandTotal,
+                        color: Colors.amber,
+                      ),
+                    ),
                   ],
                 ),
 
                 const Divider(height: 32),
                 const Text(
                   "Today's Live Logs",
-                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
 
                 if (joinedEntries.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 32.0),
-                    child: Center(child: Text("No milk has been logged yet today.", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic))),
+                    child: Center(
+                      child: Text(
+                        "No milk has been logged yet today.",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
                   )
                 else
                   ListView.builder(
@@ -214,17 +299,50 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         color: MainDashboard.cardNavy,
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: ListTile(
-                          leading: const CircleAvatar(backgroundColor: Colors.blue, child: Icon(Icons.opacity, color: Colors.white)),
-                          title: Text(cow.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 30.0)),
+                          leading: const CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            child: Icon(Icons.opacity, color: Colors.white),
+                          ),
+                          title: Text(
+                            cow.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 30.0,
+                            ),
+                          ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("Amount: ${entry.amount.toStringAsFixed(2)} Liters", style: const TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Colors.lightGreen)),
-                              Text("Session: ${entry.session.toUpperCase()}", style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                              Text(DateFormat.jm().format(entry.entryDate), style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                              Text(
+                                "Amount: ${entry.amount.toStringAsFixed(2)} Liters",
+                                style: const TextStyle(
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.lightGreen,
+                                ),
+                              ),
+                              Text(
+                                "Session: ${entry.session.toUpperCase()}",
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                DateFormat.jm().format(entry.entryDate),
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
                             ],
                           ),
-                          trailing: const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                          trailing: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 18,
+                          ),
                         ),
                       );
                     },
@@ -237,7 +355,12 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     );
   }
 
-  Widget _buildSessionBar({required String title, required double amount, required double total, required Color color}) {
+  Widget _buildSessionBar({
+    required String title,
+    required double amount,
+    required double total,
+    required Color color,
+  }) {
     final percent = total == 0 ? 0.0 : amount / total;
     return Card(
       color: MainDashboard.cardNavy,
@@ -245,11 +368,25 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 4),
-            LinearProgressIndicator(value: percent, backgroundColor: Colors.grey[700], color: color, minHeight: 8),
+            LinearProgressIndicator(
+              value: percent,
+              backgroundColor: Colors.grey[700],
+              color: color,
+              minHeight: 8,
+            ),
             const SizedBox(height: 4),
-            Text("${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)", style: const TextStyle(color: Colors.white70)),
+            Text(
+              "${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)",
+              style: const TextStyle(color: Colors.white70),
+            ),
           ],
         ),
       ),
