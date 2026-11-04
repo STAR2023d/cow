@@ -7,6 +7,7 @@ import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/screens/widgets/hover_action_button.dart';
+import 'package:cow/screens/widgets/milk_yield_card.dart';
 import 'package:drift/drift.dart' show TypedResult;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +52,7 @@ class MainDashboard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(child: _buildMilkYieldCard(db)),
+                  Expanded(child: MilkYieldCard(db: db)),
                   const SizedBox(width: 12.0),
                   Expanded(child: _buildHerdSummaryCard(db)),
                 ],
@@ -109,164 +110,6 @@ class MainDashboard extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  /// Live 7-day milk yield card. One stream drives the sparkline, the
-  /// headline total, and the day-over-day percentage change.
-  Widget _buildMilkYieldCard(AppDatabase db) {
-    final today = DateTime.now();
-    final start = DateTime(
-      today.year,
-      today.month,
-      today.day,
-    ).subtract(const Duration(days: 6));
-    final end = DateTime(today.year, today.month, today.day);
-
-    return Container(
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: Colors.white10),
-      ),
-      child: StreamBuilder<Map<DateTime, double>>(
-        stream: db.watchDailyTotalsInRange(start, end),
-        builder: (context, snapshot) {
-          final totals = snapshot.data ?? {};
-
-          //GENERATE CLEAN MIDNINGHT DATES
-          final days = List.generate(7, (i) => start.add(Duration(days: i)));
-
-          //Safely extract normalized values
-          final values = days.map((d) => totals[d] ?? 0.0).toList();
-          final maxValue = values.fold<double>(0, (m, v) => v > m ? v : m);
-          final todayTotal = values.last;
-          final yesterdayTotal = values[values.length - 2];
-          final double? percentChange = yesterdayTotal > 0
-              ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100
-              : null;
-
-          //weekday list
-          const weekMap = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-          final dayLabels = days.map((d) {
-            final idx = d.weekday - 1;
-            return (idx >= 0 && idx < 7) ? weekMap[idx] : '';
-          }).toList();
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "MILK YIELD (LITERS)",
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white60,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              SizedBox(
-                height: 50,
-                child: snapshot.connectionState == ConnectionState.waiting
-                    ? const Center(
-                        child: SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: List.generate(7, (i) {
-                          final isPeak = maxValue > 0 && values[i] == maxValue;
-                          final height = maxValue > 0
-                              ? (values[i] / maxValue) * 50
-                              : 2.0;
-                          // 1. Wrap each bar in Expanded so they scale to fit the row safely
-                          return Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 2.0,
-                              ), // Adds space between bars
-                              child: _buildGraphBar(
-                                height < 2 ? 2 : height,
-                                isPeak: isPeak,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 6.0, bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(7, (i) {
-                    // 2. Changed fixed width SizedBox(width: 24) to Expanded
-                    // This forces all 7 day labels to share width perfectly with the bars above
-                    return Expanded(
-                      child: Text(
-                        dayLabels[i],
-                        textAlign: TextAlign.center,
-                        maxLines:
-                            1, // Prevents text wrapping from pushing layout down
-                        style: const TextStyle(
-                          fontSize: 9,
-                          color: Colors.white38,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              Text(
-                '${todayTotal.toStringAsFixed(1)} L',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                percentChange == null
-                    ? 'No data for yesterday'
-                    : '${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(0)}% from yesterday',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: (percentChange ?? 0) >= 0
-                      ? Colors.greenAccent
-                      : Colors.redAccent,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildGraphBar(double percentageHeight, {bool isPeak = false}) {
-    return Container(
-      width: 6,
-      height: percentageHeight,
-      decoration: BoxDecoration(
-        color: isPeak ? AppColors.accent : Colors.white24,
-        borderRadius: BorderRadius.circular(3),
-        boxShadow: isPeak
-            ? [
-                const BoxShadow(
-                  color: AppColors.accent,
-                  blurRadius: 6,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
       ),
     );
   }

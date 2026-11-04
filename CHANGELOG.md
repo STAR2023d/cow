@@ -10,3 +10,4 @@
 - Added `lib/theme/app_theme.dart` (`AppColors`, `AppTheme`); screens no longer borrow colours from `MainDashboard`
 - Replaced the default counter test with breeding logic, database and theme tests
 - Extracted the navigation drawer into `lib/screens/widgets/app_drawer.dart`
+- Extracted the 7-day milk yield card into `lib/screens/widgets/milk_yield_card.dart`
