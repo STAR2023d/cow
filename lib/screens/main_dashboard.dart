@@ -1,13 +1,11 @@
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/breeding/breeding_status_card.dart';
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/analytics_dashboard.dart';
 import 'package:cow/screens/cow_add.dart';
-import 'package:cow/screens/cow_dashboard.dart';
-import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/feeding_screen.dart';
 import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
+import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/screens/widgets/hover_action_button.dart';
 import 'package:drift/drift.dart' show TypedResult;
 import 'package:flutter/material.dart';
@@ -31,102 +29,12 @@ class MainDashboard extends StatelessWidget {
           'Dashboard',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 33, 7, 80),
+        backgroundColor: AppColors.appBar,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
 
-      drawer: Drawer(
-        width: 240,
-        backgroundColor: AppColors.card,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: AppColors.card),
-              child: const Center(
-                child: Text(
-                  "MWAURA'S FARM",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            _buildDrawerItem(
-              icon: Icons.home,
-              title: 'Home',
-              onTap: () => Navigator.pop(context),
-            ),
-            _buildDrawerItem(
-              icon: Icons.search,
-              title: 'Search',
-              onTap: () => Navigator.pop(context),
-            ),
-            _buildDrawerItem(
-              icon: Icons.money,
-              title: 'Expenses',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ExpenseEntryScreen(db: db),
-                ),
-              ),
-            ),
-            _buildDrawerItem(
-              icon: Icons.dashboard,
-              title: 'Dashboard',
-              onTap: () => Navigator.pop(context),
-            ),
-            _buildDrawerItem(
-              icon: Icons.pets,
-              title: 'Herd',
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HerdDashboard()),
-                );
-              },
-            ),
-            _buildDrawerItem(
-              icon: Icons.grass,
-              title: 'Feeding',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FeedingScreen(db: db)),
-              ),
-            ),
-            _buildDrawerItem(
-              icon: Icons.health_and_safety,
-              title: 'Health',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HealthScreen(db: db)),
-              ),
-            ),
-            _buildDrawerItem(
-              icon: Icons.analytics,
-              title: 'Analytics',
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AnalyticsDashboard(),
-                  ),
-                );
-              },
-            ),
-            const Divider(color: Colors.white30),
-            _buildDrawerItem(
-              icon: Icons.settings,
-              title: 'Settings',
-              onTap: () => Navigator.pop(context),
-            ),
-          ],
-        ),
-      ),
+      drawer: const AppDrawer(),
 
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -160,22 +68,6 @@ class MainDashboard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  // A clean helper method to avoid repetitive item styling code
-  Widget _buildDrawerItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(
-        title,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
-      ),
-      onTap: onTap,
     );
   }
 
