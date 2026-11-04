@@ -47,6 +47,14 @@ lib/
   models/              Helpers such as financial period calculations
   abstract/            Shared dialogs and image picking
 ```
+## Running tests
+
+```bash
+flutter test
+```
+
+Tests cover the breeding date logic, the database (using an in-memory SQLite), and the app theme.
+
 
 ## Documentation
 
