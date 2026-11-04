@@ -1,5 +1,5 @@
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/main_dashboard.dart';
+import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 
@@ -32,7 +32,7 @@ class FeedingScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: MainDashboard.cardNavy,
+          backgroundColor: AppColors.card,
           title: const Text(
             'Log Feeding',
             style: TextStyle(color: Colors.white),
@@ -48,7 +48,7 @@ class FeedingScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<String>(
                           initialValue: value,
-                          dropdownColor: MainDashboard.cardNavy,
+                          dropdownColor: AppColors.card,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Feed Type',
@@ -68,7 +68,7 @@ class FeedingScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<int?>(
                           initialValue: value,
-                          dropdownColor: MainDashboard.cardNavy,
+                          dropdownColor: AppColors.card,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Cow (optional)',
@@ -154,7 +154,7 @@ class FeedingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MainDashboard.primaryNavy,
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Feeding'), centerTitle: true),
       body: StreamBuilder<List<FeedingLogData>>(
         stream: db.watchFeedingLogs(),
@@ -198,7 +198,7 @@ class FeedingScreen extends StatelessWidget {
                       ? (cowsById[log.cowId] ?? 'Unknown cow')
                       : 'Whole herd';
                   return Card(
-                    color: MainDashboard.cardNavy,
+                    color: AppColors.card,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

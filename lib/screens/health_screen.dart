@@ -1,5 +1,5 @@
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/main_dashboard.dart';
+import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 
@@ -40,7 +40,7 @@ class HealthScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: MainDashboard.cardNavy,
+          backgroundColor: AppColors.card,
           title: const Text(
             'Log Health Record',
             style: TextStyle(color: Colors.white),
@@ -56,7 +56,7 @@ class HealthScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<int>(
                           initialValue: value,
-                          dropdownColor: MainDashboard.cardNavy,
+                          dropdownColor: AppColors.card,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(labelText: 'Cow'),
                           items: cows
@@ -76,7 +76,7 @@ class HealthScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<String>(
                           initialValue: value,
-                          dropdownColor: MainDashboard.cardNavy,
+                          dropdownColor: AppColors.card,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Record Type',
@@ -163,7 +163,7 @@ class HealthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MainDashboard.primaryNavy,
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Health'), centerTitle: true),
       body: StreamBuilder<List<HealthRecordData>>(
         stream: db.watchHealthRecords(),
@@ -205,7 +205,7 @@ class HealthScreen extends StatelessWidget {
                   final r = records[index];
                   final cowName = cowsById[r.cowId] ?? 'Unknown cow';
                   return Card(
-                    color: MainDashboard.cardNavy,
+                    color: AppColors.card,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cow/abstract/image_source.dart'; // abstracted file path
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/main_dashboard.dart';
+import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,7 +103,7 @@ class _CowAddState extends State<CowAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MainDashboard.primaryNavy,
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Add Cow'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -118,7 +118,7 @@ class _CowAddState extends State<CowAdd> {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: MainDashboard.cardNavy,
+                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey[400]!),
                   ),
@@ -226,7 +226,7 @@ class _CowAddState extends State<CowAdd> {
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: MainDashboard.cardNavy,
+                  foregroundColor: AppColors.card,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Text(

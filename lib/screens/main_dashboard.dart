@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/breeding/breeding_status_card.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/analytics_dashboard.dart';
@@ -15,10 +16,6 @@ import 'package:provider/provider.dart';
 class MainDashboard extends StatelessWidget {
   const MainDashboard({super.key});
 
-  // Base background theme configuration
-  static const Color primaryNavy = Color.fromARGB(255, 13, 23, 41);
-  static const Color cardNavy = Color.fromARGB(255, 23, 37, 65);
-  static const Color accentBlue = Color.fromARGB(255, 30, 144, 255);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,7 @@ class MainDashboard extends StatelessWidget {
     final db = Provider.of<AppDatabase>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: primaryNavy,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -41,12 +38,12 @@ class MainDashboard extends StatelessWidget {
 
       drawer: Drawer(
         width: 240,
-        backgroundColor: cardNavy,
+        backgroundColor: AppColors.card,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(color: cardNavy),
+              decoration: const BoxDecoration(color: AppColors.card),
               child: const Center(
                 child: Text(
                   "MWAURA'S FARM",
@@ -189,7 +186,7 @@ class MainDashboard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: cardNavy,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: Colors.white10),
       ),
@@ -238,7 +235,7 @@ class MainDashboard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: cardNavy,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: Colors.white10),
       ),
@@ -367,12 +364,12 @@ class MainDashboard extends StatelessWidget {
       width: 6,
       height: percentageHeight,
       decoration: BoxDecoration(
-        color: isPeak ? accentBlue : Colors.white24,
+        color: isPeak ? AppColors.accent : Colors.white24,
         borderRadius: BorderRadius.circular(3),
         boxShadow: isPeak
             ? [
                 const BoxShadow(
-                  color: accentBlue,
+                  color: AppColors.accent,
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),
@@ -387,7 +384,7 @@ class MainDashboard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: cardNavy,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: Colors.white10),
       ),
@@ -478,7 +475,7 @@ class MainDashboard extends StatelessWidget {
             offset: Offset(0, 2),
           ),
         ],
-        color: cardNavy,
+        color: AppColors.card,
       ),
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -594,7 +591,7 @@ class MainDashboard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: cardNavy,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: Colors.white10),
       ),

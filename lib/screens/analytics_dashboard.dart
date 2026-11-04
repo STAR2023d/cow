@@ -1,5 +1,5 @@
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/main_dashboard.dart';
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/services/ai_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +19,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     final database = Provider.of<AppDatabase>(context);
 
     return Scaffold(
-      backgroundColor: MainDashboard.primaryNavy,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           "Daily Production Analytics",
@@ -68,7 +68,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               children: [
                 // GRAND TOTAL SCOREBOARD CARD
                 Card(
-                  color: MainDashboard.cardNavy,
+                  color: AppColors.card,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -80,7 +80,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         const Text(
                           "TOTAL PRODUCTION TODAY",
                           style: TextStyle(
-                            color: Color.fromARGB(255, 250, 143, 3),
+                            color: AppColors.highlight,
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
@@ -140,7 +140,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   builder: (context, aiSnapshot) {
                     if (aiSnapshot.connectionState == ConnectionState.waiting) {
                       return Card(
-                        color: MainDashboard.cardNavy,
+                        color: AppColors.card,
                         child: const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Center(
@@ -171,7 +171,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         aiSnapshot.data ?? "No advice available.";
 
                     return Card(
-                      color: MainDashboard.cardNavy,
+                      color: AppColors.card,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: const BorderSide(
@@ -296,7 +296,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       final cow = row.readTable(database.cow);
 
                       return Card(
-                        color: MainDashboard.cardNavy,
+                        color: AppColors.card,
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: ListTile(
                           leading: const CircleAvatar(
@@ -363,7 +363,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   }) {
     final percent = total == 0 ? 0.0 : amount / total;
     return Card(
-      color: MainDashboard.cardNavy,
+      color: AppColors.card,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
