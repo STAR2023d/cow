@@ -43,8 +43,9 @@ class _StatementScreenState extends State<StatementScreen> {
       body: FutureBuilder<PeriodStatement>(
         future: _future,
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
           final s = snapshot.data!;
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -86,9 +87,9 @@ class _StatementScreenState extends State<StatementScreen> {
               ...s.milkRecords.map(
                 (r) => ListTile(
                   dense: true,
-                  title: Text(_fmt(r.date)),
-                  subtitle: Text('${r.litres} L × ${r.pricePerLitre}'),
-                  trailing: Text(_money(r.litres * r.pricePerLitre)),
+                  title: Text('${_fmt(r.entryDate)} • ${r.session}'),
+                  subtitle: Text('${r.amount.toStringAsFixed(2)} L'),
+                  trailing: Text(_money(s.cashFor(r))),
                 ),
               ),
               const SizedBox(height: 16),

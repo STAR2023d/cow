@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cow/abstract/image_source.dart'; // abstracted file path
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/daily_record.dart';
+import 'package:cow/screens/main_dashboard.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -191,14 +191,7 @@ class _CowAddState extends State<CowAdd> {
                   DropdownMenuItem(value: 'Holstein', child: Text('Holstein')),
                   DropdownMenuItem(value: 'Jersey', child: Text('Jersey')),
                   DropdownMenuItem(value: 'Ayrshire', child: Text('Ayrshire')),
-                  DropdownMenuItem(value: 'Guernsey', child: Text('Guernsey')),
-                  DropdownMenuItem(
-                    value: 'Brown Swiss',
-                    child: Text('Brown Swiss'),
-                  ),
-                  DropdownMenuItem(value: 'Brahman', child: Text('Brahman')),
-                  DropdownMenuItem(value: 'Angus', child: Text('Angus')),
-                  DropdownMenuItem(value: 'Hereford', child: Text('Hereford')),
+                  DropdownMenuItem(value: 'Friesien', child: Text('Friesien')),
                 ],
                 onSaved: (value) =>
                     _breed = value?.isEmpty == true ? null : value,
@@ -238,10 +231,7 @@ class _CowAddState extends State<CowAdd> {
                 ),
                 child: const Text(
                   'Save Cow',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color.fromARGB(26, 220, 26, 26),
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ],

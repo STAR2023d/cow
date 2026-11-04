@@ -154,7 +154,6 @@ class AIService {
       final Map<String, dynamic> decoded = jsonDecode(response.text!);
       return FarmInsightsData.fromJson(decoded);
     } catch (e) {
-      print("AI Processing Error: $e");
       return null;
     }
   }
@@ -199,7 +198,7 @@ class AIService {
     }
 
     if (data.sessionPatterns.isNotEmpty) {
-      buffer.write('⏰ Session distribution: ');
+      buffer.write('Session distribution: ');
       buffer.write(
         data.sessionPatterns
             .map(
@@ -212,7 +211,7 @@ class AIService {
     }
 
     if (data.actionableRecommendations.isNotEmpty) {
-      buffer.write('💡 Recommendations: ');
+      buffer.write('Recommendations: ');
       buffer.write(data.actionableRecommendations.join('; '));
     }
 

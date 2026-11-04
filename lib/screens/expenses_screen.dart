@@ -23,7 +23,6 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
       lastDate: DateTime.now(),
     );
     if (picked != null) setState(() => _selectedDate = picked);
-    print('date selected');
   }
 
   Future<void> _save() async {
@@ -36,8 +35,6 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
       ),
     );
 
-    print('mounted');
-
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
@@ -45,8 +42,6 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
     _descController.clear();
     _amountController.clear();
     setState(() {});
-
-    print('expenses record saved');
   }
 
   @override

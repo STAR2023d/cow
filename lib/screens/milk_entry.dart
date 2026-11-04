@@ -1,6 +1,5 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +26,23 @@ class _MilkDataState extends State<MilkData> {
     // clean up to prevent memory leaks
     _quantityController.dispose();
     super.dispose();
+  }
+
+  /// MilkingSession has three values (morning/midday/evening), but the
+  /// dashboard's aggregation queries (watchSessionDailyTotal, etc.) and
+  /// the MilkSession class in app_database.dart filter on the
+  /// capitalized strings 'Morning' / 'Evening'. This keeps entries
+  /// logged here consistent with those queries instead of silently
+  /// storing lowercase 'morning'/'evening' that wouldn't match.
+  String _sessionLabel(MilkingSession session) {
+    switch (session) {
+      case MilkingSession.morning:
+        return MilkSession.morning;
+      case MilkingSession.midday:
+        return 'Midday';
+      case MilkingSession.evening:
+        return MilkSession.evening;
+    }
   }
 
   @override
@@ -159,37 +175,22 @@ class _MilkDataState extends State<MilkData> {
                             _quantityController.text,
                           );
 
-                          //Look into the app's tree layout and locate our open Database instance
-                          final database = context.read<AppDatabase>();
-
-                          //Prepare the "Order Ticket" (The Companion)
-                          //Drift requires a Companion object because it allows values to be explicitly "set" or "absent"
-                          final ticket = MilkTableCompanion(
-                            //Generates a simple text timestamp ID string
-                            id: drift.Value(
-                              DateTime.now().millisecondsSinceEpoch.toString(),
-                            ),
-
-                            //Grabs the exact current device date and time
-                            entryDate: drift.Value(DateTime.now()),
-
-                            // Takes our selected enum (morning, midday, evening) and converts it to text
-                            session: drift.Value(_selectedSession.name),
-
-                            // Plugs in the double decimal value we parsed above
-                            amount: drift.Value(inputAmount),
-
-                            //selected cow id
-                            cowId: drift.Value(widget.cowId),
+                          // upsertMilkEntry both inserts new entries and,
+                          // if this cow/day/session already has one,
+                          // updates it in place instead of creating a
+                          // duplicate — no separate double-log check needed.
+                          await database.upsertMilkEntry(
+                            cowId: widget.cowId,
+                            date: DateTime.now(),
+                            session: _sessionLabel(_selectedSession),
+                            amount: inputAmount,
                           );
-
-                          await database.insertMilkEntry(ticket);
 
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Saved $inputAmount Liters successfully to Drift!',
+                                  'Saved $inputAmount Liters successfully!',
                                 ),
                               ),
                             );

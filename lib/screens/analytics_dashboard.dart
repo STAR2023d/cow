@@ -1,5 +1,5 @@
 import 'package:cow/database/app_database.dart';
-import 'package:cow/screens/daily_record.dart';
+import 'package:cow/screens/main_dashboard.dart';
 import 'package:cow/services/ai_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

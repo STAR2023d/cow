@@ -1,5 +1,3 @@
-
-
 import 'package:cow/database/app_database.dart';
 
 class PeriodStatement {
@@ -8,8 +6,16 @@ class PeriodStatement {
   final double openingBalance;
   final double totalMilkCash;
   final double totalExpenses;
-  final List<MilkRecord> milkRecords;
+  final List<MilkTableData> milkRecords;
   final List<Expense> expenseRecords;
+
+  /// Price-per-litre used for each day in [milkRecords], keyed by
+  /// midnight of that day. Prices now live in PriceSettings (looked up
+  /// per date) rather than being stored on the milk record itself, so
+  /// the UI needs this to show a per-record cash value without an
+  /// async lookup per row. Use [cashFor] instead of reading this map
+  /// directly.
+  final Map<DateTime, double> priceByDay;
 
   PeriodStatement({
     required this.periodStart,
@@ -19,10 +25,21 @@ class PeriodStatement {
     required this.totalExpenses,
     required this.milkRecords,
     required this.expenseRecords,
+    required this.priceByDay,
   });
 
   double get closingBalance => openingBalance + totalMilkCash - totalExpenses;
   double get netForPeriod => totalMilkCash - totalExpenses;
+
+  /// Cash value of a single milk record, using that day's price.
+  double cashFor(MilkTableData record) {
+    final day = DateTime(
+      record.entryDate.year,
+      record.entryDate.month,
+      record.entryDate.day,
+    );
+    return record.amount * (priceByDay[day] ?? 0);
+  }
 }
 
 class StatementCalculator {
@@ -51,12 +68,12 @@ class StatementCalculator {
     final priorPeriodEnd = periodStart.subtract(const Duration(seconds: 1));
     final (priorStart, _) = periodBoundsFor(priorPeriodEnd);
 
-    final milk = await db.milkRecordsInRange(priorStart, priorPeriodEnd);
+    final milk = await db.milkEntriesInRange(priorStart, priorPeriodEnd);
     final exp = await db.expensesInRange(priorStart, priorPeriodEnd);
 
     if (milk.isEmpty && exp.isEmpty) {
       // No activity before this period at all — treat as the start of books.
-      final earliestMilk = await db.milkRecordsInRange(
+      final earliestMilk = await db.milkEntriesInRange(
           DateTime(2000), periodStart.subtract(const Duration(seconds: 1)));
       final earliestExp = await db.expensesInRange(
           DateTime(2000), periodStart.subtract(const Duration(seconds: 1)));
@@ -64,19 +81,26 @@ class StatementCalculator {
     }
 
     final priorOpening = await _openingBalanceFor(priorStart);
-    final milkCash = milk.fold<double>(0, (s, r) => s + r.litres * r.pricePerLitre);
-    final expTotal = exp.fold<double>(0, (s, e) => s + e.amount);
+    final milkCash = await db.cashInRange(priorStart, priorPeriodEnd);
+    final expTotal = await db.totalExpensesInRange(priorStart, priorPeriodEnd);
     return priorOpening + milkCash - expTotal;
   }
 
   Future<PeriodStatement> statementFor(DateTime reference) async {
     final (start, end) = periodBoundsFor(reference);
-    final milk = await db.milkRecordsInRange(start, end);
+    final milk = await db.milkEntriesInRange(start, end);
     final exp = await db.expensesInRange(start, end);
 
-    final milkCash = milk.fold<double>(0, (s, r) => s + r.litres * r.pricePerLitre);
-    final expTotal = exp.fold<double>(0, (s, e) => s + e.amount);
+    final milkCash = await db.cashInRange(start, end);
+    final expTotal = await db.totalExpensesInRange(start, end);
     final opening = await _openingBalanceFor(start);
+
+    // One price lookup per distinct day in the period, not per record.
+    final priceByDay = <DateTime, double>{};
+    for (final r in milk) {
+      final day = DateTime(r.entryDate.year, r.entryDate.month, r.entryDate.day);
+      priceByDay[day] ??= await db.priceForDate(day);
+    }
 
     return PeriodStatement(
       periodStart: start,
@@ -86,6 +110,7 @@ class StatementCalculator {
       totalExpenses: expTotal,
       milkRecords: milk,
       expenseRecords: exp,
+      priceByDay: priceByDay,
     );
   }
 }
