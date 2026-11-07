@@ -11,3 +11,4 @@
 - Replaced the default counter test with breeding logic, database and theme tests
 - Extracted the navigation drawer into `lib/screens/widgets/app_drawer.dart`
 - Extracted the 7-day milk yield card into `lib/screens/widgets/milk_yield_card.dart`
+- Split `main_dashboard.dart` into widgets: `farm_header_card`, `quick_actions_hub`, `recent_activity_card` (dashboard is now about 70 lines)
