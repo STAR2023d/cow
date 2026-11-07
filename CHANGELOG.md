@@ -25,3 +25,5 @@
 - Vet assistant automatically includes the cow's breed, age, breeding stage and last 7 days of milk
 - Vet Assistant results can be saved to the cow's health records (type Illness, with a follow-up date)
 - AI model can be chosen with `--dart-define=GEMINI_MODEL=...`
+- Analytics AI insights now run only when the farmer taps Analyse, are cached for identical milk data, and use the shared `AiGenerator` (fixes repeated AI calls on every redraw)
+- Removed the old `ai_service.dart`; default model is now `gemini-3.8-flash`

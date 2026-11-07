@@ -1,6 +1,7 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
-import 'package:cow/services/ai_service.dart';
+import 'package:cow/screens/widgets/production_insights_card.dart';
+import 'package:cow/services/ai/production_insights_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -127,98 +128,18 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                FutureBuilder<String>(
-                  future: AIService.getProductionInsights(
-                    joinedEntries: joinedEntries,
-                    morning: morningTotal,
-                    midday: middayTotal,
-                    evening: eveningTotal,
-                    total: grandTotal,
-                    milkTable: database.milkTable,
-                    cowTable: database.cow,
-                  ),
-                  builder: (context, aiSnapshot) {
-                    if (aiSnapshot.connectionState == ConnectionState.waiting) {
-                      return Card(
-                        color: AppColors.card,
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.purpleAccent,
-                                  ),
-                                ),
-                                SizedBox(width: 12),
-                                Text(
-                                  "Analyzing production data with AI...",
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                ProductionInsightsCard(
+                  snapshot: ProductionSnapshot(
+                    logs: joinedEntries.map((row) {
+                      final entry = row.readTable(database.milkTable);
+                      final cow = row.readTable(database.cow);
+                      return MilkLog(
+                        cowName: cow.name,
+                        session: entry.session,
+                        litres: entry.amount,
                       );
-                    }
-
-                    final insightText =
-                        aiSnapshot.data ?? "No advice available.";
-
-                    return Card(
-                      color: AppColors.card,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: const BorderSide(
-                          color: Colors.purpleAccent,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Row(
-                              children: [
-                                Icon(
-                                  Icons.psychology,
-                                  color: Colors.purpleAccent,
-                                  size: 28,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "Gemini Veterinary Advisory",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              color: Colors.purpleAccent,
-                              height: 20,
-                            ),
-                            Text(
-                              insightText,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                    }).toList(),
+                  ),
                 ),
 
                 const SizedBox(height: 24),

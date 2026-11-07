@@ -52,7 +52,7 @@ class GeminiGenerator implements AiGenerator {
   /// flutter run --dart-define=GEMINI_MODEL=some-model-name
   static const String _defaultModel = String.fromEnvironment(
     'GEMINI_MODEL',
-    defaultValue: 'gemini-3.7-flash',
+    defaultValue: 'gemini-3.8-flash',
   );
 
   final String model;

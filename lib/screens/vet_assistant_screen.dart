@@ -1,5 +1,6 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/services/ai/ai_generator.dart';
+import 'package:cow/services/ai/ai_messages.dart';
 import 'package:cow/services/ai/vet_case_builder.dart';
 import 'package:cow/services/ai/vet_record.dart';
 import 'package:cow/services/ai/vet_service.dart';
@@ -105,20 +106,6 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
     );
   }
 
-  String _failureMessage(AiFailure failure) {
-    switch (failure) {
-      case AiFailure.noKey:
-        return 'The AI is not set up in this version of the app (no API key).';
-      case AiFailure.network:
-        return "Couldn't reach the AI. Check your internet and try again.";
-      case AiFailure.blocked:
-        return "The AI didn't give an answer. Try describing the symptoms "
-            'in different words.';
-      case AiFailure.unknown:
-        return 'Something went wrong. Please try again.';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final db = Provider.of<AppDatabase>(context, listen: false);
@@ -203,7 +190,7 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
           if (_failure != null) ...[
             const SizedBox(height: 16),
             Text(
-              _failureMessage(_failure!),
+              _failure!.message,
               style: const TextStyle(color: Colors.orangeAccent),
             ),
           ],

@@ -29,3 +29,10 @@ flutter run --dart-define=GEMINI_API_KEY=your_key_here
 ## What the vet assistant knows about the cow
 
 Breed, age, current breeding stage (with expected calving date) and the last 7 days of milk, gathered by `vet_case_builder.dart`. The farmer only types the symptoms and how long.
+
+## Structure
+
+- `lib/services/ai/ai_generator.dart`: `AiGenerator` interface, `AiResult` (value or failure reason) and `GeminiGenerator`
+- `lib/services/ai/ai_messages.dart`: farmer-friendly wording for each failure
+- `lib/services/ai/vet_service.dart`, `vet_case_builder.dart`, `vet_record.dart`: vet assistant
+- `lib/services/ai/production_insights_service.dart`: milk insights (asks only on request, caches identical data)
