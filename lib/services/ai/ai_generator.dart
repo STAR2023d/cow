@@ -48,11 +48,18 @@ abstract class AiGenerator {
 class GeminiGenerator implements AiGenerator {
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
 
+  /// Override without editing code:
+  /// flutter run --dart-define=GEMINI_MODEL=some-model-name
+  static const String _defaultModel = String.fromEnvironment(
+    'GEMINI_MODEL',
+    defaultValue: 'gemini-3.7-flash',
+  );
+
   final String model;
   final Duration timeout;
 
   const GeminiGenerator({
-    this.model = 'gemini-3.7-flash',
+    this.model = _defaultModel,
     this.timeout = const Duration(seconds: 45),
   });
 

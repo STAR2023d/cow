@@ -23,3 +23,5 @@
 - Added `docs/AI.md`
 - Added Vet Assistant screen (drawer): pick a cow, describe symptoms, get a colour-coded urgency card; danger signs show instantly without internet
 - Vet assistant automatically includes the cow's breed, age, breeding stage and last 7 days of milk
+- Vet Assistant results can be saved to the cow's health records (type Illness, with a follow-up date)
+- AI model can be chosen with `--dart-define=GEMINI_MODEL=...`

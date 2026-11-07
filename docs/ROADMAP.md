@@ -51,3 +51,4 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [x] Dashboard alerts (checks due, dry-off, calving)
 - [x] AI provider interface with failure reasons, and vet assessment logic (no screen yet)
 - [ ] Move production insights onto `AiGenerator`, with caching
+- [x] Save assessments to health records

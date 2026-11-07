@@ -1,7 +1,9 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/services/ai/ai_generator.dart';
 import 'package:cow/services/ai/vet_case_builder.dart';
+import 'package:cow/services/ai/vet_record.dart';
 import 'package:cow/services/ai/vet_service.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +27,12 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
   VetAssessment? _assessment;
   AiFailure? _failure;
 
+  // What the current answer was based on, so saving it stays correct even
+  // if the farmer edits the text boxes afterwards.
+  CowData? _assessedCow;
+  String _assessedSymptoms = '';
+  bool _saved = false;
+
   @override
   void dispose() {
     _symptoms.dispose();
@@ -44,6 +52,9 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
       _loading = true;
       _assessment = null;
       _failure = null;
+      _assessedCow = cow;
+      _assessedSymptoms = _symptoms.text.trim();
+      _saved = false;
     });
 
     final vetCase = await buildVetCase(
@@ -64,6 +75,34 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
       _assessment = result.value;
       _failure = result.failure;
     });
+  }
+
+  Future<void> _save() async {
+    final cow = _assessedCow;
+    final assessment = _assessment;
+    if (cow == null || assessment == null || _saved) return;
+    final db = Provider.of<AppDatabase>(context, listen: false);
+    final messenger = ScaffoldMessenger.of(context);
+
+    final draft = buildVetRecordDraft(
+      assessment: assessment,
+      symptoms: _assessedSymptoms,
+    );
+    await db.insertHealthRecord(
+      HealthRecordCompanion.insert(
+        date: DateTime.now(),
+        cowId: cow.id,
+        recordType: draft.recordType,
+        description: draft.description,
+        followUpDate: Value(draft.followUpDate),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() => _saved = true);
+    messenger.showSnackBar(
+      SnackBar(content: Text("Saved to ${cow.name}'s health records")),
+    );
   }
 
   String _failureMessage(AiFailure failure) {
@@ -171,6 +210,14 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
           if (_assessment != null) ...[
             const SizedBox(height: 16),
             _AssessmentCard(assessment: _assessment!),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: _saved ? null : _save,
+              icon: Icon(_saved ? Icons.check : Icons.save_alt),
+              label: Text(
+                _saved ? 'Saved to health records' : 'Save to health records',
+              ),
+            ),
           ],
         ],
       ),
