@@ -1,5 +1,6 @@
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
+import 'breeding_labels.dart';
 import 'breeding_schema.dart';
 import 'breeding_logic.dart';
 
@@ -53,7 +54,7 @@ class BreedingStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _stageLabel(displayStage),
+                  displayStage.label,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 if (cycle.expectedCalvingDate != null) ...[
@@ -263,25 +264,6 @@ class BreedingStatusCard extends StatelessWidget {
         saleDate: DateTime.now(),
       );
     }
-  }
-
-  String _stageLabel(BreedingStage stage) {
-    return switch (stage) {
-      BreedingStage.awaitingService => 'Heat detected — awaiting service',
-      BreedingStage.awaitingCheck1 => 'Awaiting 21-day pregnancy check',
-      BreedingStage.awaitingCheck2 => 'Awaiting 42-day pregnancy check',
-      BreedingStage.awaitingCheck3 => 'Awaiting 63-day pregnancy check',
-      BreedingStage.confirmedPregnant =>
-        'Pregnancy confirmed — counting down to calving',
-      BreedingStage.dryOff => 'Dry-off period (8 weeks to calving)',
-      BreedingStage.prep4Weeks => '4 weeks to calving — preparation',
-      BreedingStage.prep2Weeks => '2 weeks to calving — preparation',
-      BreedingStage.prep1Week => '1 week to calving — final preparation',
-      BreedingStage.calved => 'Calved — awaiting outcome',
-      BreedingStage.keptAsHeifer => 'Calf kept as heifer',
-      BreedingStage.soldCalf => 'Calf sold',
-      BreedingStage.failed => 'Returned to heat — re-service needed',
-    };
   }
 
   String _formatDate(DateTime d) =>

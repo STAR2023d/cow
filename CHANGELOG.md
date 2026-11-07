@@ -15,3 +15,5 @@
 - Added per-cow breeding screen (`lib/breeding/breeding_screen.dart`) with cycle history, opened from the Herd list
 - Added `watchBreedingHistory` and a `main.dart` entry-point test
 - Breeding steps (heat, service, checks, calving) now use a date picker so past events can be recorded accurately
+- Added herd-wide breeding overview (`breeding_overview_screen.dart`); the dashboard Breeding button now opens it instead of a placeholder cow
+- Added `nextMilestone` logic with tests; stage labels moved to `breeding_labels.dart`

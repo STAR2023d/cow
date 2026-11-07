@@ -1,4 +1,4 @@
-import 'package:cow/breeding/breeding_status_card.dart';
+import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/cow_add.dart';
 import 'package:cow/screens/feeding_screen.dart';
@@ -93,13 +93,12 @@ class QuickActionsHub extends StatelessWidget {
               ),
               Expanded(
                 child: _QuickAction(
-                  icon: Icons.analytics,
+                  icon: Icons.favorite,
                   label: 'Breeding',
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          BreedingStatusCard(db: db, cowId: 0),
+                      builder: (context) => const BreedingOverviewScreen(),
                     ),
                   ),
                 ),

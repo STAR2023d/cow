@@ -70,3 +70,54 @@ BreedingStage deriveDisplayStage({
   if (now.isAfter(schedule.dryOffDate)) return BreedingStage.dryOff;
   return BreedingStage.confirmedPregnant;
 }
+
+/// The next thing the farmer is waiting for on a cycle.
+/// [date] is null when there is no calendar date to show.
+class BreedingMilestone {
+  final String label;
+  final DateTime? date;
+
+  const BreedingMilestone(this.label, [this.date]);
+}
+
+/// What is the farmer waiting for next, given the cycle's display stage?
+/// Pure date maths like the rest of this file, so it is easy to test.
+BreedingMilestone? nextMilestone({
+  required BreedingStage stage,
+  required DateTime? serviceDate,
+  required int gestationDays,
+  DateTime? expectedCalvingDate,
+}) {
+  if (stage == BreedingStage.awaitingService) {
+    return const BreedingMilestone('Waiting for service');
+  }
+  if (stage == BreedingStage.calved) {
+    return const BreedingMilestone('Record the calf outcome');
+  }
+  if (serviceDate == null) return null;
+
+  final schedule = BreedingSchedule(
+    serviceDate: serviceDate,
+    gestationDays: gestationDays,
+  );
+
+  switch (stage) {
+    case BreedingStage.awaitingCheck1:
+      return BreedingMilestone('Check 1 due', schedule.check1Due);
+    case BreedingStage.awaitingCheck2:
+      return BreedingMilestone('Check 2 due', schedule.check2Due);
+    case BreedingStage.awaitingCheck3:
+      return BreedingMilestone('Check 3 due', schedule.check3Due);
+    case BreedingStage.confirmedPregnant:
+    case BreedingStage.dryOff:
+    case BreedingStage.prep4Weeks:
+    case BreedingStage.prep2Weeks:
+    case BreedingStage.prep1Week:
+      return BreedingMilestone(
+        'Calving expected',
+        expectedCalvingDate ?? schedule.expectedCalvingDate,
+      );
+    default:
+      return null;
+  }
+}
