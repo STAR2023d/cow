@@ -1,6 +1,5 @@
 import 'package:cow/breeding/breeding_labels.dart';
-import 'package:cow/breeding/breeding_logic.dart';
-import 'package:cow/breeding/breeding_schema.dart';
+import 'package:cow/breeding/breeding_rows.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,7 @@ class BreedingOverviewScreen extends StatelessWidget {
               if (!cowSnap.hasData || !cycleSnap.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final rows = _buildRows(cowSnap.data!, cycleSnap.data!);
+              final rows = buildBreedingRows(cowSnap.data!, cycleSnap.data!);
               if (rows.isEmpty) {
                 return const Center(
                   child: Text(
@@ -47,69 +46,10 @@ class BreedingOverviewScreen extends StatelessWidget {
       ),
     );
   }
-
-  List<_Row> _buildRows(List<CowData> cows, List<BreedingCycle> cycles) {
-    final now = DateTime.now();
-
-    // Newest open cycle per cow.
-    final byCow = <int, BreedingCycle>{};
-    for (final c in cycles) {
-      final existing = byCow[c.cowId];
-      if (existing == null || c.createdAt.isAfter(existing.createdAt)) {
-        byCow[c.cowId] = c;
-      }
-    }
-
-    final rows = cows.map((cow) {
-      final cycle = byCow[cow.id];
-      if (cycle == null) return _Row(cow);
-
-      final stage = deriveDisplayStage(
-        now: now,
-        serviceDate: cycle.serviceDate,
-        check1Result: cycle.check1Result,
-        check2Result: cycle.check2Result,
-        check3Result: cycle.check3Result,
-        actualCalvingDate: cycle.actualCalvingDate,
-        gestationDays: cycle.gestationDays,
-      );
-      final milestone = nextMilestone(
-        stage: stage,
-        serviceDate: cycle.serviceDate,
-        gestationDays: cycle.gestationDays,
-        expectedCalvingDate: cycle.expectedCalvingDate,
-      );
-      return _Row(cow, stage: stage, milestone: milestone);
-    }).toList();
-
-    // 0 = has a dated milestone, 1 = open cycle without a date, 2 = idle.
-    int group(_Row r) {
-      if (r.stage == null) return 2;
-      return r.milestone?.date != null ? 0 : 1;
-    }
-
-    rows.sort((a, b) {
-      final g = group(a).compareTo(group(b));
-      if (g != 0) return g;
-      if (group(a) == 0) {
-        return a.milestone!.date!.compareTo(b.milestone!.date!);
-      }
-      return a.cow.name.toLowerCase().compareTo(b.cow.name.toLowerCase());
-    });
-    return rows;
-  }
-}
-
-class _Row {
-  final CowData cow;
-  final BreedingStage? stage;
-  final BreedingMilestone? milestone;
-
-  const _Row(this.cow, {this.stage, this.milestone});
 }
 
 class _CowBreedingTile extends StatelessWidget {
-  final _Row row;
+  final BreedingRow row;
 
   const _CowBreedingTile({required this.row});
 
@@ -119,27 +59,17 @@ class _CowBreedingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final milestone = row.milestone;
     final due = milestone?.date;
+    final days = row.daysUntilDue(DateTime.now());
 
     String? milestoneText;
     var milestoneColor = Colors.white70;
 
     if (milestone != null) {
-      if (due == null) {
+      if (due == null || days == null) {
         milestoneText = milestone.label;
       } else {
-        final now = DateTime.now();
-        final days = DateTime.utc(
-          due.year,
-          due.month,
-          due.day,
-        ).difference(DateTime.utc(now.year, now.month, now.day)).inDays;
-        final when = switch (days) {
-          < 0 => '${-days} ${-days == 1 ? 'day' : 'days'} overdue',
-          0 => 'today',
-          1 => 'tomorrow',
-          _ => 'in $days days',
-        };
-        milestoneText = '${milestone.label}: ${_fmt.format(due)} • $when';
+        milestoneText =
+            '${milestone.label}: ${_fmt.format(due)} • ${dueLabel(days)}';
         if (days < 0) {
           milestoneColor = Colors.redAccent;
         } else if (days <= 7) {

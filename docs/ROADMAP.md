@@ -48,3 +48,4 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [ ] Backup and export (PDF/CSV)
 - [x] Split `main_dashboard.dart` into widgets
 - [x] Per-cow breeding screen
+- [x] Dashboard alerts (checks due, dry-off, calving)

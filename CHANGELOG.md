@@ -17,3 +17,5 @@
 - Breeding steps (heat, service, checks, calving) now use a date picker so past events can be recorded accurately
 - Added herd-wide breeding overview (`breeding_overview_screen.dart`); the dashboard Breeding button now opens it instead of a placeholder cow
 - Added `nextMilestone` logic with tests; stage labels moved to `breeding_labels.dart`
+- Added Breeding Alerts card to the dashboard (overdue / due within 7 days / awaiting calf outcome)
+- Moved breeding row building into `breeding_rows.dart`, shared by the overview and the alerts card

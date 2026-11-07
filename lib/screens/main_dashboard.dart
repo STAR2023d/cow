@@ -1,3 +1,4 @@
+import 'package:cow/breeding/breeding_alerts_card.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/screens/widgets/farm_header_card.dart';
@@ -42,6 +43,9 @@ class MainDashboard extends StatelessWidget {
             // 1. Header Hero Card
             const FarmHeaderCard(),
             const SizedBox(height: 16.0),
+
+            // 1b. Breeding alerts (hidden when nothing needs attention)
+            BreedingAlertsCard(db: db),
 
             // 2. Primary KPI Data Layout Grid — now live-streamed
             IntrinsicHeight(
