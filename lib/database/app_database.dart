@@ -682,6 +682,14 @@ class AppDatabase extends _$AppDatabase {
     )..where((t) => t.isActive.equals(true))).watch();
   }
 
+  /// Every cycle for a cow (open and closed), newest first.
+  Stream<List<BreedingCycle>> watchBreedingHistory(int cowId) {
+    return (select(breedingCycles)
+          ..where((t) => t.cowId.equals(cowId))
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .watch();
+  }
+
   // Unified Connection File
   static QueryExecutor _openConnection() {
     return driftDatabase(

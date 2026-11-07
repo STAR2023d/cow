@@ -3,25 +3,20 @@ import 'package:flutter/material.dart';
 import 'breeding_schema.dart';
 import 'breeding_logic.dart';
 
-
 /// Drop this into a cow's detail screen. Shows where she is in the cycle
 /// and exposes only the one action that's relevant right now.
 class BreedingStatusCard extends StatelessWidget {
   final AppDatabase db;
   final int cowId;
 
-  const BreedingStatusCard({
-    super.key,
-    required this.db,
-    required this.cowId,
-  });
+  const BreedingStatusCard({super.key, required this.db, required this.cowId});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<BreedingCycle?>(
       stream: db.watchActiveBreedingCycle(cowId),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Card(
             child: ListTile(title: Text('Loading breeding status...')),
           );
@@ -34,8 +29,10 @@ class BreedingStatusCard extends StatelessWidget {
               title: const Text('No active breeding cycle'),
               subtitle: const Text('Log heat signs to start one'),
               trailing: FilledButton(
-                onPressed: () =>
-                    db.startBreedingCycle(cowId: cowId, heatDate: DateTime.now()),
+                onPressed: () => db.startBreedingCycle(
+                  cowId: cowId,
+                  heatDate: DateTime.now(),
+                ),
                 child: const Text('Log heat'),
               ),
             ),
@@ -230,5 +227,6 @@ class BreedingStatusCard extends StatelessWidget {
     };
   }
 
-  String _formatDate(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+  String _formatDate(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 }

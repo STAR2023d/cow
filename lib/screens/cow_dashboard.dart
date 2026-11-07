@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cow/abstract/dialog_deletion.dart';
+import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -142,6 +143,22 @@ class HerdDashboard extends StatelessWidget {
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Breeding',
+                          icon: const Icon(
+                            Icons.favorite_border,
+                            color: Colors.pinkAccent,
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BreedingScreen(
+                                cowId: cow.id,
+                                cowName: cow.name,
+                              ),
+                            ),
                           ),
                         ),
                         IconButton(

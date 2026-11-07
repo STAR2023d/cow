@@ -47,3 +47,4 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [ ] Per-cow profitability
 - [ ] Backup and export (PDF/CSV)
 - [x] Split `main_dashboard.dart` into widgets
+- [x] Per-cow breeding screen
