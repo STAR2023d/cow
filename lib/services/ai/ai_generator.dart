@@ -52,7 +52,7 @@ class GeminiGenerator implements AiGenerator {
   final Duration timeout;
 
   const GeminiGenerator({
-    this.model = 'gemini-2.5-flash',
+    this.model = 'gemini-3.7-flash',
     this.timeout = const Duration(seconds: 45),
   });
 

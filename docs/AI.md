@@ -25,3 +25,7 @@
 ```bash
 flutter run --dart-define=GEMINI_API_KEY=your_key_here
 ```
+
+## What the vet assistant knows about the cow
+
+Breed, age, current breeding stage (with expected calving date) and the last 7 days of milk, gathered by `vet_case_builder.dart`. The farmer only types the symptoms and how long.

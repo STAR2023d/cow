@@ -21,3 +21,5 @@
 - Moved breeding row building into `breeding_rows.dart`, shared by the overview and the alerts card
 - Added AI provider interface (`AiGenerator`, `AiResult`) and vet assessment logic with danger-sign override and tests
 - Added `docs/AI.md`
+- Added Vet Assistant screen (drawer): pick a cow, describe symptoms, get a colour-coded urgency card; danger signs show instantly without internet
+- Vet assistant automatically includes the cow's breed, age, breeding stage and last 7 days of milk

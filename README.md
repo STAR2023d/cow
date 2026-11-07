@@ -21,7 +21,7 @@ It works offline-first: all data is stored on the device in SQLite.
 | Database   | `drift` + `drift_flutter` (SQLite)        |
 | State / DI | `provider`                                |
 | Charts     | `fl_chart`                                |
-| AI         | `google_generative_ai` (Gemini 2.5 Flash) |
+| AI         | `google_generative_ai` (Gemini 3.7 Flash) |
 | Other      | `image_picker`, `intl`, `lucide_icons`    |
 
 ## Getting started
@@ -47,6 +47,7 @@ lib/
   models/              Helpers such as financial period calculations
   abstract/            Shared dialogs and image picking
 ```
+
 ## Running tests
 
 ```bash
@@ -54,7 +55,6 @@ flutter test
 ```
 
 Tests cover the breeding date logic, the database (using an in-memory SQLite), and the app theme.
-
 
 ## Documentation
 
