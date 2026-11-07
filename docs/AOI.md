@@ -1,0 +1,27 @@
+# AI in Mwaura's Farm
+
+## Structure
+
+- `lib/services/ai/ai_generator.dart`: `AiGenerator` interface, `AiResult` (value or failure reason) and `GeminiGenerator`
+- `lib/services/ai/vet_service.dart`: vet assessment (prompt, danger-sign override, reply parser)
+- `lib/services/ai_service.dart`: older milk-production insights (to be moved onto `AiGenerator`)
+
+## Vet assistant safety rules
+
+- Never gives drug doses; tells the farmer to ask a vet for medicines.
+- Reminds farmers to withhold milk from treated cows.
+- Danger phrases (bloat, cannot stand, difficult calving, etc.) always force "emergency", whatever the AI says. This can only raise urgency, never lower it.
+- An unrecognised urgency from the AI is treated as "see a vet soon".
+- The danger phrase list is English only so far.
+
+## Known limits
+
+- `google_generative_ai` is no longer maintained; plan a move to `firebase_ai` or a small server-side proxy before a public release.
+- `GEMINI_API_KEY` is compiled into the app, so it can be extracted from a distributed build. Fine for personal testing, not for publishing.
+- Swapping provider = write a new class implementing `AiGenerator`.
+
+## Running with a key
+
+```bash
+flutter run --dart-define=GEMINI_API_KEY=your_key_here
+```

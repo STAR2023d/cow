@@ -19,3 +19,5 @@
 - Added `nextMilestone` logic with tests; stage labels moved to `breeding_labels.dart`
 - Added Breeding Alerts card to the dashboard (overdue / due within 7 days / awaiting calf outcome)
 - Moved breeding row building into `breeding_rows.dart`, shared by the overview and the alerts card
+- Added AI provider interface (`AiGenerator`, `AiResult`) and vet assessment logic with danger-sign override and tests
+- Added `docs/AI.md`
