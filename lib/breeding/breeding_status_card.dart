@@ -29,10 +29,7 @@ class BreedingStatusCard extends StatelessWidget {
               title: const Text('No active breeding cycle'),
               subtitle: const Text('Log heat signs to start one'),
               trailing: FilledButton(
-                onPressed: () => db.startBreedingCycle(
-                  cowId: cowId,
-                  heatDate: DateTime.now(),
-                ),
+                onPressed: () => _logHeat(context),
                 child: const Text('Log heat'),
               ),
             ),
@@ -84,22 +81,22 @@ class BreedingStatusCard extends StatelessWidget {
     switch (stage) {
       case BreedingStage.awaitingService:
         return FilledButton(
-          onPressed: () => db.recordService(cycle.id, DateTime.now()),
+          onPressed: () => _logService(context, cycle),
           child: const Text('Log service date'),
         );
       case BreedingStage.awaitingCheck1:
-        return _checkButtons(1, cycle.id);
+        return _checkButtons(context, cycle, 1);
       case BreedingStage.awaitingCheck2:
-        return _checkButtons(2, cycle.id);
+        return _checkButtons(context, cycle, 2);
       case BreedingStage.awaitingCheck3:
-        return _checkButtons(3, cycle.id);
+        return _checkButtons(context, cycle, 3);
       case BreedingStage.confirmedPregnant:
       case BreedingStage.dryOff:
       case BreedingStage.prep4Weeks:
       case BreedingStage.prep2Weeks:
       case BreedingStage.prep1Week:
         return FilledButton(
-          onPressed: () => db.recordCalving(cycle.id, DateTime.now()),
+          onPressed: () => _logCalving(context, cycle),
           child: const Text('Log calving'),
         );
       case BreedingStage.calved:
@@ -121,30 +118,90 @@ class BreedingStatusCard extends StatelessWidget {
     }
   }
 
-  Widget _checkButtons(int checkNumber, int cycleId) {
+  Widget _checkButtons(BuildContext context, BreedingCycle cycle, int n) {
     return Row(
       children: [
         FilledButton(
-          onPressed: () => db.recordPregnancyCheck(
-            cycleId: cycleId,
-            checkNumber: checkNumber,
-            passed: true,
-            checkDate: DateTime.now(),
-          ),
-          child: Text('Check $checkNumber: success'),
+          onPressed: () => _logCheck(context, cycle, n, passed: true),
+          child: Text('Check $n: success'),
         ),
         const SizedBox(width: 8),
         OutlinedButton(
-          onPressed: () => db.recordPregnancyCheck(
-            cycleId: cycleId,
-            checkNumber: checkNumber,
-            passed: false,
-            checkDate: DateTime.now(),
-          ),
+          onPressed: () => _logCheck(context, cycle, n, passed: false),
           child: const Text('Returned to heat'),
         ),
       ],
     );
+  }
+
+  /// Asks the farmer for the date (defaults to today, never in the future).
+  /// [earliest] stops dates that come before the previous step. Returns
+  /// null when the farmer cancels.
+  Future<DateTime?> _pickDate(
+    BuildContext context, {
+    required String help,
+    DateTime? earliest,
+  }) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    var first = earliest == null
+        ? today.subtract(const Duration(days: 365))
+        : DateTime(earliest.year, earliest.month, earliest.day);
+    if (first.isAfter(today)) first = today;
+
+    return showDatePicker(
+      context: context,
+      initialDate: today,
+      firstDate: first,
+      lastDate: today,
+      helpText: help,
+    );
+  }
+
+  Future<void> _logHeat(BuildContext context) async {
+    final date = await _pickDate(context, help: 'Date heat signs were seen');
+    if (date == null) return;
+    await db.startBreedingCycle(cowId: cowId, heatDate: date);
+  }
+
+  Future<void> _logService(BuildContext context, BreedingCycle cycle) async {
+    final date = await _pickDate(
+      context,
+      help: 'Date of service',
+      earliest: cycle.heatDate,
+    );
+    if (date == null) return;
+    await db.recordService(cycle.id, date);
+  }
+
+  Future<void> _logCheck(
+    BuildContext context,
+    BreedingCycle cycle,
+    int n, {
+    required bool passed,
+  }) async {
+    final date = await _pickDate(
+      context,
+      help: 'Date of check $n',
+      earliest: cycle.serviceDate,
+    );
+    if (date == null) return;
+    await db.recordPregnancyCheck(
+      cycleId: cycle.id,
+      checkNumber: n,
+      passed: passed,
+      checkDate: date,
+    );
+  }
+
+  Future<void> _logCalving(BuildContext context, BreedingCycle cycle) async {
+    final date = await _pickDate(
+      context,
+      help: 'Calving date',
+      earliest: cycle.serviceDate,
+    );
+    if (date == null) return;
+    await db.recordCalving(cycle.id, date);
   }
 
   Future<void> _promptFemale(BuildContext context, BreedingCycle cycle) async {

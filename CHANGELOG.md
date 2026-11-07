@@ -14,3 +14,4 @@
 - Split `main_dashboard.dart` into widgets: `farm_header_card`, `quick_actions_hub`, `recent_activity_card` (dashboard is now about 70 lines)
 - Added per-cow breeding screen (`lib/breeding/breeding_screen.dart`) with cycle history, opened from the Herd list
 - Added `watchBreedingHistory` and a `main.dart` entry-point test
+- Breeding steps (heat, service, checks, calving) now use a date picker so past events can be recorded accurately
