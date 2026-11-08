@@ -1,9 +1,20 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
+import 'package:cow/screens/widgets/finance_advisor_card.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+/// A month and the one before it (for comparison).
+class _MonthData {
+  final MonthlyReport current;
+
+  /// Null when nothing was recorded in the earlier month.
+  final MonthlyReport? previous;
+
+  const _MonthData(this.current, this.previous);
+}
 
 /// A month of the farm's money at a glance: income, expenses, profit,
 /// cost per litre, and where the spending went.
@@ -19,7 +30,7 @@ class MonthlyReportScreen extends StatefulWidget {
 class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   late final MonthlyReportCalculator _calc;
   late DateTime _month;
-  late Future<MonthlyReport> _future;
+  late Future<_MonthData> _future;
 
   @override
   void initState() {
@@ -27,7 +38,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
     _calc = MonthlyReportCalculator(widget.db);
     final now = DateTime.now();
     _month = DateTime(now.year, now.month);
-    _future = _calc.reportFor(_month);
+    _future = _load(_month);
   }
 
   bool get _isCurrentMonth {
@@ -35,10 +46,25 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
     return _month.year == now.year && _month.month == now.month;
   }
 
+  /// Loads [month] and the month before it. For the month in progress, the
+  /// earlier month is cut off at the same day so the comparison is fair.
+  Future<_MonthData> _load(DateTime month) async {
+    final now = DateTime.now();
+    final inProgress = month.year == now.year && month.month == now.month;
+    final day = inProgress ? now.day : null;
+
+    final current = await _calc.reportFor(month, throughDay: day);
+    final previous = await _calc.reportFor(
+      DateTime(month.year, month.month - 1),
+      throughDay: day,
+    );
+    return _MonthData(current, previous.isEmpty ? null : previous);
+  }
+
   void _shift(int months) {
     setState(() {
       _month = DateTime(_month.year, _month.month + months);
-      _future = _calc.reportFor(_month);
+      _future = _load(_month);
     });
   }
 
@@ -71,7 +97,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          FutureBuilder<MonthlyReport>(
+          FutureBuilder<_MonthData>(
             future: _future,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -89,7 +115,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
-              return _ReportBody(report: snapshot.data!);
+              return _ReportBody(data: snapshot.data!);
             },
           ),
         ],
@@ -102,12 +128,14 @@ final _money = NumberFormat('#,##0');
 final _money2 = NumberFormat('#,##0.00');
 
 class _ReportBody extends StatelessWidget {
-  final MonthlyReport report;
+  final _MonthData data;
 
-  const _ReportBody({required this.report});
+  const _ReportBody({required this.data});
 
   @override
   Widget build(BuildContext context) {
+    final report = data.current;
+
     if (report.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(32),
@@ -218,6 +246,14 @@ class _ReportBody extends StatelessWidget {
               ],
           ],
         ),
+        const SizedBox(height: 16),
+        // A new card for each month, so advice never carries over.
+        FinanceAdvisorCard(
+          key: ValueKey(report.month),
+          current: report,
+          previous: data.previous,
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }

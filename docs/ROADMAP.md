@@ -33,7 +33,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [x] Expense categories
 - [x] Earnings per buyer
 - [x] Monthly analytics and charts
-- [ ] AI finance advisor
+- [x] AI finance advisor
 
 ## Phase 4: UI
 

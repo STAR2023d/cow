@@ -1,10 +1,15 @@
 import 'package:cow/database/app_database.dart';
 
 /// One calendar month of the farm's money, in a form that is easy to show
-/// on screen and to hand to the AI finance advisor later.
+/// on screen and to hand to the AI finance advisor.
 class MonthlyReport {
   /// The first day of the month.
   final DateTime month;
+
+  /// Set when the report only covers the first days of the month (for
+  /// example the current month so far). Null means the whole month.
+  final int? throughDay;
+
   final double litres;
   final double milkCash;
   final double otherIncome;
@@ -20,6 +25,7 @@ class MonthlyReport {
     required this.otherIncome,
     required this.totalExpenses,
     required this.expensesByCategory,
+    this.throughDay,
   });
 
   double get totalIncome => milkCash + otherIncome;
@@ -43,14 +49,27 @@ class MonthlyReportCalculator {
   MonthlyReportCalculator(this.db);
 
   /// First moment and last moment of the month containing [reference].
-  static (DateTime, DateTime) monthBounds(DateTime reference) {
+  /// With [throughDay], the end is the last moment of that day of the
+  /// month instead (kept inside the month, so day 31 in a 30-day month
+  /// means the whole month).
+  static (DateTime, DateTime) monthBounds(
+    DateTime reference, {
+    int? throughDay,
+  }) {
     final start = DateTime(reference.year, reference.month);
-    final end = DateTime(reference.year, reference.month + 1, 0, 23, 59, 59);
+    final lastDay = DateTime(reference.year, reference.month + 1, 0).day;
+
+    var day = lastDay;
+    if (throughDay != null) {
+      day = throughDay < 1 ? 1 : (throughDay > lastDay ? lastDay : throughDay);
+    }
+
+    final end = DateTime(reference.year, reference.month, day, 23, 59, 59);
     return (start, end);
   }
 
-  Future<MonthlyReport> reportFor(DateTime reference) async {
-    final (start, end) = monthBounds(reference);
+  Future<MonthlyReport> reportFor(DateTime reference, {int? throughDay}) async {
+    final (start, end) = monthBounds(reference, throughDay: throughDay);
 
     final milk = await db.milkEntriesInRange(start, end);
     final litres = milk.fold<double>(0, (sum, m) => sum + m.amount);
@@ -67,6 +86,7 @@ class MonthlyReportCalculator {
 
     return MonthlyReport(
       month: start,
+      throughDay: throughDay,
       litres: litres,
       milkCash: milkCash,
       otherIncome: otherIncome,

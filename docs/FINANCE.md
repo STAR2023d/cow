@@ -19,3 +19,4 @@ Only ledger rows of type `income` are counted. Nothing writes ledger `expense` r
 ## Monthly report
 
 `MonthlyReportCalculator` (`lib/models/monthly_report.dart`) totals one calendar month: litres, milk cash, other income, expenses (overall and per category), profit, and cost per litre (expenses ÷ litres, empty when no milk was logged). The Monthly Report screen shows it, and the AI finance advisor will use the same report.
+Alerts (shown without AI): loss for the month; cost per litre up 20%+; income or milk down 20%+; a category up 30%+ (when it is at least 5% of spending); a large new category (20%+ of spending).

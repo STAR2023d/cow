@@ -32,3 +32,6 @@
 - Added `docs/FINANCE.md`
 - Added expense categories (database schema 8); existing expenses become "Other"; the statement shows each expense's category
 - Added Monthly Report screen (drawer): income, expenses, profit, cost per litre, and spending by category for any month
+- Added AI Finance Advisor to the Monthly Report: instant "things to watch" alerts, AI advice, and a question box; months in progress are compared with the same days of the previous month
+- Optional `GEMINI_FALLBACK_MODEL`: used when the main model is still overloaded after retries
+- Fixed `monthly_report_test.dart` to use dates in the past (the default price is dated "now")

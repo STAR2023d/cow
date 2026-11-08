@@ -87,6 +87,19 @@ Future<AiResult<T>> retryWhenBusy<T>(
   return result;
 }
 
+/// Runs [primary]. If it ends up [AiFailure.busy] and a [fallback] is
+/// given, runs that instead. Any other outcome is returned as it is.
+Future<AiResult<T>> fallbackWhenBusy<T>(
+  Future<AiResult<T>> Function() primary,
+  Future<AiResult<T>> Function()? fallback,
+) async {
+  final result = await primary();
+  if (result.failure == AiFailure.busy && fallback != null) {
+    return fallback();
+  }
+  return result;
+}
+
 /// Gemini through the google_generative_ai package.
 class GeminiGenerator implements AiGenerator {
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
@@ -98,11 +111,20 @@ class GeminiGenerator implements AiGenerator {
     defaultValue: 'gemini-3.8-flash',
   );
 
+  /// A second model to try when the first is still overloaded after its
+  /// retries. Empty means no fallback.
+  /// flutter run --dart-define=GEMINI_FALLBACK_MODEL=another-model-name
+  static const String _defaultFallbackModel = String.fromEnvironment(
+    'GEMINI_FALLBACK_MODEL',
+  );
+
   final String model;
+  final String fallbackModel;
   final Duration timeout;
 
   const GeminiGenerator({
     this.model = _defaultModel,
+    this.fallbackModel = _defaultFallbackModel,
     this.timeout = const Duration(seconds: 45),
   });
 
@@ -114,12 +136,29 @@ class GeminiGenerator implements AiGenerator {
   }) async {
     if (_apiKey.isEmpty) return const AiResult.fail(AiFailure.noKey);
 
-    return retryWhenBusy(
-      () => _attempt(prompt: prompt, system: system, json: json),
+    final hasFallback = fallbackModel.isNotEmpty && fallbackModel != model;
+
+    return fallbackWhenBusy(
+      () => retryWhenBusy(
+        () =>
+            _attempt(model: model, prompt: prompt, system: system, json: json),
+      ),
+      hasFallback
+          ? () => retryWhenBusy(
+              () => _attempt(
+                model: fallbackModel,
+                prompt: prompt,
+                system: system,
+                json: json,
+              ),
+              delays: const [Duration(seconds: 2)],
+            )
+          : null,
     );
   }
 
   Future<AiResult<String>> _attempt({
+    required String model,
     required String prompt,
     String? system,
     bool json = false,
