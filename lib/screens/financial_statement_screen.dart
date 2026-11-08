@@ -74,6 +74,10 @@ class _StatementScreenState extends State<StatementScreen> {
                 s.totalMilkCash,
               ),
               _row(
+                'Other income (${s.incomeRecords.length} entries)',
+                s.otherIncome,
+              ),
+              _row(
                 'Expenses (${s.expenseRecords.length} entries)',
                 -s.totalExpenses,
               ),
@@ -92,6 +96,25 @@ class _StatementScreenState extends State<StatementScreen> {
                   trailing: Text(_money(s.cashFor(r))),
                 ),
               ),
+              if (s.incomeRecords.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Other income',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                ...s.incomeRecords.map(
+                  (i) => ListTile(
+                    dense: true,
+                    title: Text(_incomeLabel(i.category)),
+                    subtitle: Text(
+                      (i.note == null || i.note!.isEmpty)
+                          ? _fmt(i.date)
+                          : '${_fmt(i.date)} • ${i.note}',
+                    ),
+                    trailing: Text('+${_money(i.amount)}'),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               Text('Expenses', style: Theme.of(context).textTheme.titleSmall),
               ...s.expenseRecords.map(
@@ -107,6 +130,14 @@ class _StatementScreenState extends State<StatementScreen> {
         },
       ),
     );
+  }
+
+  /// 'calf_sale' -> 'Calf sale'.
+  String _incomeLabel(String category) {
+    if (category == 'calf_sale') return 'Calf sale';
+    final words = category.replaceAll('_', ' ');
+    if (words.isEmpty) return 'Income';
+    return words[0].toUpperCase() + words.substring(1);
   }
 
   Widget _row(String label, double value, {bool bold = false}) {

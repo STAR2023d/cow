@@ -450,6 +450,40 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ============================================================
+  // === OTHER INCOME (LedgerEntries, such as calf sales) ===
+  // ============================================================
+
+  Future<int> insertIncome(LedgerEntriesCompanion entry) =>
+      into(ledgerEntries).insert(entry);
+
+  Future<List<LedgerEntry>> incomeEntriesInRange(
+    DateTime start,
+    DateTime end,
+  ) =>
+      (select(ledgerEntries)
+            ..where(
+              (t) =>
+                  t.type.equals('income') &
+                  t.date.isBiggerOrEqualValue(start) &
+                  t.date.isSmallerOrEqualValue(end),
+            )
+            ..orderBy([(t) => OrderingTerm.asc(t.date)]))
+          .get();
+
+  Future<double> totalIncomeInRange(DateTime start, DateTime end) async {
+    final total = ledgerEntries.amount.sum();
+    final query = selectOnly(ledgerEntries)
+      ..addColumns([total])
+      ..where(
+        ledgerEntries.type.equals('income') &
+            ledgerEntries.date.isBiggerOrEqualValue(start) &
+            ledgerEntries.date.isSmallerOrEqualValue(end),
+      );
+    final row = await query.getSingle();
+    return row.read(total) ?? 0.0;
+  }
+
+  // ============================================================
   // === FEEDING LOG ===
   // ============================================================
 

@@ -5,8 +5,12 @@ class PeriodStatement {
   final DateTime periodEnd;
   final double openingBalance;
   final double totalMilkCash;
+
+  /// Money in from sources other than milk, such as calf sales.
+  final double otherIncome;
   final double totalExpenses;
   final List<MilkTableData> milkRecords;
+  final List<LedgerEntry> incomeRecords;
   final List<Expense> expenseRecords;
 
   /// Price-per-litre used for each day in [milkRecords], keyed by
@@ -22,14 +26,16 @@ class PeriodStatement {
     required this.periodEnd,
     required this.openingBalance,
     required this.totalMilkCash,
+    required this.otherIncome,
     required this.totalExpenses,
     required this.milkRecords,
+    required this.incomeRecords,
     required this.expenseRecords,
     required this.priceByDay,
   });
 
-  double get closingBalance => openingBalance + totalMilkCash - totalExpenses;
-  double get netForPeriod => totalMilkCash - totalExpenses;
+  double get netForPeriod => totalMilkCash + otherIncome - totalExpenses;
+  double get closingBalance => openingBalance + netForPeriod;
 
   /// Cash value of a single milk record, using that day's price.
   double cashFor(MilkTableData record) {
@@ -70,35 +76,47 @@ class StatementCalculator {
 
     final milk = await db.milkEntriesInRange(priorStart, priorPeriodEnd);
     final exp = await db.expensesInRange(priorStart, priorPeriodEnd);
+    final income = await db.incomeEntriesInRange(priorStart, priorPeriodEnd);
 
-    if (milk.isEmpty && exp.isEmpty) {
-      // No activity before this period at all — treat as the start of books.
-      final earliestMilk = await db.milkEntriesInRange(
-          DateTime(2000), periodStart.subtract(const Duration(seconds: 1)));
-      final earliestExp = await db.expensesInRange(
-          DateTime(2000), periodStart.subtract(const Duration(seconds: 1)));
-      if (earliestMilk.isEmpty && earliestExp.isEmpty) return 0.0;
+    if (milk.isEmpty && exp.isEmpty && income.isEmpty) {
+      // No activity in the previous period: is there anything earlier at
+      // all? If not, this is the start of the books.
+      final earliest = DateTime(2000);
+      final before = periodStart.subtract(const Duration(seconds: 1));
+      final earlierMilk = await db.milkEntriesInRange(earliest, before);
+      final earlierExp = await db.expensesInRange(earliest, before);
+      final earlierIncome = await db.incomeEntriesInRange(earliest, before);
+      if (earlierMilk.isEmpty && earlierExp.isEmpty && earlierIncome.isEmpty) {
+        return 0.0;
+      }
     }
 
     final priorOpening = await _openingBalanceFor(priorStart);
     final milkCash = await db.cashInRange(priorStart, priorPeriodEnd);
+    final incomeTotal = await db.totalIncomeInRange(priorStart, priorPeriodEnd);
     final expTotal = await db.totalExpensesInRange(priorStart, priorPeriodEnd);
-    return priorOpening + milkCash - expTotal;
+    return priorOpening + milkCash + incomeTotal - expTotal;
   }
 
   Future<PeriodStatement> statementFor(DateTime reference) async {
     final (start, end) = periodBoundsFor(reference);
     final milk = await db.milkEntriesInRange(start, end);
     final exp = await db.expensesInRange(start, end);
+    final income = await db.incomeEntriesInRange(start, end);
 
     final milkCash = await db.cashInRange(start, end);
+    final incomeTotal = await db.totalIncomeInRange(start, end);
     final expTotal = await db.totalExpensesInRange(start, end);
     final opening = await _openingBalanceFor(start);
 
     // One price lookup per distinct day in the period, not per record.
     final priceByDay = <DateTime, double>{};
     for (final r in milk) {
-      final day = DateTime(r.entryDate.year, r.entryDate.month, r.entryDate.day);
+      final day = DateTime(
+        r.entryDate.year,
+        r.entryDate.month,
+        r.entryDate.day,
+      );
       priceByDay[day] ??= await db.priceForDate(day);
     }
 
@@ -107,8 +125,10 @@ class StatementCalculator {
       periodEnd: end,
       openingBalance: opening,
       totalMilkCash: milkCash,
+      otherIncome: incomeTotal,
       totalExpenses: expTotal,
       milkRecords: milk,
+      incomeRecords: income,
       expenseRecords: exp,
       priceByDay: priceByDay,
     );
