@@ -1,4 +1,5 @@
 import 'package:cow/database/app_database.dart';
+import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/period_runner.dart';
 import 'package:flutter/material.dart';
 
@@ -121,7 +122,9 @@ class _StatementScreenState extends State<StatementScreen> {
                 (e) => ListTile(
                   dense: true,
                   title: Text(e.description),
-                  subtitle: Text(_fmt(e.date)),
+                  subtitle: Text(
+                    '${ExpenseCategory.label(e.category)} • ${_fmt(e.date)}',
+                  ),
                   trailing: Text('-${_money(e.amount)}'),
                 ),
               ),

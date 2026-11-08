@@ -53,6 +53,9 @@ class Expenses extends Table {
   DateTimeColumn get date => dateTime()();
   TextColumn get description => text().withLength(min: 1, max: 200)();
   RealColumn get amount => real()();
+  // A key from ExpenseCategory. Expenses saved before categories existed
+  // read as 'other'.
+  TextColumn get category => text().withDefault(const Constant('other'))();
 }
 
 // --- TABLE 5: FEEDING LOG ---
@@ -93,7 +96,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
@@ -135,6 +138,11 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(breedingCycles);
           await m.createTable(ledgerEntries);
           await m.addColumn(cow, cow.parentCowId);
+        }
+        if (from < 8 && from >= 4) {
+          // Databases older than 4 get the expenses table created above
+          // with the category column already in it, so they skip this.
+          await m.addColumn(expenses, expenses.category);
         }
       },
     );

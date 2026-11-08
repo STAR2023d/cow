@@ -1125,8 +1125,26 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, date, description, amount];
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('other'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    date,
+    description,
+    amount,
+    category,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1169,6 +1187,12 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
     } else if (isInserting) {
       context.missing(_amountMeta);
     }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
     return context;
   }
 
@@ -1194,6 +1218,10 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
         DriftSqlType.double,
         data['${effectivePrefix}amount'],
       )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
     );
   }
 
@@ -1208,11 +1236,13 @@ class Expense extends DataClass implements Insertable<Expense> {
   final DateTime date;
   final String description;
   final double amount;
+  final String category;
   const Expense({
     required this.id,
     required this.date,
     required this.description,
     required this.amount,
+    required this.category,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1221,6 +1251,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     map['date'] = Variable<DateTime>(date);
     map['description'] = Variable<String>(description);
     map['amount'] = Variable<double>(amount);
+    map['category'] = Variable<String>(category);
     return map;
   }
 
@@ -1230,6 +1261,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       date: Value(date),
       description: Value(description),
       amount: Value(amount),
+      category: Value(category),
     );
   }
 
@@ -1243,6 +1275,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       date: serializer.fromJson<DateTime>(json['date']),
       description: serializer.fromJson<String>(json['description']),
       amount: serializer.fromJson<double>(json['amount']),
+      category: serializer.fromJson<String>(json['category']),
     );
   }
   @override
@@ -1253,6 +1286,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       'date': serializer.toJson<DateTime>(date),
       'description': serializer.toJson<String>(description),
       'amount': serializer.toJson<double>(amount),
+      'category': serializer.toJson<String>(category),
     };
   }
 
@@ -1261,11 +1295,13 @@ class Expense extends DataClass implements Insertable<Expense> {
     DateTime? date,
     String? description,
     double? amount,
+    String? category,
   }) => Expense(
     id: id ?? this.id,
     date: date ?? this.date,
     description: description ?? this.description,
     amount: amount ?? this.amount,
+    category: category ?? this.category,
   );
   Expense copyWithCompanion(ExpensesCompanion data) {
     return Expense(
@@ -1275,6 +1311,7 @@ class Expense extends DataClass implements Insertable<Expense> {
           ? data.description.value
           : this.description,
       amount: data.amount.present ? data.amount.value : this.amount,
+      category: data.category.present ? data.category.value : this.category,
     );
   }
 
@@ -1284,13 +1321,14 @@ class Expense extends DataClass implements Insertable<Expense> {
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('description: $description, ')
-          ..write('amount: $amount')
+          ..write('amount: $amount, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, date, description, amount);
+  int get hashCode => Object.hash(id, date, description, amount, category);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1298,7 +1336,8 @@ class Expense extends DataClass implements Insertable<Expense> {
           other.id == this.id &&
           other.date == this.date &&
           other.description == this.description &&
-          other.amount == this.amount);
+          other.amount == this.amount &&
+          other.category == this.category);
 }
 
 class ExpensesCompanion extends UpdateCompanion<Expense> {
@@ -1306,17 +1345,20 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
   final Value<DateTime> date;
   final Value<String> description;
   final Value<double> amount;
+  final Value<String> category;
   const ExpensesCompanion({
     this.id = const Value.absent(),
     this.date = const Value.absent(),
     this.description = const Value.absent(),
     this.amount = const Value.absent(),
+    this.category = const Value.absent(),
   });
   ExpensesCompanion.insert({
     this.id = const Value.absent(),
     required DateTime date,
     required String description,
     required double amount,
+    this.category = const Value.absent(),
   }) : date = Value(date),
        description = Value(description),
        amount = Value(amount);
@@ -1325,12 +1367,14 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Expression<DateTime>? date,
     Expression<String>? description,
     Expression<double>? amount,
+    Expression<String>? category,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (date != null) 'date': date,
       if (description != null) 'description': description,
       if (amount != null) 'amount': amount,
+      if (category != null) 'category': category,
     });
   }
 
@@ -1339,12 +1383,14 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Value<DateTime>? date,
     Value<String>? description,
     Value<double>? amount,
+    Value<String>? category,
   }) {
     return ExpensesCompanion(
       id: id ?? this.id,
       date: date ?? this.date,
       description: description ?? this.description,
       amount: amount ?? this.amount,
+      category: category ?? this.category,
     );
   }
 
@@ -1363,6 +1409,9 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     if (amount.present) {
       map['amount'] = Variable<double>(amount.value);
     }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
     return map;
   }
 
@@ -1372,7 +1421,8 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('description: $description, ')
-          ..write('amount: $amount')
+          ..write('amount: $amount, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -5149,6 +5199,7 @@ typedef $$ExpensesTableCreateCompanionBuilder =
       required DateTime date,
       required String description,
       required double amount,
+      Value<String> category,
     });
 typedef $$ExpensesTableUpdateCompanionBuilder =
     ExpensesCompanion Function({
@@ -5156,6 +5207,7 @@ typedef $$ExpensesTableUpdateCompanionBuilder =
       Value<DateTime> date,
       Value<String> description,
       Value<double> amount,
+      Value<String> category,
     });
 
 class $$ExpensesTableFilterComposer
@@ -5184,6 +5236,11 @@ class $$ExpensesTableFilterComposer
 
   ColumnFilters<double> get amount => $composableBuilder(
     column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5216,6 +5273,11 @@ class $$ExpensesTableOrderingComposer
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ExpensesTableAnnotationComposer
@@ -5240,6 +5302,9 @@ class $$ExpensesTableAnnotationComposer
 
   GeneratedColumn<double> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
 }
 
 class $$ExpensesTableTableManager
@@ -5274,11 +5339,13 @@ class $$ExpensesTableTableManager
                 Value<DateTime> date = const Value.absent(),
                 Value<String> description = const Value.absent(),
                 Value<double> amount = const Value.absent(),
+                Value<String> category = const Value.absent(),
               }) => ExpensesCompanion(
                 id: id,
                 date: date,
                 description: description,
                 amount: amount,
+                category: category,
               ),
           createCompanionCallback:
               ({
@@ -5286,11 +5353,13 @@ class $$ExpensesTableTableManager
                 required DateTime date,
                 required String description,
                 required double amount,
+                Value<String> category = const Value.absent(),
               }) => ExpensesCompanion.insert(
                 id: id,
                 date: date,
                 description: description,
                 amount: amount,
+                category: category,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

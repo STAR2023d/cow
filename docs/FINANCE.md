@@ -3,7 +3,7 @@
 ## Where money is recorded
 
 - **Milk cash**: litres logged × the price per litre in force on that day (`PriceSettings`, looked up per date). Never stored as a money amount.
-- **Expenses** (`Expenses` table): costs, with a description and an amount.
+- **Expenses** (`Expenses` table): costs, with a description, an amount and a category (feed, vet, labour, transport, other). Expenses saved before categories existed are 'other'.
 - **Other income** (`LedgerEntries` table, type `income`): money in that is not milk. Today the only writer is a calf sale (category `calf_sale`).
 
 ## Financial statement

@@ -30,3 +30,4 @@
 - AI requests now retry up to twice when Google is overloaded (503) or rate-limited (429), with a clearer "AI is very busy" message
 - Fixed: calf-sale income is now counted in the financial statement and carried into later opening balances (it was recorded but never read)
 - Added `docs/FINANCE.md`
+- Added expense categories (database schema 8); existing expenses become "Other"; the statement shows each expense's category
