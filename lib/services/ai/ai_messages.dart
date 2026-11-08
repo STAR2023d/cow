@@ -8,6 +8,8 @@ extension AiFailureMessage on AiFailure {
       'The AI is not set up in this version of the app (no API key).',
     AiFailure.network =>
       "Couldn't reach the AI. Check your internet and try again.",
+    AiFailure.busy =>
+      'The AI is very busy right now. Wait a minute and try again.',
     AiFailure.blocked =>
       "The AI didn't give an answer. Try again, or describe things in "
           'different words.',

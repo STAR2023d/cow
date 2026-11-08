@@ -27,3 +27,4 @@
 - AI model can be chosen with `--dart-define=GEMINI_MODEL=...`
 - Analytics AI insights now run only when the farmer taps Analyse, are cached for identical milk data, and use the shared `AiGenerator` (fixes repeated AI calls on every redraw)
 - Removed the old `ai_service.dart`; default model is now `gemini-3.8-flash`
+- AI requests now retry up to twice when Google is overloaded (503) or rate-limited (429), with a clearer "AI is very busy" message

@@ -10,6 +10,10 @@ enum AiFailure {
   /// No internet, DNS failure, or the request timed out.
   network,
 
+  /// Google's servers are overloaded (503) or a usage limit was reached
+  /// (429). Trying again in a little while usually works.
+  busy,
+
   /// The model returned nothing (for example, blocked by safety filters).
   blocked,
 
@@ -44,6 +48,45 @@ abstract class AiGenerator {
   });
 }
 
+/// Sorts a raw error message into an [AiFailure].
+AiFailure classifyAiError(String message) {
+  final m = message.toLowerCase();
+
+  if (m.contains('socketexception') ||
+      m.contains('clientexception') ||
+      m.contains('failed host lookup')) {
+    return AiFailure.network;
+  }
+
+  if (m.contains('503') ||
+      m.contains('overloaded') ||
+      m.contains('unavailable') ||
+      m.contains('high demand') ||
+      m.contains('429') ||
+      m.contains('quota') ||
+      m.contains('resource_exhausted') ||
+      m.contains('rate limit')) {
+    return AiFailure.busy;
+  }
+
+  return AiFailure.unknown;
+}
+
+/// Runs [attempt]. While it reports [AiFailure.busy], waits for each of
+/// [delays] in turn and tries again. Any other outcome is returned at once.
+Future<AiResult<T>> retryWhenBusy<T>(
+  Future<AiResult<T>> Function() attempt, {
+  List<Duration> delays = const [Duration(seconds: 2), Duration(seconds: 5)],
+}) async {
+  var result = await attempt();
+  for (final delay in delays) {
+    if (result.failure != AiFailure.busy) break;
+    await Future<void>.delayed(delay);
+    result = await attempt();
+  }
+  return result;
+}
+
 /// Gemini through the google_generative_ai package.
 class GeminiGenerator implements AiGenerator {
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
@@ -71,6 +114,16 @@ class GeminiGenerator implements AiGenerator {
   }) async {
     if (_apiKey.isEmpty) return const AiResult.fail(AiFailure.noKey);
 
+    return retryWhenBusy(
+      () => _attempt(prompt: prompt, system: system, json: json),
+    );
+  }
+
+  Future<AiResult<String>> _attempt({
+    required String prompt,
+    String? system,
+    bool json = false,
+  }) async {
     try {
       final client = GenerativeModel(
         model: model,
@@ -95,14 +148,7 @@ class GeminiGenerator implements AiGenerator {
       return const AiResult.fail(AiFailure.network, 'Timed out');
     } catch (e) {
       final message = e.toString();
-      final looksOffline =
-          message.contains('SocketException') ||
-          message.contains('ClientException') ||
-          message.contains('Failed host lookup');
-      return AiResult.fail(
-        looksOffline ? AiFailure.network : AiFailure.unknown,
-        message,
-      );
+      return AiResult.fail(classifyAiError(message), message);
     }
   }
 }

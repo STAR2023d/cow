@@ -19,6 +19,7 @@
 - `google_generative_ai` is no longer maintained; plan a move to `firebase_ai` or a small server-side proxy before a public release.
 - `GEMINI_API_KEY` is compiled into the app, so it can be extracted from a distributed build. Fine for personal testing, not for publishing.
 - Swapping provider = write a new class implementing `AiGenerator`.
+- A 503 means Google's servers are overloaded. Requests are retried twice (after 2 s, then 5 s) before the farmer is told the AI is busy.
 
 ## Running with a key
 
