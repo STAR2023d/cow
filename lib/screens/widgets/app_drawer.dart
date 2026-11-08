@@ -4,6 +4,7 @@ import 'package:cow/screens/cow_dashboard.dart';
 import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/feeding_screen.dart';
 import 'package:cow/screens/health_screen.dart';
+import 'package:cow/screens/monthly_report_screen.dart';
 import 'package:cow/screens/vet_assistant_screen.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,16 @@ class AppDrawer extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const VetAssistantScreen(),
+              ),
+            ),
+          ),
+          _DrawerItem(
+            icon: Icons.bar_chart,
+            title: 'Monthly Report',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MonthlyReportScreen(db: db),
               ),
             ),
           ),

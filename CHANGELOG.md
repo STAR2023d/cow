@@ -31,3 +31,4 @@
 - Fixed: calf-sale income is now counted in the financial statement and carried into later opening balances (it was recorded but never read)
 - Added `docs/FINANCE.md`
 - Added expense categories (database schema 8); existing expenses become "Other"; the statement shows each expense's category
+- Added Monthly Report screen (drawer): income, expenses, profit, cost per litre, and spending by category for any month

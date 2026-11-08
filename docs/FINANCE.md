@@ -15,3 +15,7 @@ Statements cover half-month periods (1st to 15th, 16th to month end).
 - Opening balance = the previous period's closing balance, walking back until there is no earlier activity
 
 Only ledger rows of type `income` are counted. Nothing writes ledger `expense` rows yet.
+
+## Monthly report
+
+`MonthlyReportCalculator` (`lib/models/monthly_report.dart`) totals one calendar month: litres, milk cash, other income, expenses (overall and per category), profit, and cost per litre (expenses ÷ litres, empty when no milk was logged). The Monthly Report screen shows it, and the AI finance advisor will use the same report.
