@@ -544,6 +544,14 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
+  /// Every record with a follow-up date, soonest first (past ones too,
+  /// so overdue reminders can be shown).
+  Stream<List<HealthRecordData>> watchFollowUpRecords() =>
+      (select(healthRecord)
+            ..where((t) => t.followUpDate.isNotNull())
+            ..orderBy([(t) => OrderingTerm.asc(t.followUpDate)]))
+          .watch();
+
   // ============================================================
   // === BREEDING CYCLE OPERATIONS ===
   // ============================================================
