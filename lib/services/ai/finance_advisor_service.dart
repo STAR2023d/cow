@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
 import 'package:cow/services/ai/ai_generator.dart';
+import 'package:cow/services/ai/ai_provider_factory.dart';
 import 'package:intl/intl.dart';
 
 final _whole = NumberFormat('#,##0');
@@ -224,7 +225,7 @@ String _signature(MonthlyReport r) {
 class FinanceAdvisorService {
   final AiGenerator generator;
 
-  const FinanceAdvisorService([this.generator = const GeminiGenerator()]);
+  const FinanceAdvisorService([this.generator = const ConfiguredAiGenerator()]);
 
   // Remembers answers while the app is open, so asking the same thing
   // about the same numbers costs nothing.

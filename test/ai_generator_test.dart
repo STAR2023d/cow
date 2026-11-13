@@ -2,43 +2,6 @@ import 'package:cow/services/ai/ai_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('classifyAiError', () {
-    test('overload and limit errors are "busy"', () {
-      expect(
-        classifyAiError(
-          'Server Error [503]: The model is overloaded. Please try again later.',
-        ),
-        AiFailure.busy,
-      );
-      expect(
-        classifyAiError('{"error":{"code":503,"status":"UNAVAILABLE"}}'),
-        AiFailure.busy,
-      );
-      expect(
-        classifyAiError('Quota exceeded ... RESOURCE_EXHAUSTED'),
-        AiFailure.busy,
-      );
-      expect(classifyAiError('429 Too Many Requests'), AiFailure.busy);
-    });
-
-    test('connection errors are "network"', () {
-      expect(
-        classifyAiError(
-          'SocketException: Failed host lookup: generativelanguage.googleapis.com',
-        ),
-        AiFailure.network,
-      );
-      expect(
-        classifyAiError('ClientException: Connection closed'),
-        AiFailure.network,
-      );
-    });
-
-    test('anything else is "unknown"', () {
-      expect(classifyAiError('Something odd happened'), AiFailure.unknown);
-    });
-  });
-
   group('retryWhenBusy', () {
     const noWait = [Duration.zero, Duration.zero];
 

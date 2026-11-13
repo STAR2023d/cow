@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cow/services/ai/ai_generator.dart';
+import 'package:cow/services/ai/ai_provider_factory.dart';
 
 enum VetUrgency {
   /// Call a vet now.
@@ -218,7 +219,7 @@ VetAssessment? parseVetResponse(String raw) {
 class VetService {
   final AiGenerator generator;
 
-  const VetService([this.generator = const GeminiGenerator()]);
+  const VetService([this.generator = const ConfiguredAiGenerator()]);
 
   /// Asks the AI to assess [vetCase]. Danger signs in the farmer's
   /// description can only raise the urgency, never lower it.

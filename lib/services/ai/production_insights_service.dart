@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cow/services/ai/ai_generator.dart';
+import 'package:cow/services/ai/ai_provider_factory.dart';
 
 /// One milking entry, reduced to what the AI needs to see.
 class MilkLog {
@@ -130,7 +131,9 @@ ProductionInsights? parseProductionInsights(String raw) {
 class ProductionInsightsService {
   final AiGenerator generator;
 
-  const ProductionInsightsService([this.generator = const GeminiGenerator()]);
+  const ProductionInsightsService([
+    this.generator = const ConfiguredAiGenerator(),
+  ]);
 
   // Remembers answers while the app is open, so reopening the screen with
   // the same milk data costs nothing.
