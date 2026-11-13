@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Milk Entry screen shows an orange "Milk on hold" banner while the cow is under milk withdrawal
 - Rewrote README and added a roadmap
 - Removed unused `models/milk.dart` and `models/milk_entry_enum.dart`
 - Fixed session totals in analytics (case mismatch); added `MilkSession.afternoon`

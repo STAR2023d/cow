@@ -1,5 +1,6 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
+import 'package:cow/screens/widgets/milk_hold_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -53,6 +54,7 @@ class _MilkDataState extends State<MilkData> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          MilkHoldBanner(cowId: widget.cowId),
           Expanded(
             child: SingleChildScrollView(
               // Adds standard structural breathing room around the outer container edge
