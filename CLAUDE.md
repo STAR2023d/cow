@@ -18,4 +18,5 @@ Done: step 10a read-only calf register (`lib/breeding/calf_register.dart`, `calf
 Done: step 10b schema v10 (`Calves` table, milk `buyer`), calf add/edit (`calf_dialogs.dart`, `docs/CALVES.md`), buyer on milk entry.
 Done: earnings per buyer (`lib/models/buyer_earnings.dart`, Monthly Report panel).
 Next: pick from Later.
-Later: Swahili UI, replace `google_generative_ai`, merge phase branches into main.
+Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
+Later: Swahili UI, replace `google_generative_ai`.
