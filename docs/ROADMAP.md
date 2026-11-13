@@ -18,7 +18,8 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [x] Status card
 - [ ] Per-cow breeding screen
 - [ ] Dashboard alerts (checks due, dry-off, calving)
-- [ ] Calf register
+- [x] Calf register (read-only, built from breeding cycles)
+- [ ] Calf register table: birth weight, weaning, calves bought in (schema change)
 
 ## Phase 2: AI vet service
 

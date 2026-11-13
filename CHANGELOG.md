@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Calf Register screen (drawer): every calf recorded through breeding cycles with dam, birth date, age, sex and outcome (kept, sold with amount, or awaiting)
 - Dashboard "Health reminders" card for follow-ups overdue, due today or within 14 days
 - Preset chips in the Log Health Record dialog (Vaccination, Tick control, Deworming, Hoof care, Vet check) with suggested follow-up dates; added "Tick control" and "Hoof care" record types
 - Dashboard shows a "Milk on hold" card listing cows under milk withdrawal

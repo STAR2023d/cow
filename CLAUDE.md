@@ -14,5 +14,6 @@
 Done: breeding tracker, AI vet + insights, finance (expenses, monthly report, advisor), milk withdrawal recording and hold logic (`lib/health/milk_withdrawal.dart`, `activeHolds`).
 Done: step 8b (milk hold banner on milk entry, `milk_hold_banner.dart`; dashboard card, `milk_hold_card.dart`).
 Done: step 9 health reminders (`lib/health/reminders.dart`, `health_reminders_card.dart`, presets in `lib/health/health_presets.dart`).
-Next: calf register.
+Done: step 10a read-only calf register (`lib/breeding/calf_register.dart`, `calf_register_screen.dart`, `watchCalvings`).
+Next: step 10b calf register table (birth weight, weaning, bought-in calves; schema v10, back up DB first).
 Later: Swahili UI, buyer field, replace `google_generative_ai`, merge phase branches into main.

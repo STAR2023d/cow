@@ -1,3 +1,4 @@
+import 'package:cow/breeding/calf_register_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/analytics_dashboard.dart';
 import 'package:cow/screens/cow_dashboard.dart';
@@ -84,6 +85,16 @@ class AppDrawer extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HealthScreen(db: db)),
+            ),
+          ),
+          _DrawerItem(
+            icon: Icons.child_friendly,
+            title: 'Calf Register',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CalfRegisterScreen(db: db),
+              ),
             ),
           ),
           _DrawerItem(

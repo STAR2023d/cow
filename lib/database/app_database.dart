@@ -757,6 +757,14 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
+  /// Every cycle with a calving date (the calf register), newest first.
+  Stream<List<BreedingCycle>> watchCalvings() {
+    return (select(breedingCycles)
+          ..where((t) => t.actualCalvingDate.isNotNull())
+          ..orderBy([(t) => OrderingTerm.desc(t.actualCalvingDate)]))
+        .watch();
+  }
+
   // Unified Connection File
   static QueryExecutor _openConnection() {
     return driftDatabase(
