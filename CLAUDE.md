@@ -19,4 +19,6 @@ Done: step 10b schema v10 (`Calves` table, milk `buyer`), calf add/edit (`calf_d
 Done: earnings per buyer (`lib/models/buyer_earnings.dart`, Monthly Report panel).
 Next: pick from Later.
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
-Later: Swahili UI, replace `google_generative_ai`.
+Later: Swahili UI.
+Later: AI provider switching (Gemini, Anthropic, OpenAI/compatible over plain HTTP, replacing `google_generative_ai`; provider factory; cross-provider fallback).
+Later: going public with paid AI (key-holding backend proxy, phone OTP accounts, metering and spending caps, M-Pesa credits, privacy policy + Kenya DPA, app-store billing check, closed beta).
