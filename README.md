@@ -12,7 +12,7 @@ It works offline-first: all data is stored on the device in SQLite.
 - **Feeding log** for herd-wide or per-cow feeding
 - **Health records** (vaccination, illness, checkups) with follow-up dates
 - **Breeding tracker** from heat to service, pregnancy checks (day 21/42/63), dry-off, calving, and calf outcome _(in progress)_
-- **Calf register** listing every calf born, its dam, age and whether it was kept or sold
+- **Calf register** listing every calf born or bought in, its dam, age, birth weight, weaning and whether it was kept or sold
 - **AI insights** on milk production using Gemini
 
 ## Tech stack

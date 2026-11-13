@@ -223,16 +223,25 @@ class AppDatabase extends _$AppDatabase {
 
   /// Inserts a new entry, or updates the existing one for that
   /// cow/date/session if it's already there.
+  ///
+  /// [buyer] is optional. When null or blank the stored buyer is left as
+  /// it was (none for a new entry), so callers that don't know the buyer
+  /// never wipe one recorded earlier.
   Future<void> upsertMilkEntry({
     required int cowId,
     required DateTime date,
     required String session,
     required double amount,
+    String? buyer,
   }) async {
+    final trimmed = buyer?.trim();
+    final buyerValue = trimmed == null || trimmed.isEmpty
+        ? const Value<String?>.absent()
+        : Value<String?>(trimmed);
     final existing = await existingSessionEntry(cowId, date, session);
     if (existing != null) {
       await (update(milkTable)..where((t) => t.id.equals(existing.id))).write(
-        MilkTableCompanion(amount: Value(amount)),
+        MilkTableCompanion(amount: Value(amount), buyer: buyerValue),
       );
     } else {
       await into(milkTable).insert(
@@ -242,6 +251,7 @@ class AppDatabase extends _$AppDatabase {
           session: session,
           amount: amount,
           cowId: cowId,
+          buyer: buyerValue,
         ),
       );
     }

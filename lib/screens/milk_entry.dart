@@ -21,11 +21,14 @@ class _MilkDataState extends State<MilkData> {
   // Tracks the ID of the chosen cow
 
   final TextEditingController _quantityController = TextEditingController();
+  // Kept after saving: the buyer is usually the same for the next entry.
+  final TextEditingController _buyerController = TextEditingController();
 
   @override
   void dispose() {
     // clean up to prevent memory leaks
     _quantityController.dispose();
+    _buyerController.dispose();
     super.dispose();
   }
 
@@ -163,6 +166,22 @@ class _MilkDataState extends State<MilkData> {
                       },
                     ),
 
+                    // --- BUYER FIELD (optional) ---
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _buyerController,
+                      textCapitalization: TextCapitalization.words,
+                      maxLength: 100,
+                      decoration: InputDecoration(
+                        labelText: 'Buyer (optional)',
+                        hintText: 'e.g. dairy co-op, hotel, neighbour',
+                        prefixIcon: const Icon(Icons.storefront_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+
                     // --- SUBMIT BUTTON ---
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -186,6 +205,7 @@ class _MilkDataState extends State<MilkData> {
                             date: DateTime.now(),
                             session: _sessionLabel(_selectedSession),
                             amount: inputAmount,
+                            buyer: _buyerController.text,
                           );
 
                           if (context.mounted) {
@@ -278,7 +298,11 @@ class _MilkDataState extends State<MilkData> {
                           '${entry.amount.toStringAsFixed(2)} Liters',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(formattedDate),
+                        subtitle: Text(
+                          entry.buyer == null
+                              ? formattedDate
+                              : '$formattedDate • ${entry.buyer}',
+                        ),
                         trailing: Chip(
                           label: Text(
                             entry.session.toUpperCase(),

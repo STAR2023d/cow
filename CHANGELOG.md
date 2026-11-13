@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Schema v10: new `Calves` table and optional `buyer` column on milk entries (migration from v9 tested)
+- Calf Register: add calves bought in or born before the app, and record birth weight, weaning date and notes for any calf (see `docs/CALVES.md`)
+- Milk Entry: optional Buyer field, shown in the history list; leaving it blank never clears a buyer saved earlier
+- Roadmap: "Earnings per buyer" was ticked by mistake and is now unticked (the report is not built yet)
 - Calf Register screen (drawer): every calf recorded through breeding cycles with dam, birth date, age, sex and outcome (kept, sold with amount, or awaiting)
 - Dashboard "Health reminders" card for follow-ups overdue, due today or within 14 days
 - Preset chips in the Log Health Record dialog (Vaccination, Tick control, Deworming, Hoof care, Vet check) with suggested follow-up dates; added "Tick control" and "Hoof care" record types

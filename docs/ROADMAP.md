@@ -19,7 +19,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [ ] Per-cow breeding screen
 - [ ] Dashboard alerts (checks due, dry-off, calving)
 - [x] Calf register (read-only, built from breeding cycles)
-- [ ] Calf register table: birth weight, weaning, calves bought in (schema change)
+- [x] Calf register table: birth weight, weaning, calves bought in (schema v10)
 
 ## Phase 2: AI vet service
 
@@ -33,7 +33,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 - [x] Show calf-sale income in statements (keep `Expenses` for costs, `LedgerEntries` for other income)
 - [x] Expense categories
-- [x] Earnings per buyer
+- [ ] Earnings per buyer (buyer is now recorded on milk entries; report not built)
 - [x] Monthly analytics and charts
 - [x] AI finance advisor
 
