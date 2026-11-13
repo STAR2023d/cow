@@ -35,6 +35,8 @@ class MilkTable extends Table {
   TextColumn get session => text()();
   RealColumn get amount => real()();
   IntColumn get cowId => integer().references(Cow, #id)();
+  // Who the milk was sold to, if recorded (added in v10).
+  TextColumn get buyer => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -83,6 +85,24 @@ class HealthRecord extends Table {
   IntColumn get milkWithdrawalDays => integer().nullable()();
 }
 
+/// Extra details for a calf (added in v10). A calf from a logged breeding
+/// cycle links back via [breedingCycleId]; a calf bought in, or born
+/// before the app was used, has no cycle.
+@DataClassName('Calf')
+class Calves extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get breedingCycleId =>
+      integer().nullable().references(BreedingCycles, #id)();
+  TextColumn get name => text().nullable()();
+  DateTimeColumn get dateOfBirth => dateTime()();
+  TextColumn get sex => text()(); // 'female' | 'male'
+  IntColumn get damCowId => integer().nullable().references(Cow, #id)();
+  RealColumn get birthWeightKg => real().nullable()();
+  DateTimeColumn get weanedOn => dateTime().nullable()();
+  TextColumn get notes => text().withLength(max: 300).nullable()();
+  BoolColumn get boughtIn => boolean().withDefault(const Constant(false))();
+}
+
 // --- UNIFIED DATABASE CLASS ---
 @DriftDatabase(
   tables: [
@@ -94,13 +114,14 @@ class HealthRecord extends Table {
     HealthRecord,
     BreedingCycles,
     LedgerEntries,
+    Calves,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration {
@@ -153,6 +174,14 @@ class AppDatabase extends _$AppDatabase {
           // these columns already in it, so they skip this.
           await m.addColumn(healthRecord, healthRecord.medicine);
           await m.addColumn(healthRecord, healthRecord.milkWithdrawalDays);
+        }
+        if (from < 10) {
+          await m.createTable(calves);
+        }
+        if (from < 10 && from >= 2) {
+          // Databases older than 2 get the milk table created above with
+          // the buyer column already in it, so they skip this.
+          await m.addColumn(milkTable, milkTable.buyer);
         }
       },
     );
@@ -764,6 +793,24 @@ class AppDatabase extends _$AppDatabase {
           ..orderBy([(t) => OrderingTerm.desc(t.actualCalvingDate)]))
         .watch();
   }
+
+  // ============================================================
+  // === CALVES ===
+  // ============================================================
+
+  Future<int> insertCalf(CalvesCompanion entry) => into(calves).insert(entry);
+
+  /// Writes only the fields present in [entry] to calf [id].
+  Future<int> updateCalf(int id, CalvesCompanion entry) =>
+      (update(calves)..where((t) => t.id.equals(id))).write(entry);
+
+  /// Every calf row, newest first.
+  Stream<List<Calf>> watchCalves() => (select(
+    calves,
+  )..orderBy([(t) => OrderingTerm.desc(t.dateOfBirth)])).watch();
+
+  Future<int> deleteCalf(int id) =>
+      (delete(calves)..where((t) => t.id.equals(id))).go();
 
   // Unified Connection File
   static QueryExecutor _openConnection() {

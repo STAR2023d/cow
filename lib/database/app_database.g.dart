@@ -512,8 +512,24 @@ class $MilkTableTable extends MilkTable
       'REFERENCES cow (id)',
     ),
   );
+  static const VerificationMeta _buyerMeta = const VerificationMeta('buyer');
   @override
-  List<GeneratedColumn> get $columns => [id, entryDate, session, amount, cowId];
+  late final GeneratedColumn<String> buyer = GeneratedColumn<String>(
+    'buyer',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    entryDate,
+    session,
+    amount,
+    cowId,
+    buyer,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -563,6 +579,12 @@ class $MilkTableTable extends MilkTable
     } else if (isInserting) {
       context.missing(_cowIdMeta);
     }
+    if (data.containsKey('buyer')) {
+      context.handle(
+        _buyerMeta,
+        buyer.isAcceptableOrUnknown(data['buyer']!, _buyerMeta),
+      );
+    }
     return context;
   }
 
@@ -592,6 +614,10 @@ class $MilkTableTable extends MilkTable
         DriftSqlType.int,
         data['${effectivePrefix}cow_id'],
       )!,
+      buyer: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}buyer'],
+      ),
     );
   }
 
@@ -607,12 +633,14 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
   final String session;
   final double amount;
   final int cowId;
+  final String? buyer;
   const MilkTableData({
     required this.id,
     required this.entryDate,
     required this.session,
     required this.amount,
     required this.cowId,
+    this.buyer,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -622,6 +650,9 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
     map['session'] = Variable<String>(session);
     map['amount'] = Variable<double>(amount);
     map['cow_id'] = Variable<int>(cowId);
+    if (!nullToAbsent || buyer != null) {
+      map['buyer'] = Variable<String>(buyer);
+    }
     return map;
   }
 
@@ -632,6 +663,9 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
       session: Value(session),
       amount: Value(amount),
       cowId: Value(cowId),
+      buyer: buyer == null && nullToAbsent
+          ? const Value.absent()
+          : Value(buyer),
     );
   }
 
@@ -646,6 +680,7 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
       session: serializer.fromJson<String>(json['session']),
       amount: serializer.fromJson<double>(json['amount']),
       cowId: serializer.fromJson<int>(json['cowId']),
+      buyer: serializer.fromJson<String?>(json['buyer']),
     );
   }
   @override
@@ -657,6 +692,7 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
       'session': serializer.toJson<String>(session),
       'amount': serializer.toJson<double>(amount),
       'cowId': serializer.toJson<int>(cowId),
+      'buyer': serializer.toJson<String?>(buyer),
     };
   }
 
@@ -666,12 +702,14 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
     String? session,
     double? amount,
     int? cowId,
+    Value<String?> buyer = const Value.absent(),
   }) => MilkTableData(
     id: id ?? this.id,
     entryDate: entryDate ?? this.entryDate,
     session: session ?? this.session,
     amount: amount ?? this.amount,
     cowId: cowId ?? this.cowId,
+    buyer: buyer.present ? buyer.value : this.buyer,
   );
   MilkTableData copyWithCompanion(MilkTableCompanion data) {
     return MilkTableData(
@@ -680,6 +718,7 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
       session: data.session.present ? data.session.value : this.session,
       amount: data.amount.present ? data.amount.value : this.amount,
       cowId: data.cowId.present ? data.cowId.value : this.cowId,
+      buyer: data.buyer.present ? data.buyer.value : this.buyer,
     );
   }
 
@@ -690,13 +729,14 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
           ..write('entryDate: $entryDate, ')
           ..write('session: $session, ')
           ..write('amount: $amount, ')
-          ..write('cowId: $cowId')
+          ..write('cowId: $cowId, ')
+          ..write('buyer: $buyer')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, entryDate, session, amount, cowId);
+  int get hashCode => Object.hash(id, entryDate, session, amount, cowId, buyer);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -705,7 +745,8 @@ class MilkTableData extends DataClass implements Insertable<MilkTableData> {
           other.entryDate == this.entryDate &&
           other.session == this.session &&
           other.amount == this.amount &&
-          other.cowId == this.cowId);
+          other.cowId == this.cowId &&
+          other.buyer == this.buyer);
 }
 
 class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
@@ -714,6 +755,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
   final Value<String> session;
   final Value<double> amount;
   final Value<int> cowId;
+  final Value<String?> buyer;
   final Value<int> rowid;
   const MilkTableCompanion({
     this.id = const Value.absent(),
@@ -721,6 +763,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
     this.session = const Value.absent(),
     this.amount = const Value.absent(),
     this.cowId = const Value.absent(),
+    this.buyer = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MilkTableCompanion.insert({
@@ -729,6 +772,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
     required String session,
     required double amount,
     required int cowId,
+    this.buyer = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        entryDate = Value(entryDate),
@@ -741,6 +785,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
     Expression<String>? session,
     Expression<double>? amount,
     Expression<int>? cowId,
+    Expression<String>? buyer,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -749,6 +794,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
       if (session != null) 'session': session,
       if (amount != null) 'amount': amount,
       if (cowId != null) 'cow_id': cowId,
+      if (buyer != null) 'buyer': buyer,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -759,6 +805,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
     Value<String>? session,
     Value<double>? amount,
     Value<int>? cowId,
+    Value<String?>? buyer,
     Value<int>? rowid,
   }) {
     return MilkTableCompanion(
@@ -767,6 +814,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
       session: session ?? this.session,
       amount: amount ?? this.amount,
       cowId: cowId ?? this.cowId,
+      buyer: buyer ?? this.buyer,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -789,6 +837,9 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
     if (cowId.present) {
       map['cow_id'] = Variable<int>(cowId.value);
     }
+    if (buyer.present) {
+      map['buyer'] = Variable<String>(buyer.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -803,6 +854,7 @@ class MilkTableCompanion extends UpdateCompanion<MilkTableData> {
           ..write('session: $session, ')
           ..write('amount: $amount, ')
           ..write('cowId: $cowId, ')
+          ..write('buyer: $buyer, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4083,6 +4135,628 @@ class LedgerEntriesCompanion extends UpdateCompanion<LedgerEntry> {
   }
 }
 
+class $CalvesTable extends Calves with TableInfo<$CalvesTable, Calf> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CalvesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _breedingCycleIdMeta = const VerificationMeta(
+    'breedingCycleId',
+  );
+  @override
+  late final GeneratedColumn<int> breedingCycleId = GeneratedColumn<int>(
+    'breeding_cycle_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES breeding_cycles (id)',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateOfBirthMeta = const VerificationMeta(
+    'dateOfBirth',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateOfBirth = GeneratedColumn<DateTime>(
+    'date_of_birth',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sexMeta = const VerificationMeta('sex');
+  @override
+  late final GeneratedColumn<String> sex = GeneratedColumn<String>(
+    'sex',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _damCowIdMeta = const VerificationMeta(
+    'damCowId',
+  );
+  @override
+  late final GeneratedColumn<int> damCowId = GeneratedColumn<int>(
+    'dam_cow_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cow (id)',
+    ),
+  );
+  static const VerificationMeta _birthWeightKgMeta = const VerificationMeta(
+    'birthWeightKg',
+  );
+  @override
+  late final GeneratedColumn<double> birthWeightKg = GeneratedColumn<double>(
+    'birth_weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weanedOnMeta = const VerificationMeta(
+    'weanedOn',
+  );
+  @override
+  late final GeneratedColumn<DateTime> weanedOn = GeneratedColumn<DateTime>(
+    'weaned_on',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 300),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _boughtInMeta = const VerificationMeta(
+    'boughtIn',
+  );
+  @override
+  late final GeneratedColumn<bool> boughtIn = GeneratedColumn<bool>(
+    'bought_in',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("bought_in" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    breedingCycleId,
+    name,
+    dateOfBirth,
+    sex,
+    damCowId,
+    birthWeightKg,
+    weanedOn,
+    notes,
+    boughtIn,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'calves';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Calf> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('breeding_cycle_id')) {
+      context.handle(
+        _breedingCycleIdMeta,
+        breedingCycleId.isAcceptableOrUnknown(
+          data['breeding_cycle_id']!,
+          _breedingCycleIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('date_of_birth')) {
+      context.handle(
+        _dateOfBirthMeta,
+        dateOfBirth.isAcceptableOrUnknown(
+          data['date_of_birth']!,
+          _dateOfBirthMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dateOfBirthMeta);
+    }
+    if (data.containsKey('sex')) {
+      context.handle(
+        _sexMeta,
+        sex.isAcceptableOrUnknown(data['sex']!, _sexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sexMeta);
+    }
+    if (data.containsKey('dam_cow_id')) {
+      context.handle(
+        _damCowIdMeta,
+        damCowId.isAcceptableOrUnknown(data['dam_cow_id']!, _damCowIdMeta),
+      );
+    }
+    if (data.containsKey('birth_weight_kg')) {
+      context.handle(
+        _birthWeightKgMeta,
+        birthWeightKg.isAcceptableOrUnknown(
+          data['birth_weight_kg']!,
+          _birthWeightKgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weaned_on')) {
+      context.handle(
+        _weanedOnMeta,
+        weanedOn.isAcceptableOrUnknown(data['weaned_on']!, _weanedOnMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('bought_in')) {
+      context.handle(
+        _boughtInMeta,
+        boughtIn.isAcceptableOrUnknown(data['bought_in']!, _boughtInMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Calf map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Calf(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      breedingCycleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}breeding_cycle_id'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      dateOfBirth: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_of_birth'],
+      )!,
+      sex: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sex'],
+      )!,
+      damCowId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dam_cow_id'],
+      ),
+      birthWeightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}birth_weight_kg'],
+      ),
+      weanedOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}weaned_on'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      boughtIn: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}bought_in'],
+      )!,
+    );
+  }
+
+  @override
+  $CalvesTable createAlias(String alias) {
+    return $CalvesTable(attachedDatabase, alias);
+  }
+}
+
+class Calf extends DataClass implements Insertable<Calf> {
+  final int id;
+  final int? breedingCycleId;
+  final String? name;
+  final DateTime dateOfBirth;
+  final String sex;
+  final int? damCowId;
+  final double? birthWeightKg;
+  final DateTime? weanedOn;
+  final String? notes;
+  final bool boughtIn;
+  const Calf({
+    required this.id,
+    this.breedingCycleId,
+    this.name,
+    required this.dateOfBirth,
+    required this.sex,
+    this.damCowId,
+    this.birthWeightKg,
+    this.weanedOn,
+    this.notes,
+    required this.boughtIn,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || breedingCycleId != null) {
+      map['breeding_cycle_id'] = Variable<int>(breedingCycleId);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    map['date_of_birth'] = Variable<DateTime>(dateOfBirth);
+    map['sex'] = Variable<String>(sex);
+    if (!nullToAbsent || damCowId != null) {
+      map['dam_cow_id'] = Variable<int>(damCowId);
+    }
+    if (!nullToAbsent || birthWeightKg != null) {
+      map['birth_weight_kg'] = Variable<double>(birthWeightKg);
+    }
+    if (!nullToAbsent || weanedOn != null) {
+      map['weaned_on'] = Variable<DateTime>(weanedOn);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    map['bought_in'] = Variable<bool>(boughtIn);
+    return map;
+  }
+
+  CalvesCompanion toCompanion(bool nullToAbsent) {
+    return CalvesCompanion(
+      id: Value(id),
+      breedingCycleId: breedingCycleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(breedingCycleId),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      dateOfBirth: Value(dateOfBirth),
+      sex: Value(sex),
+      damCowId: damCowId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(damCowId),
+      birthWeightKg: birthWeightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthWeightKg),
+      weanedOn: weanedOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weanedOn),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      boughtIn: Value(boughtIn),
+    );
+  }
+
+  factory Calf.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Calf(
+      id: serializer.fromJson<int>(json['id']),
+      breedingCycleId: serializer.fromJson<int?>(json['breedingCycleId']),
+      name: serializer.fromJson<String?>(json['name']),
+      dateOfBirth: serializer.fromJson<DateTime>(json['dateOfBirth']),
+      sex: serializer.fromJson<String>(json['sex']),
+      damCowId: serializer.fromJson<int?>(json['damCowId']),
+      birthWeightKg: serializer.fromJson<double?>(json['birthWeightKg']),
+      weanedOn: serializer.fromJson<DateTime?>(json['weanedOn']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      boughtIn: serializer.fromJson<bool>(json['boughtIn']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'breedingCycleId': serializer.toJson<int?>(breedingCycleId),
+      'name': serializer.toJson<String?>(name),
+      'dateOfBirth': serializer.toJson<DateTime>(dateOfBirth),
+      'sex': serializer.toJson<String>(sex),
+      'damCowId': serializer.toJson<int?>(damCowId),
+      'birthWeightKg': serializer.toJson<double?>(birthWeightKg),
+      'weanedOn': serializer.toJson<DateTime?>(weanedOn),
+      'notes': serializer.toJson<String?>(notes),
+      'boughtIn': serializer.toJson<bool>(boughtIn),
+    };
+  }
+
+  Calf copyWith({
+    int? id,
+    Value<int?> breedingCycleId = const Value.absent(),
+    Value<String?> name = const Value.absent(),
+    DateTime? dateOfBirth,
+    String? sex,
+    Value<int?> damCowId = const Value.absent(),
+    Value<double?> birthWeightKg = const Value.absent(),
+    Value<DateTime?> weanedOn = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    bool? boughtIn,
+  }) => Calf(
+    id: id ?? this.id,
+    breedingCycleId: breedingCycleId.present
+        ? breedingCycleId.value
+        : this.breedingCycleId,
+    name: name.present ? name.value : this.name,
+    dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+    sex: sex ?? this.sex,
+    damCowId: damCowId.present ? damCowId.value : this.damCowId,
+    birthWeightKg: birthWeightKg.present
+        ? birthWeightKg.value
+        : this.birthWeightKg,
+    weanedOn: weanedOn.present ? weanedOn.value : this.weanedOn,
+    notes: notes.present ? notes.value : this.notes,
+    boughtIn: boughtIn ?? this.boughtIn,
+  );
+  Calf copyWithCompanion(CalvesCompanion data) {
+    return Calf(
+      id: data.id.present ? data.id.value : this.id,
+      breedingCycleId: data.breedingCycleId.present
+          ? data.breedingCycleId.value
+          : this.breedingCycleId,
+      name: data.name.present ? data.name.value : this.name,
+      dateOfBirth: data.dateOfBirth.present
+          ? data.dateOfBirth.value
+          : this.dateOfBirth,
+      sex: data.sex.present ? data.sex.value : this.sex,
+      damCowId: data.damCowId.present ? data.damCowId.value : this.damCowId,
+      birthWeightKg: data.birthWeightKg.present
+          ? data.birthWeightKg.value
+          : this.birthWeightKg,
+      weanedOn: data.weanedOn.present ? data.weanedOn.value : this.weanedOn,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      boughtIn: data.boughtIn.present ? data.boughtIn.value : this.boughtIn,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Calf(')
+          ..write('id: $id, ')
+          ..write('breedingCycleId: $breedingCycleId, ')
+          ..write('name: $name, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('sex: $sex, ')
+          ..write('damCowId: $damCowId, ')
+          ..write('birthWeightKg: $birthWeightKg, ')
+          ..write('weanedOn: $weanedOn, ')
+          ..write('notes: $notes, ')
+          ..write('boughtIn: $boughtIn')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    breedingCycleId,
+    name,
+    dateOfBirth,
+    sex,
+    damCowId,
+    birthWeightKg,
+    weanedOn,
+    notes,
+    boughtIn,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Calf &&
+          other.id == this.id &&
+          other.breedingCycleId == this.breedingCycleId &&
+          other.name == this.name &&
+          other.dateOfBirth == this.dateOfBirth &&
+          other.sex == this.sex &&
+          other.damCowId == this.damCowId &&
+          other.birthWeightKg == this.birthWeightKg &&
+          other.weanedOn == this.weanedOn &&
+          other.notes == this.notes &&
+          other.boughtIn == this.boughtIn);
+}
+
+class CalvesCompanion extends UpdateCompanion<Calf> {
+  final Value<int> id;
+  final Value<int?> breedingCycleId;
+  final Value<String?> name;
+  final Value<DateTime> dateOfBirth;
+  final Value<String> sex;
+  final Value<int?> damCowId;
+  final Value<double?> birthWeightKg;
+  final Value<DateTime?> weanedOn;
+  final Value<String?> notes;
+  final Value<bool> boughtIn;
+  const CalvesCompanion({
+    this.id = const Value.absent(),
+    this.breedingCycleId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.dateOfBirth = const Value.absent(),
+    this.sex = const Value.absent(),
+    this.damCowId = const Value.absent(),
+    this.birthWeightKg = const Value.absent(),
+    this.weanedOn = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.boughtIn = const Value.absent(),
+  });
+  CalvesCompanion.insert({
+    this.id = const Value.absent(),
+    this.breedingCycleId = const Value.absent(),
+    this.name = const Value.absent(),
+    required DateTime dateOfBirth,
+    required String sex,
+    this.damCowId = const Value.absent(),
+    this.birthWeightKg = const Value.absent(),
+    this.weanedOn = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.boughtIn = const Value.absent(),
+  }) : dateOfBirth = Value(dateOfBirth),
+       sex = Value(sex);
+  static Insertable<Calf> custom({
+    Expression<int>? id,
+    Expression<int>? breedingCycleId,
+    Expression<String>? name,
+    Expression<DateTime>? dateOfBirth,
+    Expression<String>? sex,
+    Expression<int>? damCowId,
+    Expression<double>? birthWeightKg,
+    Expression<DateTime>? weanedOn,
+    Expression<String>? notes,
+    Expression<bool>? boughtIn,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (breedingCycleId != null) 'breeding_cycle_id': breedingCycleId,
+      if (name != null) 'name': name,
+      if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
+      if (sex != null) 'sex': sex,
+      if (damCowId != null) 'dam_cow_id': damCowId,
+      if (birthWeightKg != null) 'birth_weight_kg': birthWeightKg,
+      if (weanedOn != null) 'weaned_on': weanedOn,
+      if (notes != null) 'notes': notes,
+      if (boughtIn != null) 'bought_in': boughtIn,
+    });
+  }
+
+  CalvesCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? breedingCycleId,
+    Value<String?>? name,
+    Value<DateTime>? dateOfBirth,
+    Value<String>? sex,
+    Value<int?>? damCowId,
+    Value<double?>? birthWeightKg,
+    Value<DateTime?>? weanedOn,
+    Value<String?>? notes,
+    Value<bool>? boughtIn,
+  }) {
+    return CalvesCompanion(
+      id: id ?? this.id,
+      breedingCycleId: breedingCycleId ?? this.breedingCycleId,
+      name: name ?? this.name,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      sex: sex ?? this.sex,
+      damCowId: damCowId ?? this.damCowId,
+      birthWeightKg: birthWeightKg ?? this.birthWeightKg,
+      weanedOn: weanedOn ?? this.weanedOn,
+      notes: notes ?? this.notes,
+      boughtIn: boughtIn ?? this.boughtIn,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (breedingCycleId.present) {
+      map['breeding_cycle_id'] = Variable<int>(breedingCycleId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (dateOfBirth.present) {
+      map['date_of_birth'] = Variable<DateTime>(dateOfBirth.value);
+    }
+    if (sex.present) {
+      map['sex'] = Variable<String>(sex.value);
+    }
+    if (damCowId.present) {
+      map['dam_cow_id'] = Variable<int>(damCowId.value);
+    }
+    if (birthWeightKg.present) {
+      map['birth_weight_kg'] = Variable<double>(birthWeightKg.value);
+    }
+    if (weanedOn.present) {
+      map['weaned_on'] = Variable<DateTime>(weanedOn.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (boughtIn.present) {
+      map['bought_in'] = Variable<bool>(boughtIn.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CalvesCompanion(')
+          ..write('id: $id, ')
+          ..write('breedingCycleId: $breedingCycleId, ')
+          ..write('name: $name, ')
+          ..write('dateOfBirth: $dateOfBirth, ')
+          ..write('sex: $sex, ')
+          ..write('damCowId: $damCowId, ')
+          ..write('birthWeightKg: $birthWeightKg, ')
+          ..write('weanedOn: $weanedOn, ')
+          ..write('notes: $notes, ')
+          ..write('boughtIn: $boughtIn')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4094,6 +4768,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $HealthRecordTable healthRecord = $HealthRecordTable(this);
   late final $BreedingCyclesTable breedingCycles = $BreedingCyclesTable(this);
   late final $LedgerEntriesTable ledgerEntries = $LedgerEntriesTable(this);
+  late final $CalvesTable calves = $CalvesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4107,6 +4782,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     healthRecord,
     breedingCycles,
     ledgerEntries,
+    calves,
   ];
 }
 
@@ -4219,6 +4895,25 @@ final class $$CowTableReferences
     ).filter((f) => f.cowId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_ledgerEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CalvesTable, List<Calf>> _calvesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.calves,
+    aliasName: 'cow__id__calves__dam_cow_id',
+  );
+
+  $$CalvesTableProcessedTableManager get calvesRefs {
+    final manager = $$CalvesTableTableManager(
+      $_db,
+      $_db.calves,
+    ).filter((f) => f.damCowId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_calvesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4377,6 +5072,31 @@ class $$CowTableFilterComposer extends Composer<_$AppDatabase, $CowTable> {
           }) => $$LedgerEntriesTableFilterComposer(
             $db: $db,
             $table: $db.ledgerEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> calvesRefs(
+    Expression<bool> Function($$CalvesTableFilterComposer f) f,
+  ) {
+    final $$CalvesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.calves,
+      getReferencedColumn: (t) => t.damCowId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CalvesTableFilterComposer(
+            $db: $db,
+            $table: $db.calves,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4597,6 +5317,31 @@ class $$CowTableAnnotationComposer extends Composer<_$AppDatabase, $CowTable> {
     );
     return f(composer);
   }
+
+  Expression<T> calvesRefs<T extends Object>(
+    Expression<T> Function($$CalvesTableAnnotationComposer a) f,
+  ) {
+    final $$CalvesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.calves,
+      getReferencedColumn: (t) => t.damCowId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CalvesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.calves,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CowTableTableManager
@@ -4618,6 +5363,7 @@ class $$CowTableTableManager
             bool feedingLogRefs,
             bool healthRecordRefs,
             bool ledgerEntriesRefs,
+            bool calvesRefs,
           })
         > {
   $$CowTableTableManager(_$AppDatabase db, $CowTable table)
@@ -4679,6 +5425,7 @@ class $$CowTableTableManager
                 feedingLogRefs = false,
                 healthRecordRefs = false,
                 ledgerEntriesRefs = false,
+                calvesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4687,6 +5434,7 @@ class $$CowTableTableManager
                     if (feedingLogRefs) db.feedingLog,
                     if (healthRecordRefs) db.healthRecord,
                     if (ledgerEntriesRefs) db.ledgerEntries,
+                    if (calvesRefs) db.calves,
                   ],
                   addJoins:
                       <
@@ -4799,6 +5547,19 @@ class $$CowTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (calvesRefs)
+                        await $_getPrefetchedData<CowData, $CowTable, Calf>(
+                          currentTable: table,
+                          referencedTable: $$CowTableReferences
+                              ._calvesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CowTableReferences(db, table, p0).calvesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.damCowId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4825,6 +5586,7 @@ typedef $$CowTableProcessedTableManager =
         bool feedingLogRefs,
         bool healthRecordRefs,
         bool ledgerEntriesRefs,
+        bool calvesRefs,
       })
     >;
 typedef $$MilkTableTableCreateCompanionBuilder =
@@ -4834,6 +5596,7 @@ typedef $$MilkTableTableCreateCompanionBuilder =
       required String session,
       required double amount,
       required int cowId,
+      Value<String?> buyer,
       Value<int> rowid,
     });
 typedef $$MilkTableTableUpdateCompanionBuilder =
@@ -4843,6 +5606,7 @@ typedef $$MilkTableTableUpdateCompanionBuilder =
       Value<String> session,
       Value<double> amount,
       Value<int> cowId,
+      Value<String?> buyer,
       Value<int> rowid,
     });
 
@@ -4894,6 +5658,11 @@ class $$MilkTableTableFilterComposer
 
   ColumnFilters<double> get amount => $composableBuilder(
     column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get buyer => $composableBuilder(
+    column: $table.buyer,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4950,6 +5719,11 @@ class $$MilkTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get buyer => $composableBuilder(
+    column: $table.buyer,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CowTableOrderingComposer get cowId {
     final $$CowTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4994,6 +5768,9 @@ class $$MilkTableTableAnnotationComposer
 
   GeneratedColumn<double> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get buyer =>
+      $composableBuilder(column: $table.buyer, builder: (column) => column);
 
   $$CowTableAnnotationComposer get cowId {
     final $$CowTableAnnotationComposer composer = $composerBuilder(
@@ -5052,6 +5829,7 @@ class $$MilkTableTableTableManager
                 Value<String> session = const Value.absent(),
                 Value<double> amount = const Value.absent(),
                 Value<int> cowId = const Value.absent(),
+                Value<String?> buyer = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MilkTableCompanion(
                 id: id,
@@ -5059,6 +5837,7 @@ class $$MilkTableTableTableManager
                 session: session,
                 amount: amount,
                 cowId: cowId,
+                buyer: buyer,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5068,6 +5847,7 @@ class $$MilkTableTableTableManager
                 required String session,
                 required double amount,
                 required int cowId,
+                Value<String?> buyer = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MilkTableCompanion.insert(
                 id: id,
@@ -5075,6 +5855,7 @@ class $$MilkTableTableTableManager
                 session: session,
                 amount: amount,
                 cowId: cowId,
+                buyer: buyer,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -6311,6 +7092,25 @@ final class $$BreedingCyclesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$CalvesTable, List<Calf>> _calvesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.calves,
+    aliasName: 'breeding_cycles__id__calves__breeding_cycle_id',
+  );
+
+  $$CalvesTableProcessedTableManager get calvesRefs {
+    final manager = $$CalvesTableTableManager(
+      $_db,
+      $_db.calves,
+    ).filter((f) => f.breedingCycleId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_calvesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$BreedingCyclesTableFilterComposer
@@ -6480,6 +7280,31 @@ class $$BreedingCyclesTableFilterComposer
           }) => $$LedgerEntriesTableFilterComposer(
             $db: $db,
             $table: $db.ledgerEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> calvesRefs(
+    Expression<bool> Function($$CalvesTableFilterComposer f) f,
+  ) {
+    final $$CalvesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.calves,
+      getReferencedColumn: (t) => t.breedingCycleId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CalvesTableFilterComposer(
+            $db: $db,
+            $table: $db.calves,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6799,6 +7624,31 @@ class $$BreedingCyclesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> calvesRefs<T extends Object>(
+    Expression<T> Function($$CalvesTableAnnotationComposer a) f,
+  ) {
+    final $$CalvesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.calves,
+      getReferencedColumn: (t) => t.breedingCycleId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CalvesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.calves,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$BreedingCyclesTableTableManager
@@ -6818,6 +7668,7 @@ class $$BreedingCyclesTableTableManager
             bool cowId,
             bool calfCowId,
             bool ledgerEntriesRefs,
+            bool calvesRefs,
           })
         > {
   $$BreedingCyclesTableTableManager(
@@ -6934,11 +7785,17 @@ class $$BreedingCyclesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({cowId = false, calfCowId = false, ledgerEntriesRefs = false}) {
+              ({
+                cowId = false,
+                calfCowId = false,
+                ledgerEntriesRefs = false,
+                calvesRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (ledgerEntriesRefs) db.ledgerEntries,
+                    if (calvesRefs) db.calves,
                   ],
                   addJoins:
                       <
@@ -7012,6 +7869,27 @@ class $$BreedingCyclesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (calvesRefs)
+                        await $_getPrefetchedData<
+                          BreedingCycle,
+                          $BreedingCyclesTable,
+                          Calf
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BreedingCyclesTableReferences
+                              ._calvesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BreedingCyclesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).calvesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.breedingCycleId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -7036,6 +7914,7 @@ typedef $$BreedingCyclesTableProcessedTableManager =
         bool cowId,
         bool calfCowId,
         bool ledgerEntriesRefs,
+        bool calvesRefs,
       })
     >;
 typedef $$LedgerEntriesTableCreateCompanionBuilder =
@@ -7497,6 +8376,501 @@ typedef $$LedgerEntriesTableProcessedTableManager =
       LedgerEntry,
       PrefetchHooks Function({bool cowId, bool breedingCycleId})
     >;
+typedef $$CalvesTableCreateCompanionBuilder =
+    CalvesCompanion Function({
+      Value<int> id,
+      Value<int?> breedingCycleId,
+      Value<String?> name,
+      required DateTime dateOfBirth,
+      required String sex,
+      Value<int?> damCowId,
+      Value<double?> birthWeightKg,
+      Value<DateTime?> weanedOn,
+      Value<String?> notes,
+      Value<bool> boughtIn,
+    });
+typedef $$CalvesTableUpdateCompanionBuilder =
+    CalvesCompanion Function({
+      Value<int> id,
+      Value<int?> breedingCycleId,
+      Value<String?> name,
+      Value<DateTime> dateOfBirth,
+      Value<String> sex,
+      Value<int?> damCowId,
+      Value<double?> birthWeightKg,
+      Value<DateTime?> weanedOn,
+      Value<String?> notes,
+      Value<bool> boughtIn,
+    });
+
+final class $$CalvesTableReferences
+    extends BaseReferences<_$AppDatabase, $CalvesTable, Calf> {
+  $$CalvesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $BreedingCyclesTable _breedingCycleIdTable(_$AppDatabase db) => db
+      .breedingCycles
+      .createAlias('calves__breeding_cycle_id__breeding_cycles__id');
+
+  $$BreedingCyclesTableProcessedTableManager? get breedingCycleId {
+    final $_column = $_itemColumn<int>('breeding_cycle_id');
+    if ($_column == null) return null;
+    final manager = $$BreedingCyclesTableTableManager(
+      $_db,
+      $_db.breedingCycles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_breedingCycleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CowTable _damCowIdTable(_$AppDatabase db) =>
+      db.cow.createAlias('calves__dam_cow_id__cow__id');
+
+  $$CowTableProcessedTableManager? get damCowId {
+    final $_column = $_itemColumn<int>('dam_cow_id');
+    if ($_column == null) return null;
+    final manager = $$CowTableTableManager(
+      $_db,
+      $_db.cow,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_damCowIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CalvesTableFilterComposer
+    extends Composer<_$AppDatabase, $CalvesTable> {
+  $$CalvesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sex => $composableBuilder(
+    column: $table.sex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get birthWeightKg => $composableBuilder(
+    column: $table.birthWeightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get weanedOn => $composableBuilder(
+    column: $table.weanedOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get boughtIn => $composableBuilder(
+    column: $table.boughtIn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$BreedingCyclesTableFilterComposer get breedingCycleId {
+    final $$BreedingCyclesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.breedingCycleId,
+      referencedTable: $db.breedingCycles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BreedingCyclesTableFilterComposer(
+            $db: $db,
+            $table: $db.breedingCycles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableFilterComposer get damCowId {
+    final $$CowTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.damCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableFilterComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CalvesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CalvesTable> {
+  $$CalvesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sex => $composableBuilder(
+    column: $table.sex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get birthWeightKg => $composableBuilder(
+    column: $table.birthWeightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get weanedOn => $composableBuilder(
+    column: $table.weanedOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get boughtIn => $composableBuilder(
+    column: $table.boughtIn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$BreedingCyclesTableOrderingComposer get breedingCycleId {
+    final $$BreedingCyclesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.breedingCycleId,
+      referencedTable: $db.breedingCycles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BreedingCyclesTableOrderingComposer(
+            $db: $db,
+            $table: $db.breedingCycles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableOrderingComposer get damCowId {
+    final $$CowTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.damCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableOrderingComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CalvesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CalvesTable> {
+  $$CalvesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateOfBirth => $composableBuilder(
+    column: $table.dateOfBirth,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sex =>
+      $composableBuilder(column: $table.sex, builder: (column) => column);
+
+  GeneratedColumn<double> get birthWeightKg => $composableBuilder(
+    column: $table.birthWeightKg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get weanedOn =>
+      $composableBuilder(column: $table.weanedOn, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<bool> get boughtIn =>
+      $composableBuilder(column: $table.boughtIn, builder: (column) => column);
+
+  $$BreedingCyclesTableAnnotationComposer get breedingCycleId {
+    final $$BreedingCyclesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.breedingCycleId,
+      referencedTable: $db.breedingCycles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BreedingCyclesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.breedingCycles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CowTableAnnotationComposer get damCowId {
+    final $$CowTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.damCowId,
+      referencedTable: $db.cow,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CowTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cow,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CalvesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CalvesTable,
+          Calf,
+          $$CalvesTableFilterComposer,
+          $$CalvesTableOrderingComposer,
+          $$CalvesTableAnnotationComposer,
+          $$CalvesTableCreateCompanionBuilder,
+          $$CalvesTableUpdateCompanionBuilder,
+          (Calf, $$CalvesTableReferences),
+          Calf,
+          PrefetchHooks Function({bool breedingCycleId, bool damCowId})
+        > {
+  $$CalvesTableTableManager(_$AppDatabase db, $CalvesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CalvesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CalvesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CalvesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> breedingCycleId = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<DateTime> dateOfBirth = const Value.absent(),
+                Value<String> sex = const Value.absent(),
+                Value<int?> damCowId = const Value.absent(),
+                Value<double?> birthWeightKg = const Value.absent(),
+                Value<DateTime?> weanedOn = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<bool> boughtIn = const Value.absent(),
+              }) => CalvesCompanion(
+                id: id,
+                breedingCycleId: breedingCycleId,
+                name: name,
+                dateOfBirth: dateOfBirth,
+                sex: sex,
+                damCowId: damCowId,
+                birthWeightKg: birthWeightKg,
+                weanedOn: weanedOn,
+                notes: notes,
+                boughtIn: boughtIn,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> breedingCycleId = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                required DateTime dateOfBirth,
+                required String sex,
+                Value<int?> damCowId = const Value.absent(),
+                Value<double?> birthWeightKg = const Value.absent(),
+                Value<DateTime?> weanedOn = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<bool> boughtIn = const Value.absent(),
+              }) => CalvesCompanion.insert(
+                id: id,
+                breedingCycleId: breedingCycleId,
+                name: name,
+                dateOfBirth: dateOfBirth,
+                sex: sex,
+                damCowId: damCowId,
+                birthWeightKg: birthWeightKg,
+                weanedOn: weanedOn,
+                notes: notes,
+                boughtIn: boughtIn,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$CalvesTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({breedingCycleId = false, damCowId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (breedingCycleId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.breedingCycleId,
+                                referencedTable: $$CalvesTableReferences
+                                    ._breedingCycleIdTable(db),
+                                referencedColumn: $$CalvesTableReferences
+                                    ._breedingCycleIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (damCowId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.damCowId,
+                                referencedTable: $$CalvesTableReferences
+                                    ._damCowIdTable(db),
+                                referencedColumn: $$CalvesTableReferences
+                                    ._damCowIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CalvesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CalvesTable,
+      Calf,
+      $$CalvesTableFilterComposer,
+      $$CalvesTableOrderingComposer,
+      $$CalvesTableAnnotationComposer,
+      $$CalvesTableCreateCompanionBuilder,
+      $$CalvesTableUpdateCompanionBuilder,
+      (Calf, $$CalvesTableReferences),
+      Calf,
+      PrefetchHooks Function({bool breedingCycleId, bool damCowId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7516,4 +8890,6 @@ class $AppDatabaseManager {
       $$BreedingCyclesTableTableManager(_db, _db.breedingCycles);
   $$LedgerEntriesTableTableManager get ledgerEntries =>
       $$LedgerEntriesTableTableManager(_db, _db.ledgerEntries);
+  $$CalvesTableTableManager get calves =>
+      $$CalvesTableTableManager(_db, _db.calves);
 }
