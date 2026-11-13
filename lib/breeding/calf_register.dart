@@ -2,33 +2,51 @@ import 'package:cow/breeding/breeding_schema.dart';
 import 'package:cow/database/app_database.dart';
 
 /// What happened to a calf after it was born.
-enum CalfOutcome { kept, sold, awaiting }
-
-/// One calf, read from the breeding cycle that recorded its birth.
 ///
-/// The register is read-only: calves only appear here once a breeding
-/// cycle has a calving date.
+/// [onFarm] is for calves entered by hand (bought in, or born before the
+/// app was used); the others come from a breeding cycle.
+enum CalfOutcome { kept, sold, awaiting, onFarm }
+
+/// One calf in the register.
+///
+/// A calf comes from a breeding cycle with a calving date ([cycle]), from a
+/// hand-entered [Calf] row, or both: a cycle calf gets a [Calf] row (linked
+/// by `breedingCycleId`) the first time its weight, weaning or notes are
+/// saved.
 class CalfEntry {
-  final BreedingCycle cycle;
+  final BreedingCycle? cycle;
+  final Calf? details;
   final String damName;
 
-  /// Name of the heifer in the herd, when the calf was kept.
+  /// Name of the heifer in the herd (kept cycle calves) or the name given
+  /// to a hand-entered calf.
   final String? calfName;
 
-  CalfEntry(this.cycle, {required this.damName, this.calfName});
+  CalfEntry({this.cycle, this.details, required this.damName, this.calfName})
+    : assert(cycle != null || details != null);
 
-  DateTime get bornOn => cycle.actualCalvingDate!;
+  bool get fromCycle => cycle != null;
 
-  /// 'female', 'male' or null while the outcome is not recorded.
-  String? get sex => cycle.calfSex;
+  DateTime get bornOn => cycle?.actualCalvingDate ?? details!.dateOfBirth;
+
+  /// 'female', 'male' or null when not recorded.
+  String? get sex {
+    final s = cycle != null ? cycle!.calfSex : details!.sex;
+    return s == 'female' || s == 'male' ? s : null;
+  }
+
+  double? get birthWeightKg => details?.birthWeightKg;
+  DateTime? get weanedOn => details?.weanedOn;
+  String? get notes => details?.notes;
+  bool get boughtIn => details?.boughtIn ?? false;
 
   CalfOutcome get outcome {
-    if (cycle.calfCowId != null || cycle.stage == BreedingStage.keptAsHeifer) {
+    final c = cycle;
+    if (c == null) return CalfOutcome.onFarm;
+    if (c.calfCowId != null || c.stage == BreedingStage.keptAsHeifer) {
       return CalfOutcome.kept;
     }
-    if (cycle.sold || cycle.stage == BreedingStage.soldCalf) {
-      return CalfOutcome.sold;
-    }
+    if (c.sold || c.stage == BreedingStage.soldCalf) return CalfOutcome.sold;
     return CalfOutcome.awaiting;
   }
 
@@ -53,19 +71,48 @@ class CalfEntry {
   }
 }
 
-/// Every calf recorded through breeding cycles, newest first.
+/// Every calf, newest first: calves from breeding cycles (with their
+/// [Calf] details when saved) plus hand-entered calves.
+///
+/// A [Calf] row whose cycle is no longer in [cycles] (for example the
+/// calving date was removed) is still listed on its own, so its details
+/// are never hidden.
 List<CalfEntry> buildCalfRegister(
   List<CowData> cows,
-  List<BreedingCycle> cycles,
-) {
+  List<BreedingCycle> cycles, [
+  List<Calf> calves = const [],
+]) {
   final names = {for (final c in cows) c.id: c.name};
-  return [
-    for (final c in cycles)
-      if (c.actualCalvingDate != null)
-        CalfEntry(
-          c,
-          damName: names[c.cowId] ?? 'Cow #${c.cowId}',
-          calfName: c.calfCowId == null ? null : names[c.calfCowId],
-        ),
-  ]..sort((a, b) => b.bornOn.compareTo(a.bornOn));
+  final byCycle = {
+    for (final c in calves)
+      if (c.breedingCycleId != null) c.breedingCycleId!: c,
+  };
+  final usedIds = <int>{};
+
+  final entries = <CalfEntry>[];
+  for (final c in cycles) {
+    if (c.actualCalvingDate == null) continue;
+    final details = byCycle[c.id];
+    if (details != null) usedIds.add(details.id);
+    entries.add(
+      CalfEntry(
+        cycle: c,
+        details: details,
+        damName: names[c.cowId] ?? 'Cow #${c.cowId}',
+        calfName: c.calfCowId == null ? null : names[c.calfCowId],
+      ),
+    );
+  }
+  for (final d in calves) {
+    if (usedIds.contains(d.id)) continue;
+    final dam = d.damCowId;
+    entries.add(
+      CalfEntry(
+        details: d,
+        damName: dam == null ? 'Unknown dam' : names[dam] ?? 'Cow #$dam',
+        calfName: d.name,
+      ),
+    );
+  }
+  return entries..sort((a, b) => b.bornOn.compareTo(a.bornOn));
 }

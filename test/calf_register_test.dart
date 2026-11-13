@@ -54,7 +54,7 @@ void main() {
   group('buildCalfRegister', () {
     test('lists only calved cycles, newest first, with outcomes', () {
       final r = buildCalfRegister(_cows, _cycles);
-      expect(r.map((c) => c.cycle.id), [3, 2, 1]);
+      expect(r.map((c) => c.cycle!.id), [3, 2, 1]);
       expect(r.map((c) => c.outcome), [
         CalfOutcome.awaiting,
         CalfOutcome.sold,
@@ -84,6 +84,88 @@ void main() {
     });
   });
 
+  group('merging Calves rows', () {
+    Calf row(
+      int id, {
+      int? cycleId,
+      String? name,
+      DateTime? born,
+      String sex = 'female',
+      int? damId,
+      double? weight,
+      DateTime? weaned,
+      bool boughtIn = false,
+    }) => Calf(
+      id: id,
+      breedingCycleId: cycleId,
+      name: name,
+      dateOfBirth: born ?? DateTime(2026, 1, 1),
+      sex: sex,
+      damCowId: damId,
+      birthWeightKg: weight,
+      weanedOn: weaned,
+      boughtIn: boughtIn,
+    );
+
+    test('a row linked to a cycle adds its details to that calf', () {
+      final r = buildCalfRegister(_cows, _cycles, [
+        row(
+          10,
+          cycleId: 2,
+          sex: 'unknown',
+          weight: 30.5,
+          weaned: DateTime(2026, 11, 1),
+        ),
+      ]);
+      expect(r, hasLength(3)); // no extra entry
+      final sold = r.firstWhere((c) => c.cycle?.id == 2);
+      expect(sold.birthWeightKg, 30.5);
+      expect(sold.weanedOn, DateTime(2026, 11, 1));
+      expect(sold.outcome, CalfOutcome.sold);
+      expect(sold.sex, 'male'); // the cycle wins over the stored value
+    });
+
+    test('a calf with no cycle is listed on its own, newest first', () {
+      final r = buildCalfRegister(_cows, _cycles, [
+        row(
+          11,
+          name: 'Toto',
+          born: DateTime(2026, 10, 1),
+          damId: 1,
+          boughtIn: true,
+        ),
+        row(12, born: DateTime(2020, 5, 5)), // unknown dam
+      ]);
+      expect(r, hasLength(5));
+      final toto = r.firstWhere((c) => c.calfName == 'Toto');
+      expect(toto.fromCycle, isFalse);
+      expect(toto.outcome, CalfOutcome.onFarm);
+      expect(toto.boughtIn, isTrue);
+      expect(toto.damName, 'Daisy');
+      expect(r.last.details!.id, 12);
+      expect(r.last.damName, 'Unknown dam');
+      // Dates descending.
+      final dates = r.map((c) => c.bornOn).toList();
+      expect(dates, [...dates]..sort((a, b) => b.compareTo(a)));
+    });
+
+    test('a row whose cycle has no calving date is still listed', () {
+      final r = buildCalfRegister(_cows, _cycles, [
+        row(13, cycleId: 4, weight: 28),
+      ]);
+      final orphan = r.singleWhere((c) => c.details?.id == 13);
+      expect(orphan.fromCycle, isFalse);
+      expect(orphan.birthWeightKg, 28);
+    });
+
+    test('an unknown stored sex reads as not recorded', () {
+      final r = buildCalfRegister(const [], const [], [
+        row(14, sex: 'unknown'),
+      ]);
+      expect(r.single.sex, isNull);
+    });
+  });
+
   Future<void> show(WidgetTester tester, List<BreedingCycle> cycles) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -93,6 +175,7 @@ void main() {
         ),
       ),
     );
+    await tester.pump();
     await tester.pump();
     await tester.pump();
   }
@@ -107,6 +190,37 @@ void main() {
     expect(find.text('Sold · 15,000'), findsOneWidget);
     expect(find.text('Awaiting outcome'), findsOneWidget);
     expect(find.text('Calf of Daisy'), findsNWidgets(2));
+  });
+
+  testWidgets('a calf row shows birth weight and weaning date', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CalfRegisterScreen(
+          cows: Stream.value(_cows),
+          cycles: Stream.value(const []),
+          calves: Stream.value([
+            Calf(
+              id: 1,
+              name: 'Toto',
+              dateOfBirth: DateTime(2026, 1, 1),
+              sex: 'male',
+              birthWeightKg: 32,
+              weanedOn: DateTime(2026, 4, 3),
+              boughtIn: true,
+            ),
+          ]),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Toto'), findsOneWidget);
+    expect(find.text('Bought in'), findsOneWidget);
+    expect(
+      find.textContaining('32 kg at birth · Weaned on 3/4/2026'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('screen explains when there are no calves', (tester) async {
