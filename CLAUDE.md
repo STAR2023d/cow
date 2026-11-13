@@ -4,9 +4,10 @@
 - After table changes: `dart run build_runner build --delete-conflicting-outputs`
 - Check every change with `flutter analyze` and `flutter test`.
 - Run: `flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json`
-- NEVER read, print or commit `~/.config/cow/env.json` (holds the Gemini key).
+- NEVER read, print or commit `~/.config/cow/env.json` (holds the AI API keys).
 - The user's DB is `~/.local/share/com.example.cow/my_database.sqlite`. Back up before schema changes.
 - Docs live in README.md, CHANGELOG.md, docs/ (ROADMAP, AI, FINANCE, HEALTH, CALVES). Update them with each step.
+- AI settings and providers: see docs/AI.md. Providers are plain HTTP in `lib/services/ai/providers/`.
 - Work in small steps. Keep token use low. The user is on a budget.
 - The AI vet never gives drug doses.
 
@@ -17,8 +18,8 @@ Done: step 9 health reminders (`lib/health/reminders.dart`, `health_reminders_ca
 Done: step 10a read-only calf register (`lib/breeding/calf_register.dart`, `calf_register_screen.dart`, `watchCalvings`).
 Done: step 10b schema v10 (`Calves` table, milk `buyer`), calf add/edit (`calf_dialogs.dart`, `docs/CALVES.md`), buyer on milk entry.
 Done: earnings per buyer (`lib/models/buyer_earnings.dart`, Monthly Report panel).
-Next: pick from Later.
+Done: step 12 AI provider switching on phase-4 (providers over HTTP, factory `ai_provider_factory.dart`, cross-provider fallback).
+Next: try a real request with each configured provider; then pick from Later (in-app provider settings, Swahili UI, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later: Swahili UI.
-Later: AI provider switching (Gemini, Anthropic, OpenAI/compatible over plain HTTP, replacing `google_generative_ai`; provider factory; cross-provider fallback).
 Later: going public with paid AI (key-holding backend proxy, phone OTP accounts, metering and spending caps, M-Pesa credits, privacy policy + Kenya DPA, app-store billing check, closed beta).

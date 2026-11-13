@@ -125,4 +125,110 @@ void main() {
       expect(rec.hosts, isEmpty);
     }
   });
+
+  group('cross-provider fallback', () {
+    AiGenerator fixed(List<String> log, String name, AiResult<String> r) =>
+        _Fixed(log, name, r);
+
+    test('busy or unreachable moves on to the next provider', () async {
+      for (final failure in [AiFailure.busy, AiFailure.network]) {
+        final log = <String>[];
+        final r = await ChainGenerator([
+          fixed(log, 'a', AiResult.fail(failure)),
+          fixed(log, 'b', const AiResult.ok('from b')),
+        ]).generate(prompt: 'hi');
+        expect(r.value, 'from b');
+        expect(log, ['a', 'b']);
+      }
+    });
+
+    test('a blocked answer is never retried elsewhere', () async {
+      final log = <String>[];
+      final r = await ChainGenerator([
+        fixed(log, 'a', const AiResult.fail(AiFailure.blocked)),
+        fixed(log, 'b', const AiResult.ok('from b')),
+      ]).generate(prompt: 'hi');
+      expect(r.failure, AiFailure.blocked);
+      expect(log, ['a']);
+    });
+
+    test(
+      'providers not set up are skipped, keeping the real failure',
+      () async {
+        final log = <String>[];
+        final r = await ChainGenerator([
+          fixed(log, 'a', const AiResult.fail(AiFailure.busy)),
+          fixed(log, 'b', const AiResult.fail(AiFailure.noKey)),
+          fixed(log, 'c', const AiResult.ok('from c')),
+        ]).generate(prompt: 'hi');
+        expect(r.value, 'from c');
+
+        final none = await ChainGenerator([
+          fixed(log, 'a', const AiResult.fail(AiFailure.busy)),
+          fixed(log, 'b', const AiResult.fail(AiFailure.noKey)),
+        ]).generate(prompt: 'hi');
+        expect(none.failure, AiFailure.busy);
+      },
+    );
+
+    test('a primary that is not set up does not fall back', () async {
+      final log = <String>[];
+      final r = await ChainGenerator([
+        fixed(log, 'a', const AiResult.fail(AiFailure.noKey)),
+        fixed(log, 'b', const AiResult.ok('from b')),
+      ]).generate(prompt: 'hi');
+      expect(r.failure, AiFailure.noKey);
+      expect(log, ['a']);
+    });
+
+    test('the factory chains configured providers, end to end', () async {
+      final rec = _Recorder();
+      final gen = buildAiGenerator(
+        const AiConfig(
+          provider: 'openai',
+          openAiKey: 'o',
+          openAiModel: 'm',
+          anthropicKey: 'a',
+          // Unknown, repeated and unconfigured names are ignored/skipped.
+          fallbackProviders: 'claude, OPENAI, gemini, anthropic',
+        ),
+        httpClient: rec.client(
+          (req) => req.url.host == 'api.openai.com'
+              ? _json('{}', 400) // unknown failure: no fallback
+              : _json(_anthropicOk),
+        ),
+      );
+      expect(gen, isA<ChainGenerator>());
+      expect((gen as ChainGenerator).generators, hasLength(3));
+
+      final r = await gen.generate(prompt: 'hi');
+      expect(r.failure, AiFailure.unknown);
+      expect(rec.hosts, ['api.openai.com']);
+    });
+
+    test('no fallback list means no chain', () {
+      expect(
+        buildAiGenerator(const AiConfig(geminiKey: 'g')),
+        isA<RetryingGenerator>(),
+      );
+    });
+  });
+}
+
+class _Fixed implements AiGenerator {
+  final List<String> log;
+  final String name;
+  final AiResult<String> result;
+
+  _Fixed(this.log, this.name, this.result);
+
+  @override
+  Future<AiResult<String>> generate({
+    required String prompt,
+    String? system,
+    bool json = false,
+  }) async {
+    log.add(name);
+    return result;
+  }
 }

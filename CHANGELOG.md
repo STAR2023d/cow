@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- AI: Gemini, Claude (Anthropic) and OpenAI / OpenAI-compatible providers over plain HTTP; `google_generative_ai` removed
+- AI: choose the provider and model with `AI_PROVIDER` and per-provider settings; incomplete settings report "not set up" without a request
+- AI: cross-provider fallback (`AI_FALLBACK_PROVIDERS`) when a provider stays busy or unreachable; blocked answers are never retried elsewhere
 - Monthly Report: "Earnings per buyer" panel (amount, litres and share of milk income per buyer; entries without a buyer grouped as "Not recorded")
 - Schema v10: new `Calves` table and optional `buyer` column on milk entries (migration from v9 tested)
 - Calf Register: add calves bought in or born before the app, and record birth weight, weaning date and notes for any calf (see `docs/CALVES.md`)

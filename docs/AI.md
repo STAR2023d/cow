@@ -1,10 +1,48 @@
 # AI in Mwaura's Farm
 
-## Structure
+## Providers
 
-- `lib/services/ai/ai_generator.dart`: `AiGenerator` interface, `AiResult` (value or failure reason) and `GeminiGenerator`
-- `lib/services/ai/vet_service.dart`: vet assessment (prompt, danger-sign override, reply parser)
-- `lib/services/ai_service.dart`: older milk-production insights (to be moved onto `AiGenerator`)
+The app can use **Gemini**, **Claude (Anthropic)**, **OpenAI**, or any **OpenAI-compatible** service. All are called over plain HTTP with the `http` package (no provider SDKs; `google_generative_ai` was removed in step 12b). The vet assistant, production insights and finance advisor only see the `AiGenerator` interface, so they work the same with every provider.
+
+| Provider | Endpoint | Notes |
+| --- | --- | --- |
+| `gemini` (default) | `generateContent` | Key sent in a header, not the URL. Temperature 0.3; JSON mode when asked. |
+| `anthropic` | Messages API, version `2026-10-21` | No `temperature` (that API version rejects it). JSON asked for in the system prompt. Only `text` blocks are read (thinking blocks are skipped). A `refusal` is shown as "no answer". Server-side refusal fallback is on (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`), so Anthropic retries a refused request on another Claude model itself. |
+| `openai` | Chat Completions | Bearer key; `response_format: json_object` for JSON. |
+| `compatible` | `<OPENAI_BASE_URL>/chat/completions` | Same as `openai` at another address. Set `OPENAI_JSON_MODE=false` if the service rejects `response_format`. |
+
+## Settings
+
+Keep keys out of shell commands and out of the repository. Put them in a private file outside the project and pass it in:
+
+```bash
+flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json
+```
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `AI_PROVIDER` | `gemini` | `gemini`, `anthropic`, `openai` or `compatible` |
+| `GEMINI_API_KEY` | | |
+| `GEMINI_MODEL` | `gemini-3.8-flash` | |
+| `GEMINI_FALLBACK_MODEL` | (none) | Second Gemini model, tried once when the main one stays busy |
+| `ANTHROPIC_API_KEY` | | |
+| `ANTHROPIC_MODEL` | `claude-opus-5-5` | Most capable; `claude-haiku-5-5` costs far less per request |
+| `OPENAI_API_KEY` | | Also used for `compatible` |
+| `OPENAI_MODEL` | (none, required) | |
+| `OPENAI_BASE_URL` | OpenAI | Required for `compatible`, e.g. `http://localhost:8080/v1` |
+| `OPENAI_JSON_MODE` | `true` | |
+| `AI_FALLBACK_PROVIDERS` | (none) | Other providers to try, in order, e.g. `anthropic,openai` |
+
+Example file: `{"AI_PROVIDER": "gemini", "GEMINI_API_KEY": "...", "ANTHROPIC_API_KEY": "...", "AI_FALLBACK_PROVIDERS": "anthropic"}`.
+
+Settings that are incomplete (unknown provider, missing key or model, `compatible` without a valid base URL) make the AI report "not set up" without sending any request.
+
+## Retries and fallback
+
+1. **Same provider:** a busy reply (429, 500, 502, 503, 504, or Anthropic's 529) is retried after 2 s, then 5 s. For Gemini, a `GEMINI_FALLBACK_MODEL` is then tried once more.
+2. **Other providers:** if the result is still busy or unreachable (no connection, timeout), each provider in `AI_FALLBACK_PROVIDERS` is tried in turn. Unknown, repeated or not-set-up providers are skipped.
+3. **Never retried elsewhere:** a blocked answer (safety filter or refusal). If one model declines a vet question the app does not shop around for another answer. Other errors (for example a bad key) are also returned as they are.
+4. A main provider that is not set up does not fall back; the farmer is told the AI is not set up.
 
 ## Vet assistant safety rules
 
@@ -14,38 +52,29 @@
 - An unrecognised urgency from the AI is treated as "see a vet soon".
 - The danger phrase list is English only so far.
 
-## Known limits
-
-- `google_generative_ai` is no longer maintained; plan a move to `firebase_ai` or a small server-side proxy before a public release.
-- `GEMINI_API_KEY` is compiled into the app, so it can be extracted from a distributed build. Fine for personal testing, not for publishing.
-- Swapping provider = write a new class implementing `AiGenerator`.
-- A 503 means Google's servers are overloaded. Requests are retried twice (after 2 s, then 5 s) before the farmer is told the AI is busy.
-
-## Running with a key
-
-```bash
-flutter run --dart-define=GEMINI_API_KEY=your_key_here
-```
-
 ## What the vet assistant knows about the cow
 
 Breed, age, current breeding stage (with expected calving date) and the last 7 days of milk, gathered by `vet_case_builder.dart`. The farmer only types the symptoms and how long.
-
-## Structure
-
-- `lib/services/ai/ai_generator.dart`: `AiGenerator` interface, `AiResult` (value or failure reason) and `GeminiGenerator`
-- `lib/services/ai/ai_messages.dart`: farmer-friendly wording for each failure
-- `lib/services/ai/vet_service.dart`, `vet_case_builder.dart`, `vet_record.dart`: vet assistant
-- `lib/services/ai/production_insights_service.dart`: milk insights (asks only on request, caches identical data)
 
 ## Finance advisor
 
 - `finance_advisor_service.dart`: `findFinanceAlerts` (plain arithmetic, instant, works offline), the prompt, the reply parser, and `FinanceAdvisorService` (asks only on request, caches identical numbers and questions).
 - Compares a month with the month before. A month in progress is compared with the same days of the previous month.
 - Rules in the system instruction: only use the numbers given, no tax/loan/investment/legal advice, say so when the data is thin. Amounts are assumed to be Kenyan shillings. English only for now.
-Keep keys out of shell commands. Put them in a private file outside the project and pass it in:
+- Earnings per buyer is not sent to the advisor yet.
 
-```bash
-flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json
-```
-with `{"GEMINI_API_KEY": "...", "GEMINI_MODEL": "...", "GEMINI_FALLBACK_MODEL": "..."}`. The fallback model is tried once when the main model is still overloaded after its retries.
+## Known limits
+
+- API keys are compiled into the app, so they can be extracted from a distributed build. Fine for personal testing, not for publishing: a key-holding backend proxy is planned (see "Going public with paid AI" in `docs/ROADMAP.md`).
+- The provider is chosen at build time; there is no in-app settings screen.
+- Prompts were written and tested with Gemini. Claude and OpenAI replies go through the same parsers, but have not been checked against real farm questions yet.
+
+## Structure
+
+- `lib/services/ai/ai_generator.dart`: `AiGenerator` interface, `AiResult` (value or failure reason), `retryWhenBusy`, `fallbackWhenBusy`
+- `lib/services/ai/providers/`: `http_ai.dart` (shared request and error sorting), `gemini_http.dart`, `anthropic_http.dart`, `openai_http.dart`
+- `lib/services/ai/ai_provider_factory.dart`: `AiConfig` (settings), `buildAiGenerator`, `RetryingGenerator`, `ChainGenerator`, `ConfiguredAiGenerator` (the app's default)
+- `lib/services/ai/ai_messages.dart`: farmer-friendly wording for each failure
+- `lib/services/ai/vet_service.dart`, `vet_case_builder.dart`, `vet_record.dart`: vet assistant
+- `lib/services/ai/production_insights_service.dart`: milk insights (asks only on request, caches identical data)
+- `lib/services/ai/finance_advisor_service.dart`: finance advisor

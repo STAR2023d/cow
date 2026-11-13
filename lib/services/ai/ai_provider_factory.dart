@@ -50,6 +50,11 @@ class AiConfig {
   /// Set to false for compatible services that reject `response_format`.
   final bool openAiJsonMode;
 
+  /// Other providers to try, in order, when [provider] stays busy or
+  /// unreachable, e.g. `anthropic,openai`. Ones not fully set up are
+  /// skipped. Empty = none.
+  final String fallbackProviders;
+
   const AiConfig({
     this.provider = 'gemini',
     this.geminiKey = '',
@@ -61,6 +66,7 @@ class AiConfig {
     this.openAiModel = '',
     this.openAiBaseUrl = '',
     this.openAiJsonMode = true,
+    this.fallbackProviders = '',
   });
 
   const AiConfig.fromEnvironment()
@@ -87,7 +93,8 @@ class AiConfig {
       openAiJsonMode = const bool.fromEnvironment(
         'OPENAI_JSON_MODE',
         defaultValue: true,
-      );
+      ),
+      fallbackProviders = const String.fromEnvironment('AI_FALLBACK_PROVIDERS');
 }
 
 /// Retries a busy [primary] (2 s, then 5 s), then hands over to [fallback]
@@ -137,13 +144,59 @@ class _NotConfigured implements AiGenerator {
   }) async => AiResult.fail(AiFailure.noKey, why);
 }
 
-/// Builds the generator for [config.provider], wrapped in retries.
-/// [httpClient] is for tests.
+/// Tries [generators] in order. Moves to the next one only while the
+/// result so far is [AiFailure.busy] or [AiFailure.network]. A generator
+/// that is not set up ([AiFailure.noKey]) is skipped and the earlier
+/// failure kept. A blocked answer is never retried elsewhere: if one
+/// model declines, the app does not shop around for another.
+class ChainGenerator implements AiGenerator {
+  final List<AiGenerator> generators;
+
+  const ChainGenerator(this.generators);
+
+  static const _moveOn = {AiFailure.busy, AiFailure.network};
+
+  @override
+  Future<AiResult<String>> generate({
+    required String prompt,
+    String? system,
+    bool json = false,
+  }) async {
+    AiResult<String>? result;
+    for (final g in generators) {
+      if (result != null && !_moveOn.contains(result.failure)) break;
+      final r = await g.generate(prompt: prompt, system: system, json: json);
+      if (r.isOk) return r;
+      if (result == null || r.failure != AiFailure.noKey) result = r;
+    }
+    return result ?? const AiResult.fail(AiFailure.noKey, 'No providers');
+  }
+}
+
+/// Builds the generator for [config.provider] (with retries), followed by
+/// any [AiConfig.fallbackProviders]. [httpClient] is for tests.
 AiGenerator buildAiGenerator(AiConfig config, {http.Client? httpClient}) {
-  final provider = AiProvider.parse(config.provider);
+  final primary = _buildProvider(config.provider, config, httpClient);
+  final primaryKind = AiProvider.parse(config.provider);
+  final seen = {?primaryKind};
+  final fallbacks = <AiGenerator>[];
+  for (final name in config.fallbackProviders.split(',')) {
+    final kind = AiProvider.parse(name);
+    if (kind == null || !seen.add(kind)) continue; // unknown or repeated
+    fallbacks.add(_buildProvider(name, config, httpClient));
+  }
+  return fallbacks.isEmpty ? primary : ChainGenerator([primary, ...fallbacks]);
+}
+
+AiGenerator _buildProvider(
+  String name,
+  AiConfig config,
+  http.Client? httpClient,
+) {
+  final provider = AiProvider.parse(name);
   switch (provider) {
     case null:
-      return _NotConfigured('Unknown AI_PROVIDER "${config.provider}"');
+      return _NotConfigured('Unknown AI provider "$name"');
     case AiProvider.gemini:
       GeminiHttpGenerator gemini(String model) => GeminiHttpGenerator(
         apiKey: config.geminiKey,

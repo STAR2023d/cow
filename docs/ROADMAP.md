@@ -56,9 +56,10 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 ### AI provider switching
 
-- [ ] Call Gemini, Anthropic, OpenAI and OpenAI-compatible services over plain HTTP, replacing `google_generative_ai`
-- [ ] Provider factory: pick the provider and model from settings, behind the existing `AiGenerator` interface
-- [ ] Cross-provider fallback: when one provider is busy or down, try the next
+- [x] Call Gemini, Anthropic, OpenAI and OpenAI-compatible services over plain HTTP, replacing `google_generative_ai`
+- [x] Provider factory: pick the provider and model from build settings (`--dart-define`), behind the existing `AiGenerator` interface
+- [ ] In-app settings screen to switch provider and model
+- [x] Cross-provider fallback: when one provider is busy or down, try the next (`AI_FALLBACK_PROVIDERS`)
 
 ### Going public with paid AI
 
