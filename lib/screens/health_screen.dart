@@ -1,4 +1,5 @@
 import 'package:cow/database/app_database.dart';
+import 'package:cow/health/milk_withdrawal.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ const List<String> healthRecordTypes = [
   'Deworming',
   'Other',
 ];
+
+String _fmt(DateTime d) => '${d.day}/${d.month}/${d.year}';
 
 class HealthScreen extends StatelessWidget {
   final AppDatabase db;
@@ -32,8 +35,11 @@ class HealthScreen extends StatelessWidget {
 
     final cowController = ValueNotifier<int>(cows.first.id);
     final typeController = ValueNotifier<String>(healthRecordTypes.first);
+    final dateController = ValueNotifier<DateTime>(DateTime.now());
     final followUpController = ValueNotifier<DateTime?>(null);
     final descriptionController = TextEditingController();
+    final medicineController = TextEditingController();
+    final withdrawalController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     await showDialog(
@@ -91,13 +97,70 @@ class HealthScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 12),
+                  ValueListenableBuilder<DateTime>(
+                    valueListenable: dateController,
+                    builder: (context, value, _) => ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        'Date: ${_fmt(value)}',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: const Icon(
+                        Icons.calendar_today,
+                        color: Colors.white70,
+                      ),
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: value,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now(),
+                        );
+                        if (picked != null) dateController.value = picked;
+                      },
+                    ),
+                  ),
                   TextFormField(
                     controller: descriptionController,
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(labelText: 'Description'),
                     maxLines: 2,
-                    validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Enter a description' : null,
+                    maxLength: 300,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? 'Enter a description'
+                        : null,
+                  ),
+                  const SizedBox(height: 4),
+                  TextFormField(
+                    controller: medicineController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelText: 'Medicine (optional)',
+                    ),
+                    maxLength: 80,
+                  ),
+                  const SizedBox(height: 4),
+                  TextFormField(
+                    controller: withdrawalController,
+                    style: const TextStyle(color: Colors.white),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Milk withdrawal days (optional)',
+                      helperText:
+                          'From the medicine label or your vet. The app only '
+                          'counts the days you enter.',
+                      helperMaxLines: 2,
+                      helperStyle: TextStyle(color: Colors.white38),
+                    ),
+                    validator: (v) {
+                      final text = v?.trim() ?? '';
+                      if (text.isEmpty) return null;
+                      final days = int.tryParse(text);
+                      if (days == null || days < 1 || days > 60) {
+                        return 'Enter 1 to 60 days';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 12),
                   ValueListenableBuilder<DateTime?>(
@@ -107,7 +170,7 @@ class HealthScreen extends StatelessWidget {
                       title: Text(
                         value == null
                             ? 'No follow-up date'
-                            : 'Follow-up: ${value.day}/${value.month}/${value.year}',
+                            : 'Follow-up: ${_fmt(value)}',
                         style: const TextStyle(color: Colors.white70),
                       ),
                       trailing: const Icon(
@@ -141,13 +204,18 @@ class HealthScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (!formKey.currentState!.validate()) return;
+                final medicine = medicineController.text.trim();
                 await db.insertHealthRecord(
                   HealthRecordCompanion.insert(
-                    date: DateTime.now(),
+                    date: dateController.value,
                     cowId: cowController.value,
                     recordType: typeController.value,
-                    description: descriptionController.text,
+                    description: descriptionController.text.trim(),
                     followUpDate: drift.Value(followUpController.value),
+                    medicine: drift.Value(medicine.isEmpty ? null : medicine),
+                    milkWithdrawalDays: drift.Value(
+                      int.tryParse(withdrawalController.text.trim()),
+                    ),
                   ),
                 );
                 if (dialogContext.mounted) Navigator.pop(dialogContext);
@@ -193,6 +261,7 @@ class HealthScreen extends StatelessWidget {
               final cowsById = {
                 for (final c in cowSnapshot.data ?? <CowData>[]) c.id: c.name,
               };
+              final now = DateTime.now();
               return ListView.builder(
                 padding: const EdgeInsets.only(
                   left: 12,
@@ -204,6 +273,7 @@ class HealthScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final r = records[index];
                   final cowName = cowsById[r.cowId] ?? 'Unknown cow';
+                  final withdrawal = milkWithdrawalOf(r);
                   return Card(
                     color: AppColors.card,
                     margin: const EdgeInsets.symmetric(vertical: 6),
@@ -222,10 +292,28 @@ class HealthScreen extends StatelessWidget {
                         '$cowName • ${r.recordType}',
                         style: const TextStyle(color: Colors.white),
                       ),
-                      subtitle: Text(
-                        '${r.description}\n${r.date.day}/${r.date.month}/${r.date.year}'
-                        '${r.followUpDate != null ? '  •  Follow-up: ${r.followUpDate!.day}/${r.followUpDate!.month}/${r.followUpDate!.year}' : ''}',
-                        style: const TextStyle(color: Colors.white60),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            r.description,
+                            style: const TextStyle(color: Colors.white60),
+                          ),
+                          if (r.medicine != null && r.medicine!.isNotEmpty)
+                            Text(
+                              'Medicine: ${r.medicine}',
+                              style: const TextStyle(color: Colors.white60),
+                            ),
+                          Text(
+                            _fmt(r.date) +
+                                (r.followUpDate != null
+                                    ? '  •  Follow-up: ${_fmt(r.followUpDate!)}'
+                                    : ''),
+                            style: const TextStyle(color: Colors.white60),
+                          ),
+                          if (withdrawal != null)
+                            _WithdrawalLine(withdrawal: withdrawal, now: now),
+                        ],
                       ),
                       isThreeLine: true,
                       trailing: IconButton(
@@ -266,5 +354,46 @@ class HealthScreen extends StatelessWidget {
       default:
         return Icons.health_and_safety;
     }
+  }
+}
+
+class _WithdrawalLine extends StatelessWidget {
+  final MilkWithdrawal withdrawal;
+  final DateTime now;
+
+  const _WithdrawalLine({required this.withdrawal, required this.now});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!withdrawal.isActiveOn(now)) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Text(
+          'Milk hold ended ${_fmt(withdrawal.lastWithheldDay)}',
+          style: const TextStyle(color: Colors.white38),
+        ),
+      );
+    }
+
+    final left = withdrawal.daysLeft(now);
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          const Icon(Icons.block, size: 16, color: Colors.orangeAccent),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              'Milk on hold: safe from ${_fmt(withdrawal.safeFrom)} '
+              '($left ${left == 1 ? 'day' : 'days'} left)',
+              style: const TextStyle(
+                color: Colors.orangeAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

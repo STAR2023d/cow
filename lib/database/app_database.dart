@@ -77,6 +77,10 @@ class HealthRecord extends Table {
   TextColumn get recordType => text()(); // Vaccination, Illness, Checkup...
   TextColumn get description => text().withLength(min: 1, max: 300)();
   DateTimeColumn get followUpDate => dateTime().nullable()();
+  // Name of the medicine given, if any.
+  TextColumn get medicine => text().nullable()();
+  // Days the cow's milk must be held back after this treatment.
+  IntColumn get milkWithdrawalDays => integer().nullable()();
 }
 
 // --- UNIFIED DATABASE CLASS ---
@@ -96,7 +100,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {
@@ -143,6 +147,12 @@ class AppDatabase extends _$AppDatabase {
           // Databases older than 4 get the expenses table created above
           // with the category column already in it, so they skip this.
           await m.addColumn(expenses, expenses.category);
+        }
+        if (from < 9 && from >= 6) {
+          // Databases older than 6 get the health table created above with
+          // these columns already in it, so they skip this.
+          await m.addColumn(healthRecord, healthRecord.medicine);
+          await m.addColumn(healthRecord, healthRecord.milkWithdrawalDays);
         }
       },
     );

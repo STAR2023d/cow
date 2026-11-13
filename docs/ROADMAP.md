@@ -24,7 +24,8 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 - [ ] Restructure `ai_service.dart` with an offline fallback and caching
 - [ ] Symptom checker with urgency levels
-- [ ] Medicine withdrawal-period warnings
+- [x] Record medicine and milk withdrawal days on health records
+- [ ] Warn when logging milk for a cow on hold, and on the dashboard
 - [ ] Vaccination and tick-control reminders
 
 ## Phase 3: AI financial management

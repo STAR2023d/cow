@@ -1909,6 +1909,27 @@ class $HealthRecordTable extends HealthRecord
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _medicineMeta = const VerificationMeta(
+    'medicine',
+  );
+  @override
+  late final GeneratedColumn<String> medicine = GeneratedColumn<String>(
+    'medicine',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _milkWithdrawalDaysMeta =
+      const VerificationMeta('milkWithdrawalDays');
+  @override
+  late final GeneratedColumn<int> milkWithdrawalDays = GeneratedColumn<int>(
+    'milk_withdrawal_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1917,6 +1938,8 @@ class $HealthRecordTable extends HealthRecord
     recordType,
     description,
     followUpDate,
+    medicine,
+    milkWithdrawalDays,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1977,6 +2000,21 @@ class $HealthRecordTable extends HealthRecord
         ),
       );
     }
+    if (data.containsKey('medicine')) {
+      context.handle(
+        _medicineMeta,
+        medicine.isAcceptableOrUnknown(data['medicine']!, _medicineMeta),
+      );
+    }
+    if (data.containsKey('milk_withdrawal_days')) {
+      context.handle(
+        _milkWithdrawalDaysMeta,
+        milkWithdrawalDays.isAcceptableOrUnknown(
+          data['milk_withdrawal_days']!,
+          _milkWithdrawalDaysMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2010,6 +2048,14 @@ class $HealthRecordTable extends HealthRecord
         DriftSqlType.dateTime,
         data['${effectivePrefix}follow_up_date'],
       ),
+      medicine: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}medicine'],
+      ),
+      milkWithdrawalDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}milk_withdrawal_days'],
+      ),
     );
   }
 
@@ -2027,6 +2073,8 @@ class HealthRecordData extends DataClass
   final String recordType;
   final String description;
   final DateTime? followUpDate;
+  final String? medicine;
+  final int? milkWithdrawalDays;
   const HealthRecordData({
     required this.id,
     required this.date,
@@ -2034,6 +2082,8 @@ class HealthRecordData extends DataClass
     required this.recordType,
     required this.description,
     this.followUpDate,
+    this.medicine,
+    this.milkWithdrawalDays,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2045,6 +2095,12 @@ class HealthRecordData extends DataClass
     map['description'] = Variable<String>(description);
     if (!nullToAbsent || followUpDate != null) {
       map['follow_up_date'] = Variable<DateTime>(followUpDate);
+    }
+    if (!nullToAbsent || medicine != null) {
+      map['medicine'] = Variable<String>(medicine);
+    }
+    if (!nullToAbsent || milkWithdrawalDays != null) {
+      map['milk_withdrawal_days'] = Variable<int>(milkWithdrawalDays);
     }
     return map;
   }
@@ -2059,6 +2115,12 @@ class HealthRecordData extends DataClass
       followUpDate: followUpDate == null && nullToAbsent
           ? const Value.absent()
           : Value(followUpDate),
+      medicine: medicine == null && nullToAbsent
+          ? const Value.absent()
+          : Value(medicine),
+      milkWithdrawalDays: milkWithdrawalDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(milkWithdrawalDays),
     );
   }
 
@@ -2074,6 +2136,8 @@ class HealthRecordData extends DataClass
       recordType: serializer.fromJson<String>(json['recordType']),
       description: serializer.fromJson<String>(json['description']),
       followUpDate: serializer.fromJson<DateTime?>(json['followUpDate']),
+      medicine: serializer.fromJson<String?>(json['medicine']),
+      milkWithdrawalDays: serializer.fromJson<int?>(json['milkWithdrawalDays']),
     );
   }
   @override
@@ -2086,6 +2150,8 @@ class HealthRecordData extends DataClass
       'recordType': serializer.toJson<String>(recordType),
       'description': serializer.toJson<String>(description),
       'followUpDate': serializer.toJson<DateTime?>(followUpDate),
+      'medicine': serializer.toJson<String?>(medicine),
+      'milkWithdrawalDays': serializer.toJson<int?>(milkWithdrawalDays),
     };
   }
 
@@ -2096,6 +2162,8 @@ class HealthRecordData extends DataClass
     String? recordType,
     String? description,
     Value<DateTime?> followUpDate = const Value.absent(),
+    Value<String?> medicine = const Value.absent(),
+    Value<int?> milkWithdrawalDays = const Value.absent(),
   }) => HealthRecordData(
     id: id ?? this.id,
     date: date ?? this.date,
@@ -2103,6 +2171,10 @@ class HealthRecordData extends DataClass
     recordType: recordType ?? this.recordType,
     description: description ?? this.description,
     followUpDate: followUpDate.present ? followUpDate.value : this.followUpDate,
+    medicine: medicine.present ? medicine.value : this.medicine,
+    milkWithdrawalDays: milkWithdrawalDays.present
+        ? milkWithdrawalDays.value
+        : this.milkWithdrawalDays,
   );
   HealthRecordData copyWithCompanion(HealthRecordCompanion data) {
     return HealthRecordData(
@@ -2118,6 +2190,10 @@ class HealthRecordData extends DataClass
       followUpDate: data.followUpDate.present
           ? data.followUpDate.value
           : this.followUpDate,
+      medicine: data.medicine.present ? data.medicine.value : this.medicine,
+      milkWithdrawalDays: data.milkWithdrawalDays.present
+          ? data.milkWithdrawalDays.value
+          : this.milkWithdrawalDays,
     );
   }
 
@@ -2129,14 +2205,24 @@ class HealthRecordData extends DataClass
           ..write('cowId: $cowId, ')
           ..write('recordType: $recordType, ')
           ..write('description: $description, ')
-          ..write('followUpDate: $followUpDate')
+          ..write('followUpDate: $followUpDate, ')
+          ..write('medicine: $medicine, ')
+          ..write('milkWithdrawalDays: $milkWithdrawalDays')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, date, cowId, recordType, description, followUpDate);
+  int get hashCode => Object.hash(
+    id,
+    date,
+    cowId,
+    recordType,
+    description,
+    followUpDate,
+    medicine,
+    milkWithdrawalDays,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2146,7 +2232,9 @@ class HealthRecordData extends DataClass
           other.cowId == this.cowId &&
           other.recordType == this.recordType &&
           other.description == this.description &&
-          other.followUpDate == this.followUpDate);
+          other.followUpDate == this.followUpDate &&
+          other.medicine == this.medicine &&
+          other.milkWithdrawalDays == this.milkWithdrawalDays);
 }
 
 class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
@@ -2156,6 +2244,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
   final Value<String> recordType;
   final Value<String> description;
   final Value<DateTime?> followUpDate;
+  final Value<String?> medicine;
+  final Value<int?> milkWithdrawalDays;
   const HealthRecordCompanion({
     this.id = const Value.absent(),
     this.date = const Value.absent(),
@@ -2163,6 +2253,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
     this.recordType = const Value.absent(),
     this.description = const Value.absent(),
     this.followUpDate = const Value.absent(),
+    this.medicine = const Value.absent(),
+    this.milkWithdrawalDays = const Value.absent(),
   });
   HealthRecordCompanion.insert({
     this.id = const Value.absent(),
@@ -2171,6 +2263,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
     required String recordType,
     required String description,
     this.followUpDate = const Value.absent(),
+    this.medicine = const Value.absent(),
+    this.milkWithdrawalDays = const Value.absent(),
   }) : date = Value(date),
        cowId = Value(cowId),
        recordType = Value(recordType),
@@ -2182,6 +2276,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
     Expression<String>? recordType,
     Expression<String>? description,
     Expression<DateTime>? followUpDate,
+    Expression<String>? medicine,
+    Expression<int>? milkWithdrawalDays,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2190,6 +2286,9 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
       if (recordType != null) 'record_type': recordType,
       if (description != null) 'description': description,
       if (followUpDate != null) 'follow_up_date': followUpDate,
+      if (medicine != null) 'medicine': medicine,
+      if (milkWithdrawalDays != null)
+        'milk_withdrawal_days': milkWithdrawalDays,
     });
   }
 
@@ -2200,6 +2299,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
     Value<String>? recordType,
     Value<String>? description,
     Value<DateTime?>? followUpDate,
+    Value<String?>? medicine,
+    Value<int?>? milkWithdrawalDays,
   }) {
     return HealthRecordCompanion(
       id: id ?? this.id,
@@ -2208,6 +2309,8 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
       recordType: recordType ?? this.recordType,
       description: description ?? this.description,
       followUpDate: followUpDate ?? this.followUpDate,
+      medicine: medicine ?? this.medicine,
+      milkWithdrawalDays: milkWithdrawalDays ?? this.milkWithdrawalDays,
     );
   }
 
@@ -2232,6 +2335,12 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
     if (followUpDate.present) {
       map['follow_up_date'] = Variable<DateTime>(followUpDate.value);
     }
+    if (medicine.present) {
+      map['medicine'] = Variable<String>(medicine.value);
+    }
+    if (milkWithdrawalDays.present) {
+      map['milk_withdrawal_days'] = Variable<int>(milkWithdrawalDays.value);
+    }
     return map;
   }
 
@@ -2243,7 +2352,9 @@ class HealthRecordCompanion extends UpdateCompanion<HealthRecordData> {
           ..write('cowId: $cowId, ')
           ..write('recordType: $recordType, ')
           ..write('description: $description, ')
-          ..write('followUpDate: $followUpDate')
+          ..write('followUpDate: $followUpDate, ')
+          ..write('medicine: $medicine, ')
+          ..write('milkWithdrawalDays: $milkWithdrawalDays')
           ..write(')'))
         .toString();
   }
@@ -5723,6 +5834,8 @@ typedef $$HealthRecordTableCreateCompanionBuilder =
       required String recordType,
       required String description,
       Value<DateTime?> followUpDate,
+      Value<String?> medicine,
+      Value<int?> milkWithdrawalDays,
     });
 typedef $$HealthRecordTableUpdateCompanionBuilder =
     HealthRecordCompanion Function({
@@ -5732,6 +5845,8 @@ typedef $$HealthRecordTableUpdateCompanionBuilder =
       Value<String> recordType,
       Value<String> description,
       Value<DateTime?> followUpDate,
+      Value<String?> medicine,
+      Value<int?> milkWithdrawalDays,
     });
 
 final class $$HealthRecordTableReferences
@@ -5788,6 +5903,16 @@ class $$HealthRecordTableFilterComposer
 
   ColumnFilters<DateTime> get followUpDate => $composableBuilder(
     column: $table.followUpDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get medicine => $composableBuilder(
+    column: $table.medicine,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get milkWithdrawalDays => $composableBuilder(
+    column: $table.milkWithdrawalDays,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5849,6 +5974,16 @@ class $$HealthRecordTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get medicine => $composableBuilder(
+    column: $table.medicine,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get milkWithdrawalDays => $composableBuilder(
+    column: $table.milkWithdrawalDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CowTableOrderingComposer get cowId {
     final $$CowTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5900,6 +6035,14 @@ class $$HealthRecordTableAnnotationComposer
 
   GeneratedColumn<DateTime> get followUpDate => $composableBuilder(
     column: $table.followUpDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get medicine =>
+      $composableBuilder(column: $table.medicine, builder: (column) => column);
+
+  GeneratedColumn<int> get milkWithdrawalDays => $composableBuilder(
+    column: $table.milkWithdrawalDays,
     builder: (column) => column,
   );
 
@@ -5961,6 +6104,8 @@ class $$HealthRecordTableTableManager
                 Value<String> recordType = const Value.absent(),
                 Value<String> description = const Value.absent(),
                 Value<DateTime?> followUpDate = const Value.absent(),
+                Value<String?> medicine = const Value.absent(),
+                Value<int?> milkWithdrawalDays = const Value.absent(),
               }) => HealthRecordCompanion(
                 id: id,
                 date: date,
@@ -5968,6 +6113,8 @@ class $$HealthRecordTableTableManager
                 recordType: recordType,
                 description: description,
                 followUpDate: followUpDate,
+                medicine: medicine,
+                milkWithdrawalDays: milkWithdrawalDays,
               ),
           createCompanionCallback:
               ({
@@ -5977,6 +6124,8 @@ class $$HealthRecordTableTableManager
                 required String recordType,
                 required String description,
                 Value<DateTime?> followUpDate = const Value.absent(),
+                Value<String?> medicine = const Value.absent(),
+                Value<int?> milkWithdrawalDays = const Value.absent(),
               }) => HealthRecordCompanion.insert(
                 id: id,
                 date: date,
@@ -5984,6 +6133,8 @@ class $$HealthRecordTableTableManager
                 recordType: recordType,
                 description: description,
                 followUpDate: followUpDate,
+                medicine: medicine,
+                milkWithdrawalDays: milkWithdrawalDays,
               ),
           withReferenceMapper: (p0) => p0
               .map(

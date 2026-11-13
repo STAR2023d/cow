@@ -35,3 +35,5 @@
 - Added AI Finance Advisor to the Monthly Report: instant "things to watch" alerts, AI advice, and a question box; months in progress are compared with the same days of the previous month
 - Optional `GEMINI_FALLBACK_MODEL`: used when the main model is still overloaded after retries
 - Fixed `monthly_report_test.dart` to use dates in the past (the default price is dated "now")
+- Health records can now have a date, a medicine and milk withdrawal days (database schema 9); the Health list shows "Milk on hold" while a hold is active
+- Health record description is limited to 300 characters in the form (it used to fail on save)
