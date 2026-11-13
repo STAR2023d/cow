@@ -38,7 +38,7 @@ void main() {
 
   test('totals a month of milk, income and spending', () async {
     await milk(DateTime(2026, 11, 5, 6, 30), 10);
-    await milk(DateTime(2026, 11, 20, 6, 30), 5);
+    await milk(DateTime(2026, 11, 6, 6, 30), 5);
     await spend(DateTime(2026, 11, 6), ExpenseCategory.feed, 600);
     await spend(DateTime(2026, 11, 25), ExpenseCategory.vet, 200);
     await spend(DateTime(2026, 11, 30, 23, 30), ExpenseCategory.other, 100);

@@ -61,3 +61,26 @@ MilkWithdrawal? milkWithdrawalOf(HealthRecordData record) {
     medicine: record.medicine,
   );
 }
+/// A cow whose milk is on hold today.
+class MilkHold {
+  final int cowId;
+  final MilkWithdrawal withdrawal;
+
+  const MilkHold(this.cowId, this.withdrawal);
+}
+
+/// The holds still running on [now], one per cow (the one that ends last),
+/// soonest to end first.
+List<MilkHold> activeHolds(List<HealthRecordData> records, DateTime now) {
+  final byCow = <int, MilkWithdrawal>{};
+  for (final r in records) {
+    final w = milkWithdrawalOf(r);
+    if (w == null || !w.isActiveOn(now)) continue;
+    final existing = byCow[r.cowId];
+    if (existing == null || w.safeFrom.isAfter(existing.safeFrom)) {
+      byCow[r.cowId] = w;
+    }
+  }
+  return [for (final e in byCow.entries) MilkHold(e.key, e.value)]
+    ..sort((a, b) => a.withdrawal.safeFrom.compareTo(b.withdrawal.safeFrom));
+}

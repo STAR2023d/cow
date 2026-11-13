@@ -528,6 +528,13 @@ class AppDatabase extends _$AppDatabase {
     healthRecord,
   )..orderBy([(t) => OrderingTerm.desc(t.date)])).watch();
 
+  /// Health records that carry milk withdrawal days, newest first.
+  Stream<List<HealthRecordData>> watchWithdrawalRecords() =>
+      (select(healthRecord)
+            ..where((t) => t.milkWithdrawalDays.isNotNull())
+            ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+          .watch();
+
   /// Upcoming vet/vaccination follow-ups, soonest first.
   Stream<List<HealthRecordData>> watchUpcomingFollowUps() {
     final now = DateTime.now();
