@@ -1,4 +1,5 @@
 import 'package:cow/database/app_database.dart';
+import 'package:cow/health/health_presets.dart';
 import 'package:cow/health/milk_withdrawal.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
@@ -10,6 +11,8 @@ const List<String> healthRecordTypes = [
   'Checkup',
   'Treatment',
   'Deworming',
+  'Tick control',
+  'Hoof care',
   'Other',
 ];
 
@@ -42,6 +45,19 @@ class HealthScreen extends StatelessWidget {
     final withdrawalController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
+    // Fills type, description and a suggested follow-up. A description the
+    // farmer typed is kept; only an empty one or an earlier preset's is
+    // replaced.
+    void applyPreset(HealthPreset p) {
+      typeController.value = p.recordType;
+      final current = descriptionController.text.trim();
+      if (current.isEmpty ||
+          healthPresets.any((x) => x.description == current)) {
+        descriptionController.text = p.description;
+      }
+      followUpController.value = p.followUpFrom(dateController.value);
+    }
+
     await showDialog(
       context: context,
       builder: (dialogContext) {
@@ -57,6 +73,24 @@ class HealthScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final p in healthPresets)
+                        ActionChip(
+                          label: Text(p.label),
+                          onPressed: () => applyPreset(p),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Presets only suggest a follow-up date. Change it as '
+                    'needed: your vet\'s advice comes first.',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
+                  const SizedBox(height: 12),
                   ValueListenableBuilder<int>(
                     valueListenable: cowController,
                     builder: (context, value, _) =>
@@ -81,6 +115,7 @@ class HealthScreen extends StatelessWidget {
                     valueListenable: typeController,
                     builder: (context, value, _) =>
                         DropdownButtonFormField<String>(
+                          key: ValueKey(value),
                           initialValue: value,
                           dropdownColor: AppColors.card,
                           style: const TextStyle(color: Colors.white),
@@ -173,17 +208,28 @@ class HealthScreen extends StatelessWidget {
                             : 'Follow-up: ${_fmt(value)}',
                         style: const TextStyle(color: Colors.white70),
                       ),
-                      trailing: const Icon(
-                        Icons.calendar_today,
-                        color: Colors.white70,
-                      ),
+                      trailing: value == null
+                          ? const Icon(
+                              Icons.calendar_today,
+                              color: Colors.white70,
+                            )
+                          : IconButton(
+                              tooltip: 'Remove follow-up',
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () => followUpController.value = null,
+                            ),
                       onTap: () async {
                         final picked = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now().add(
-                            const Duration(days: 7),
-                          ),
-                          firstDate: DateTime.now(),
+                          initialDate:
+                              value ??
+                              DateTime.now().add(const Duration(days: 7)),
+                          // Past dates allowed: a backdated record's
+                          // follow-up may already be due.
+                          firstDate: DateTime(2020),
                           lastDate: DateTime.now().add(
                             const Duration(days: 365),
                           ),
@@ -351,6 +397,10 @@ class HealthScreen extends StatelessWidget {
         return Icons.healing;
       case 'Deworming':
         return Icons.bug_report;
+      case 'Tick control':
+        return Icons.pest_control;
+      case 'Hoof care':
+        return Icons.content_cut;
       default:
         return Icons.health_and_safety;
     }

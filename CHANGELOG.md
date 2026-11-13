@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dashboard "Health reminders" card for follow-ups overdue, due today or within 14 days
+- Preset chips in the Log Health Record dialog (Vaccination, Tick control, Deworming, Hoof care, Vet check) with suggested follow-up dates; added "Tick control" and "Hoof care" record types
 - Dashboard shows a "Milk on hold" card listing cows under milk withdrawal
 - Milk Entry screen shows an orange "Milk on hold" banner while the cow is under milk withdrawal
 - Rewrote README and added a roadmap

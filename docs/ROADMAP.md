@@ -26,7 +26,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [ ] Symptom checker with urgency levels
 - [x] Record medicine and milk withdrawal days on health records
 - [x] Warn when logging milk for a cow on hold, and on the dashboard
-- [ ] Vaccination and tick-control reminders
+- [x] Vaccination and tick-control reminders
 
 ## Phase 3: AI financial management
 
