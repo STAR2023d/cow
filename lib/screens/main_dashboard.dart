@@ -3,6 +3,7 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/screens/widgets/farm_header_card.dart';
 import 'package:cow/screens/widgets/herd_summary_card.dart';
+import 'package:cow/screens/widgets/milk_hold_card.dart';
 import 'package:cow/screens/widgets/milk_yield_card.dart';
 import 'package:cow/screens/widgets/quick_actions_hub.dart';
 import 'package:cow/screens/widgets/recent_activity_card.dart';
@@ -46,6 +47,9 @@ class MainDashboard extends StatelessWidget {
 
             // 1b. Breeding alerts (hidden when nothing needs attention)
             BreedingAlertsCard(db: db),
+
+            // 1c. Cows whose milk is on hold (hidden when none)
+            MilkHoldCard(db: db),
 
             // 2. Primary KPI Data Layout Grid — now live-streamed
             IntrinsicHeight(

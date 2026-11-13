@@ -8,4 +8,4 @@ A health record can carry the medicine given and a number of **milk withdrawal d
 - This errs on the side of caution because the app does not record the time of day.
 - The Health list shows "Milk on hold: safe from …" while a hold is active.
 
-Logic is in `lib/health/milk_withdrawal.dart`. The Milk Entry screen shows an orange banner "Milk on hold: do not sell until …" (`lib/screens/widgets/milk_hold_banner.dart`). A dashboard card is the next step.
+Logic is in `lib/health/milk_withdrawal.dart`. The Milk Entry screen shows an orange banner "Milk on hold: do not sell until …" (`lib/screens/widgets/milk_hold_banner.dart`). The dashboard shows a "Milk on hold" card listing each held cow, its safe date and days left (`lib/screens/widgets/milk_hold_card.dart`); it is hidden when no cow is on hold.
