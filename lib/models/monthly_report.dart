@@ -1,4 +1,5 @@
 import 'package:cow/database/app_database.dart';
+import 'package:cow/models/buyer_earnings.dart';
 
 /// One calendar month of the farm's money, in a form that is easy to show
 /// on screen and to hand to the AI finance advisor.
@@ -18,6 +19,10 @@ class MonthlyReport {
   /// Spending per [ExpenseCategory] key.
   final Map<String, double> expensesByCategory;
 
+  /// Milk income split by buyer, biggest first, entries with no buyer
+  /// last. Adds up to [milkCash].
+  final List<BuyerEarnings> earningsByBuyer;
+
   const MonthlyReport({
     required this.month,
     required this.litres,
@@ -26,7 +31,11 @@ class MonthlyReport {
     required this.totalExpenses,
     required this.expensesByCategory,
     this.throughDay,
+    this.earningsByBuyer = const [],
   });
+
+  /// True when at least one milk entry this month names a buyer.
+  bool get hasBuyers => earningsByBuyer.any((b) => b.buyer != null);
 
   double get totalIncome => milkCash + otherIncome;
   double get net => totalIncome - totalExpenses;
@@ -75,6 +84,7 @@ class MonthlyReportCalculator {
     final litres = milk.fold<double>(0, (sum, m) => sum + m.amount);
     final milkCash = await db.cashInRange(start, end);
     final otherIncome = await db.totalIncomeInRange(start, end);
+    final byBuyer = await earningsByBuyer(milk, db.priceForDate);
 
     final expenses = await db.expensesInRange(start, end);
     final byCategory = <String, double>{};
@@ -92,6 +102,7 @@ class MonthlyReportCalculator {
       otherIncome: otherIncome,
       totalExpenses: totalExpenses,
       expensesByCategory: byCategory,
+      earningsByBuyer: byBuyer,
     );
   }
 }

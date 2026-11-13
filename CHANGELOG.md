@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Monthly Report: "Earnings per buyer" panel (amount, litres and share of milk income per buyer; entries without a buyer grouped as "Not recorded")
 - Schema v10: new `Calves` table and optional `buyer` column on milk entries (migration from v9 tested)
 - Calf Register: add calves bought in or born before the app, and record birth weight, weaning date and notes for any calf (see `docs/CALVES.md`)
 - Milk Entry: optional Buyer field, shown in the history list; leaving it blank never clears a buyer saved earlier

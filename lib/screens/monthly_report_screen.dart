@@ -194,6 +194,10 @@ class _ReportBody extends StatelessWidget {
             ),
           ],
         ),
+        if (report.earningsByBuyer.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _BuyerPanel(report: report),
+        ],
         const SizedBox(height: 16),
         _Panel(
           title: 'Income vs expenses',
@@ -254,6 +258,48 @@ class _ReportBody extends StatelessWidget {
           previous: data.previous,
         ),
         const SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
+class _BuyerPanel extends StatelessWidget {
+  final MonthlyReport report;
+
+  const _BuyerPanel({required this.report});
+
+  @override
+  Widget build(BuildContext context) {
+    final buyers = report.earningsByBuyer;
+    final top = buyers.fold<double>(0, (m, b) => b.cash > m ? b.cash : m);
+    return _Panel(
+      title: 'Earnings per buyer',
+      children: [
+        if (!report.hasBuyers)
+          const Text(
+            'No buyers recorded this month. Add a buyer when logging milk '
+            'to see who pays the most.',
+            style: TextStyle(color: Colors.white54),
+          )
+        else
+          for (final b in buyers) ...[
+            _Bar(
+              label: b.buyer ?? 'Not recorded',
+              labelWidth: 110,
+              value: b.cash,
+              max: top,
+              color: b.buyer == null ? Colors.white38 : Colors.tealAccent,
+              valueText: _money.format(b.cash),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 110, top: 2, bottom: 8),
+              child: Text(
+                '${b.litres.toStringAsFixed(1)} L'
+                '${report.milkCash > 0 ? '  •  ${(b.cash / report.milkCash * 100).toStringAsFixed(0)}% of milk income' : ''}',
+                style: const TextStyle(color: Colors.white54, fontSize: 12),
+              ),
+            ),
+          ],
       ],
     );
   }

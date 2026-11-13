@@ -33,7 +33,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 - [x] Show calf-sale income in statements (keep `Expenses` for costs, `LedgerEntries` for other income)
 - [x] Expense categories
-- [ ] Earnings per buyer (buyer is now recorded on milk entries; report not built)
+- [x] Earnings per buyer (Monthly Report panel)
 - [x] Monthly analytics and charts
 - [x] AI finance advisor
 

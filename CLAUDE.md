@@ -16,5 +16,6 @@ Done: step 8b (milk hold banner on milk entry, `milk_hold_banner.dart`; dashboar
 Done: step 9 health reminders (`lib/health/reminders.dart`, `health_reminders_card.dart`, presets in `lib/health/health_presets.dart`).
 Done: step 10a read-only calf register (`lib/breeding/calf_register.dart`, `calf_register_screen.dart`, `watchCalvings`).
 Done: step 10b schema v10 (`Calves` table, milk `buyer`), calf add/edit (`calf_dialogs.dart`, `docs/CALVES.md`), buyer on milk entry.
-Next: earnings-per-buyer report (buyer is recorded; report not built).
+Done: earnings per buyer (`lib/models/buyer_earnings.dart`, Monthly Report panel).
+Next: pick from Later.
 Later: Swahili UI, replace `google_generative_ai`, merge phase branches into main.
