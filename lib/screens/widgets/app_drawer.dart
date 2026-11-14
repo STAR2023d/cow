@@ -7,6 +7,7 @@ import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/feeding_screen.dart';
 import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
+import 'package:cow/screens/milk_price_screen.dart';
 import 'package:cow/screens/herd_milk_sheet.dart';
 import 'package:cow/screens/monthly_report_screen.dart';
 import 'package:cow/screens/vet_assistant_screen.dart';
@@ -70,6 +71,7 @@ class AppDrawer extends StatelessWidget {
             (_) => const VetAssistantScreen(),
           ),
           const _Section('Money'),
+          item(Icons.sell, 'Milk Price', (_) => MilkPriceScreen(db: db)),
           item(Icons.money, 'Expenses', (_) => ExpenseEntryScreen(db: db)),
           item(
             Icons.receipt_long,

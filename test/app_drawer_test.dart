@@ -45,6 +45,7 @@ void main() {
       'Feeding',
       'Health',
       'Vet Assistant',
+      'Milk Price',
       'Expenses',
       'Financial Statement',
       'Monthly Report',

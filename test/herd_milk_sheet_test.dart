@@ -87,9 +87,9 @@ void main() {
     await tester.enterText(box(daisy), '6.5');
     await tester.enterText(box(bella), '5');
     await tester.pump();
-    expect(find.text('Save 2 cows: 11.5 L'), findsOneWidget);
+    expect(find.text('Save 2 cows: 11.5 L ≈ KSh 575'), findsOneWidget);
 
-    await tester.tap(find.text('Save 2 cows: 11.5 L'));
+    await tester.tap(find.text('Save 2 cows: 11.5 L ≈ KSh 575'));
     await settle(tester);
 
     final today = await saved(tester, 14);
@@ -105,7 +105,7 @@ void main() {
     await openSheet(tester);
     await tester.enterText(box(daisy), '65');
     await tester.pump();
-    await tester.tap(find.text('Save 1 cow: 65 L'));
+    await tester.tap(find.text('Save 1 cow: 65 L ≈ KSh 3,250'));
     await settle(tester);
 
     expect(find.text('Check these figures'), findsOneWidget);
@@ -118,7 +118,7 @@ void main() {
     await settle(tester);
     expect(await saved(tester, 14), isEmpty);
 
-    await tester.tap(find.text('Save 1 cow: 65 L'));
+    await tester.tap(find.text('Save 1 cow: 65 L ≈ KSh 3,250'));
     await settle(tester);
     await tester.tap(find.text('Save anyway'));
     await settle(tester);
@@ -133,7 +133,7 @@ void main() {
     await settle(tester);
     await tester.enterText(box(bella), '4');
     await tester.pump();
-    await tester.tap(find.text('Save 1 cow: 4 L'));
+    await tester.tap(find.text('Save 1 cow: 4 L ≈ KSh 200'));
     await settle(tester);
 
     final evening = (await saved(

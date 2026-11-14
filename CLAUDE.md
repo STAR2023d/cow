@@ -23,6 +23,8 @@ Done: step 13 live check (`test/live/ai_live_test.dart`): Gemini and Groq (`comp
 Done: milk entry edit (litres, buyer; `edit_milk_entry_dialog.dart`, `updateMilkEntry`) and delete (`deleteMilkEntry`).
 Done: PDF export for Financial Statement and Monthly Report (`lib/services/pdf_layout.dart`, `statement_pdf.dart`, `monthly_report_pdf.dart`, `pdf_export.dart`; saved to Documents/Mwauras Farm, opened with xdg-open).
 Done: UX pass started: drawer grouped (Herd, Daily care, Money; no placeholders); whole-herd milk sheet (`herd_milk_sheet.dart`, `lib/models/herd_milk.dart`; dashboard "Log milk" button). Shared formats in `lib/utils/format.dart` (KSh 5,500, 6.5 L, 14 Nov 2026). Light/dark theme: colours via `context.farm.*` (`lib/theme/app_theme.dart`), never fixed `Colors.*` in screens; `ThemeController` (shared_preferences), switch in drawer. Deletes use `deleteWithUndo` (`lib/screens/widgets/undo_delete.dart`) + `restore*` in the DB; cow delete still confirms. UX list done.
+Done: milk price setting (`milk_price_screen.dart`, `MilkPriceCard`, `setPricePerLitre` start-of-day + same-day replace; see docs/FINANCE.md). Later: price per buyer (schema v11).
+Gemini: `gemini-3.8-flash` hangs for this key (2026-11-14); `gemini-3.5-flash-lite` passes the live check.
 Next: rerun the Gemini vet case at 90 s; check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, Swahili UI, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later: Swahili UI.

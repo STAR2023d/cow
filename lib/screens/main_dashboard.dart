@@ -6,6 +6,7 @@ import 'package:cow/screens/widgets/farm_header_card.dart';
 import 'package:cow/screens/widgets/health_reminders_card.dart';
 import 'package:cow/screens/widgets/herd_summary_card.dart';
 import 'package:cow/screens/widgets/milk_hold_card.dart';
+import 'package:cow/screens/widgets/milk_price_card.dart';
 import 'package:cow/screens/widgets/milk_yield_card.dart';
 import 'package:cow/screens/widgets/quick_actions_hub.dart';
 import 'package:cow/screens/widgets/recent_activity_card.dart';
@@ -63,6 +64,9 @@ class MainDashboard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
+
+            // 1a2. Milk price (asks for it until set)
+            MilkPriceCard(db: db),
 
             // 1b. Breeding alerts (hidden when nothing needs attention)
             BreedingAlertsCard(db: db),

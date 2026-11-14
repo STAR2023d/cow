@@ -19,7 +19,10 @@ class _SheetData {
   /// Cows whose milk is on hold that day, with the day it is safe again.
   final Map<int, DateTime> holds;
 
-  const _SheetData(this.cows, this.saved, this.usual, this.holds);
+  /// Milk price per litre on this day, from the price setting.
+  final double price;
+
+  const _SheetData(this.cows, this.saved, this.usual, this.holds, this.price);
 }
 
 /// Log one milking for the whole herd on one screen: pick the day and
@@ -97,10 +100,14 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       });
     _errors.clear();
 
+    final price = await db.priceForDate(
+      entryTimeFor(_day, _session, widget.clock()),
+    );
+
     return _SheetData(cows, saved, usualYields(before, _session), {
       for (final h in activeHolds(records, noon))
         h.cowId: h.withdrawal.safeFrom,
-    });
+    }, price);
   }
 
   void _reload({DateTime? day, String? session}) {
@@ -328,7 +335,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                         count == 0
                             ? 'Save'
                             : 'Save $count ${count == 1 ? 'cow' : 'cows'}: '
-                                  '${litres(total)}',
+                                  '${litres(total)} ≈ ${ksh(total * data.price)}',
                         style: const TextStyle(fontSize: 16),
                       ),
                       onPressed: _saving ? null : () => _save(data),

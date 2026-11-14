@@ -440,13 +440,40 @@ class AppDatabase extends _$AppDatabase {
   // === PRICE SETTINGS ===
   // ============================================================
 
-  Future<int> setPricePerLitre(double price, {DateTime? effectiveDate}) =>
-      into(priceSettings).insert(
-        PriceSettingsCompanion.insert(
-          effectiveDate: effectiveDate ?? DateTime.now(),
-          pricePerLitre: price,
-        ),
+  /// Sets the milk price per litre from the start of [effectiveDate]'s day
+  /// (default today), so it also covers milk logged earlier that day. A
+  /// price already set for that same day is replaced, not duplicated.
+  Future<void> setPricePerLitre(double price, {DateTime? effectiveDate}) {
+    final d = effectiveDate ?? DateTime.now();
+    final day = DateTime(d.year, d.month, d.day);
+    final next = day.add(const Duration(days: 1));
+    return transaction(() async {
+      await (delete(priceSettings)..where(
+            (t) =>
+                t.effectiveDate.isBiggerOrEqualValue(day) &
+                t.effectiveDate.isSmallerThanValue(next),
+          ))
+          .go();
+      await into(priceSettings).insert(
+        PriceSettingsCompanion.insert(effectiveDate: day, pricePerLitre: price),
       );
+    });
+  }
+
+  /// Every price change, newest first.
+  Stream<List<PriceSetting>> watchPriceHistory() =>
+      (select(priceSettings)..orderBy([
+            (t) => OrderingTerm.desc(t.effectiveDate),
+            (t) => OrderingTerm.desc(t.id),
+          ]))
+          .watch();
+
+  Future<int> deletePrice(int id) =>
+      (delete(priceSettings)..where((t) => t.id.equals(id))).go();
+
+  /// Undo for [deletePrice].
+  Future<void> restorePrice(PriceSetting row) =>
+      into(priceSettings).insertOnConflictUpdate(row);
 
   Stream<double> watchCurrentPrice() {
     final query = select(priceSettings)

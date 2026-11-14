@@ -6,6 +6,18 @@
 - **Expenses** (`Expenses` table): costs, with a description, an amount and a category (feed, vet, labour, transport, other). Expenses saved before categories existed are 'other'.
 - **Other income** (`LedgerEntries` table, type `income`): money in that is not milk. Today the only writer is a calf sale (category `calf_sale`).
 
+## Milk price
+
+The price per litre is a setting, never typed when logging milk. Milk entries store no price; earnings look up the price in force on each entry's day (`priceForDate`), so a price change never touches earlier milk.
+
+- Set it on the **Milk price** screen (drawer → Money, or the price card on the dashboard): "Change price" asks for the new price and the day it applies from (today, or an earlier day when the buyer's new rate started on the 1st). Reports recalculate on their own.
+- A price applies from the start of its day, so a price set at 14:00 also covers that morning's milk. Setting a price twice for the same day replaces it.
+- History lists every change, newest first; prices for a later day show as "upcoming". A wrong one can be deleted (with Undo); the last one cannot.
+- Until the farmer sets a price, earnings use a built-in KSh 50 and the dashboard shows "Set your milk price". The "already set" flag is kept with `shared_preferences` (`MilkPriceFlag`).
+- The whole-herd milk sheet shows the value of what is typed: "Save 3 cows: 15.5 L ≈ KSh 852".
+- Later (needs schema v11): a separate price per buyer (co-operative vs neighbours), falling back to the general price.
+- Code: `lib/models/milk_price.dart`, `lib/screens/milk_price_screen.dart`, `lib/screens/widgets/set_price_dialog.dart`, `lib/screens/widgets/milk_price_card.dart`.
+
 ## Financial statement
 
 Statements cover half-month periods (1st to 15th, 16th to month end).
