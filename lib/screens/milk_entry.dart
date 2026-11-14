@@ -303,15 +303,32 @@ class _MilkDataState extends State<MilkData> {
                               ? formattedDate
                               : '$formattedDate • ${entry.buyer}',
                         ),
-                        trailing: Chip(
-                          label: Text(
-                            entry.session.toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Chip(
+                              label: Text(
+                                entry.session.toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Colors.grey[200],
                             ),
-                          ),
-                          backgroundColor: Colors.grey[200],
+                            IconButton(
+                              tooltip: 'Delete entry',
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.redAccent,
+                              ),
+                              onPressed: () => _confirmDelete(
+                                database,
+                                entry,
+                                formattedDate,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -323,5 +340,41 @@ class _MilkDataState extends State<MilkData> {
         ],
       ),
     );
+  }
+
+  /// Asks before deleting, since milk figures feed earnings and reports.
+  Future<void> _confirmDelete(
+    AppDatabase database,
+    MilkTableData entry,
+    String when,
+  ) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete this entry?'),
+        content: Text(
+          '${entry.amount.toStringAsFixed(2)} litres, '
+          '${entry.session} on $when.\n'
+          'This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await database.deleteMilkEntry(entry.id);
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Milk entry deleted')));
   }
 }

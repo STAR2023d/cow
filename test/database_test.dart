@@ -137,4 +137,29 @@ void main() {
 
     expect(await db.cashForDate(day), 720); // 12 L x 60
   });
+
+  test('deleting a milk entry removes only that entry', () async {
+    final cowId = await db.insertCow(CowCompanion.insert(name: 'Daisy'));
+    await db.upsertMilkEntry(
+      cowId: cowId,
+      date: day,
+      session: MilkSession.morning,
+      amount: 5,
+    );
+    await db.upsertMilkEntry(
+      cowId: cowId,
+      date: day,
+      session: MilkSession.evening,
+      amount: 6,
+    );
+    final morning = (await db.watchAllEntries().first).firstWhere(
+      (e) => e.session == MilkSession.morning,
+    );
+
+    expect(await db.deleteMilkEntry(morning.id), 1);
+
+    final left = await db.watchAllEntries().first;
+    expect(left.length, 1);
+    expect(left.first.amount, 6);
+  });
 }

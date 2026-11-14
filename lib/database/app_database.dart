@@ -227,6 +227,10 @@ class AppDatabase extends _$AppDatabase {
   /// [buyer] is optional. When null or blank the stored buyer is left as
   /// it was (none for a new entry), so callers that don't know the buyer
   /// never wipe one recorded earlier.
+  /// Removes one milk entry, e.g. a wrong figure. Returns rows deleted.
+  Future<int> deleteMilkEntry(String id) =>
+      (delete(milkTable)..where((t) => t.id.equals(id))).go();
+
   Future<void> upsertMilkEntry({
     required int cowId,
     required DateTime date,
