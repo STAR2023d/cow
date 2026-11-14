@@ -1,7 +1,8 @@
 import 'package:cow/utils/format.dart';
 import 'dart:typed_data';
 
-import 'package:cow/models/expense_category.dart';
+import 'package:cow/l10n/app_localizations.dart';
+import 'package:cow/l10n/labels.dart';
 import 'package:cow/models/monthly_report.dart';
 import 'package:cow/services/pdf_layout.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -16,23 +17,27 @@ String monthlyReportFileName(MonthlyReport r) =>
 
 /// The period line, e.g. "November 2026" or, for a month in progress,
 /// "November 2026, 1 to 14 (month in progress)".
-String monthlyReportPeriod(MonthlyReport r) {
+String monthlyReportPeriod(MonthlyReport r, {L10n? l10n}) {
+  final t = l10n ?? pdfEnglish;
   final name = monthYear(r.month);
   final lastDay = DateTime(r.month.year, r.month.month + 1, 0).day;
   final through = r.throughDay;
   if (through == null || through >= lastDay) return name;
-  return '$name, 1 to $through (month in progress)';
+  return t.monthInProgress(name, through);
 }
 
 /// Builds the Monthly Report as a PDF: totals, milk, income, spending by
-/// category and earnings per buyer. With [previous], a "Last month"
-/// column is added (cut at the same day when the month is in progress).
+/// category and earnings per buyer, in the language of [l10n] (English by
+/// default). With [previous], a "Last month" column is added (cut at the
+/// same day when the month is in progress).
 Future<Uint8List> buildMonthlyReportPdf(
   MonthlyReport r, {
   MonthlyReport? previous,
   DateTime? generatedAt,
   bool compress = true,
+  L10n? l10n,
 }) {
+  final t = l10n ?? pdfEnglish;
   final p = previous;
   List<String> line(String label, double now, double? before) => [
     label,
@@ -42,38 +47,39 @@ Future<Uint8List> buildMonthlyReportPdf(
   final cost = r.costPerLitre;
 
   return buildFarmPdf(
-    title: 'Monthly Report: ${monthlyReportPeriod(r)}',
+    title: t.monthlyReportTitle(monthlyReportPeriod(r, l10n: t)),
     generatedAt: generatedAt,
     compress: compress,
+    l10n: t,
     body: [
-      if (r.isEmpty) pw.Text('Nothing recorded this month.'),
+      if (r.isEmpty) pw.Text(t.nothingThisMonth),
       pdfTable(
-        ['', 'This month', if (p != null) 'Last month'],
+        ['', t.thisMonth, if (p != null) t.lastMonth],
         [
-          line('Milk income', r.milkCash, p?.milkCash),
-          line('Other income', r.otherIncome, p?.otherIncome),
-          line('Total income', r.totalIncome, p?.totalIncome),
-          line('Expenses', r.totalExpenses, p?.totalExpenses),
-          line('Profit', r.net, p?.net),
+          line(t.milkIncome, r.milkCash, p?.milkCash),
+          line(t.otherIncome, r.otherIncome, p?.otherIncome),
+          line(t.totalIncome, r.totalIncome, p?.totalIncome),
+          line(t.navExpenses, r.totalExpenses, p?.totalExpenses),
+          line(t.profit, r.net, p?.net),
         ],
         rightFrom: 1,
       ),
-      pdfHeading('Milk'),
-      pdfSummaryRow('Litres produced', '${r.litres.toStringAsFixed(1)} L'),
+      pdfHeading(t.milk),
+      pdfSummaryRow(t.litresProducedLabel, litres(r.litres)),
       pdfSummaryRow(
-        'Cost per litre',
-        cost == null ? 'no milk logged' : amount(cost),
+        t.costPerLitreLabel,
+        cost == null ? t.noMilkLogged : amount(cost),
       ),
-      pdfHeading('Where the money went'),
+      pdfHeading(t.whereMoneyWent),
       if (r.categoriesBySpend.isEmpty)
-        pw.Text('No expenses recorded this month.')
+        pw.Text(t.noExpensesMonth)
       else
         pdfTable(
-          ['Category', 'Amount', 'Share'],
+          [t.colCategory, t.colAmount, t.colShare],
           [
             for (final e in r.categoriesBySpend)
               [
-                ExpenseCategory.label(e.key),
+                expenseCategoryLabel(t, e.key),
                 amount(e.value),
                 _pct(e.value, r.totalExpenses),
               ],
@@ -81,13 +87,13 @@ Future<Uint8List> buildMonthlyReportPdf(
           rightFrom: 1,
         ),
       if (r.hasBuyers) ...[
-        pdfHeading('Earnings per buyer'),
+        pdfHeading(t.earningsPerBuyer),
         pdfTable(
-          ['Buyer', 'Litres', 'Amount', 'Share of milk income'],
+          [t.colBuyer, t.colLitres, t.colAmount, t.colShareMilk],
           [
             for (final b in r.earningsByBuyer)
               [
-                b.buyer ?? 'Not recorded',
+                b.buyer ?? t.notRecorded,
                 b.litres.toStringAsFixed(1),
                 amount(b.cash),
                 _pct(b.cash, r.milkCash),

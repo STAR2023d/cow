@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:cow/database/app_database.dart';
+import 'package:cow/l10n/app_localizations.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:cow/models/period_runner.dart';
 import 'package:cow/services/statement_pdf.dart';
 import 'package:drift/drift.dart' show Value;
@@ -68,5 +70,19 @@ void main() {
     final s = await StatementCalculator(db).statementFor(DateTime(2026, 3, 1));
     final bytes = await buildStatementPdf(s, compress: false);
     expect(latin1.decode(bytes), contains('None'));
+  });
+
+  test('the statement PDF can be made in Kiswahili', () async {
+    final s = await StatementCalculator(db).statementFor(DateTime(2026, 11, 7));
+    final text = latin1.decode(
+      await buildStatementPdf(
+        s,
+        compress: false,
+        l10n: lookupL10n(const Locale('sw')),
+      ),
+    );
+    for (final word in ['Salio', 'Taarifa', 'Kumbukumbu', 'Ukurasa']) {
+      expect(text, contains(word), reason: word);
+    }
   });
 }

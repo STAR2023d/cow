@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Expense saved')));
+    ).showSnackBar(SnackBar(content: Text(context.l10n.expenseSaved)));
     _descController.clear();
     _amountController.clear();
     setState(() {});
@@ -48,7 +49,7 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Expense')),
+      appBar: AppBar(title: Text(context.l10n.expenseTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -57,16 +58,19 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                title: Text('Date: ${shortDate(_selectedDate)}'),
+                title: Text(context.l10n.dateLine(shortDate(_selectedDate))),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDate,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descController,
-                decoration: const InputDecoration(labelText: 'Description'),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Required' : null,
+                decoration: InputDecoration(
+                  labelText: context.l10n.description,
+                ),
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? context.l10n.required
+                    : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -74,15 +78,15 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(labelText: 'Amount'),
+                decoration: InputDecoration(labelText: context.l10n.amount),
                 validator: (v) => (double.tryParse(v ?? '') == null)
-                    ? 'Enter a valid number'
+                    ? context.l10n.enterValidNumberShort
                     : null,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _save,
-                child: const Text('Save Expense'),
+                child: Text(context.l10n.saveExpense),
               ),
             ],
           ),

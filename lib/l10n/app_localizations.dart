@@ -1566,6 +1566,666 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'in {count} days'**
   String dueInDays(int count);
+
+  /// No description provided for @expenseSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense saved'**
+  String get expenseSaved;
+
+  /// No description provided for @expenseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expenseTitle;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @saveExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Save expense'**
+  String get saveExpense;
+
+  /// No description provided for @catFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed'**
+  String get catFeed;
+
+  /// No description provided for @catVet.
+  ///
+  /// In en, this message translates to:
+  /// **'Vet & medicine'**
+  String get catVet;
+
+  /// No description provided for @catLabour.
+  ///
+  /// In en, this message translates to:
+  /// **'Labour'**
+  String get catLabour;
+
+  /// No description provided for @catTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get catTransport;
+
+  /// No description provided for @incomeCalfSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Calf sale'**
+  String get incomeCalfSale;
+
+  /// No description provided for @income.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get income;
+
+  /// No description provided for @exportPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get exportPdf;
+
+  /// No description provided for @periodRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} to {end}'**
+  String periodRange(String start, String end);
+
+  /// No description provided for @openingBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening balance'**
+  String get openingBalance;
+
+  /// No description provided for @milkCashRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Milk cash (1 record)} other{Milk cash ({count} records)}}'**
+  String milkCashRecords(int count);
+
+  /// No description provided for @otherIncomeEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Other income (1 entry)} other{Other income ({count} entries)}}'**
+  String otherIncomeEntries(int count);
+
+  /// No description provided for @expensesEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Expenses (1 entry)} other{Expenses ({count} entries)}}'**
+  String expensesEntries(int count);
+
+  /// No description provided for @closingBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing balance'**
+  String get closingBalance;
+
+  /// No description provided for @milkRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk records'**
+  String get milkRecords;
+
+  /// No description provided for @otherIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Other income'**
+  String get otherIncome;
+
+  /// No description provided for @savedFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {path}'**
+  String savedFile(String path);
+
+  /// No description provided for @savedFileNotOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {path} (could not open it)'**
+  String savedFileNotOpened(String path);
+
+  /// No description provided for @couldNotSavePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the PDF: {error}'**
+  String couldNotSavePdf(String error);
+
+  /// No description provided for @couldNotLoadMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this month. Please try again.'**
+  String get couldNotLoadMonth;
+
+  /// No description provided for @nothingThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded this month.'**
+  String get nothingThisMonth;
+
+  /// No description provided for @profit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get profit;
+
+  /// No description provided for @milk.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get milk;
+
+  /// No description provided for @litresProduced.
+  ///
+  /// In en, this message translates to:
+  /// **'{litres} produced'**
+  String litresProduced(String litres);
+
+  /// No description provided for @costPerLitreNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per litre: no milk logged'**
+  String get costPerLitreNone;
+
+  /// No description provided for @costPerLitre.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per litre: {amount}'**
+  String costPerLitre(String amount);
+
+  /// No description provided for @incomeVsExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Income vs expenses'**
+  String get incomeVsExpenses;
+
+  /// No description provided for @milkAndOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk {milk}  •  Other income {other}'**
+  String milkAndOther(String milk, String other);
+
+  /// No description provided for @whereMoneyWent.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the money went'**
+  String get whereMoneyWent;
+
+  /// No description provided for @noExpensesMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses recorded this month.'**
+  String get noExpensesMonth;
+
+  /// No description provided for @earningsPerBuyer.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings per buyer'**
+  String get earningsPerBuyer;
+
+  /// No description provided for @noBuyersMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'No buyers recorded this month. Add a buyer when logging milk to see who pays the most.'**
+  String get noBuyersMonth;
+
+  /// No description provided for @notRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not recorded'**
+  String get notRecorded;
+
+  /// No description provided for @shareOfMilkIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of milk income'**
+  String shareOfMilkIncome(String percent);
+
+  /// No description provided for @monthInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{month}, 1 to {day} (month in progress)'**
+  String monthInProgress(String month, int day);
+
+  /// No description provided for @pdfAmountsGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts in KES. Generated {date}.'**
+  String pdfAmountsGenerated(String date);
+
+  /// No description provided for @pdfPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {pages}'**
+  String pdfPage(int page, int pages);
+
+  /// No description provided for @statementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Statement: {start} to {end}'**
+  String statementTitle(String start, String end);
+
+  /// No description provided for @monthlyReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Report: {period}'**
+  String monthlyReportTitle(String period);
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @colDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get colDate;
+
+  /// No description provided for @colSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get colSession;
+
+  /// No description provided for @colLitres.
+  ///
+  /// In en, this message translates to:
+  /// **'Litres'**
+  String get colLitres;
+
+  /// No description provided for @colCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get colCash;
+
+  /// No description provided for @colType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get colType;
+
+  /// No description provided for @colNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get colNote;
+
+  /// No description provided for @colAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get colAmount;
+
+  /// No description provided for @colCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get colCategory;
+
+  /// No description provided for @colDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get colDescription;
+
+  /// No description provided for @colShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get colShare;
+
+  /// No description provided for @colBuyer.
+  ///
+  /// In en, this message translates to:
+  /// **'Buyer'**
+  String get colBuyer;
+
+  /// No description provided for @colShareMilk.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of milk income'**
+  String get colShareMilk;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get thisMonth;
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get lastMonth;
+
+  /// No description provided for @milkIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk income'**
+  String get milkIncome;
+
+  /// No description provided for @totalIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Total income'**
+  String get totalIncome;
+
+  /// No description provided for @litresProducedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Litres produced'**
+  String get litresProducedLabel;
+
+  /// No description provided for @costPerLitreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost per litre'**
+  String get costPerLitreLabel;
+
+  /// No description provided for @noMilkLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'no milk logged'**
+  String get noMilkLogged;
+
+  /// No description provided for @dailyAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s milk'**
+  String get dailyAnalytics;
+
+  /// No description provided for @totalToday.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL PRODUCTION TODAY'**
+  String get totalToday;
+
+  /// No description provided for @aiFarmInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'AI farm insights'**
+  String get aiFarmInsights;
+
+  /// No description provided for @sessionBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Session breakdown'**
+  String get sessionBreakdown;
+
+  /// No description provided for @todaysLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s logs'**
+  String get todaysLogs;
+
+  /// No description provided for @noMilkToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No milk has been logged yet today.'**
+  String get noMilkToday;
+
+  /// No description provided for @amountLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount: {amount}'**
+  String amountLine(String amount);
+
+  /// No description provided for @sessionLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Session: {session}'**
+  String sessionLine(String session);
+
+  /// No description provided for @calfDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Calf details'**
+  String get calfDetails;
+
+  /// No description provided for @addCalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Add calf'**
+  String get addCalf;
+
+  /// No description provided for @noCalvesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No calves yet. Calves appear here once a calving is recorded on a cow\'s breeding screen, or tap Add calf for one bought in or born before you used the app.'**
+  String get noCalvesYet;
+
+  /// No description provided for @calfSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =1{1 calf} other{{total} calves}} · {kept} kept · {sold} sold'**
+  String calfSummary(int total, int kept, int sold);
+
+  /// No description provided for @calfSummaryAwaiting.
+  ///
+  /// In en, this message translates to:
+  /// **' · {count} awaiting outcome'**
+  String calfSummaryAwaiting(int count);
+
+  /// No description provided for @calfSummaryByHand.
+  ///
+  /// In en, this message translates to:
+  /// **' · {count} added by hand'**
+  String calfSummaryByHand(int count);
+
+  /// No description provided for @unknownDam.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown dam'**
+  String get unknownDam;
+
+  /// No description provided for @unnamedCalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed calf'**
+  String get unnamedCalf;
+
+  /// No description provided for @calfOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Calf of {dam}'**
+  String calfOf(String dam);
+
+  /// No description provided for @kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept'**
+  String get kept;
+
+  /// No description provided for @sold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get sold;
+
+  /// No description provided for @soldFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold · {amount}'**
+  String soldFor(String amount);
+
+  /// No description provided for @awaitingOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting outcome'**
+  String get awaitingOutcome;
+
+  /// No description provided for @boughtIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Bought in'**
+  String get boughtIn;
+
+  /// No description provided for @onFarm.
+  ///
+  /// In en, this message translates to:
+  /// **'On farm'**
+  String get onFarm;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @sexNotRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex not recorded'**
+  String get sexNotRecorded;
+
+  /// No description provided for @damLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Dam: {dam}'**
+  String damLine(String dam);
+
+  /// No description provided for @bornLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Born {date} ({age})'**
+  String bornLine(String date, String age);
+
+  /// No description provided for @kgAtBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'{kg} kg at birth'**
+  String kgAtBirth(String kg);
+
+  /// No description provided for @weanedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Weaned on {date}'**
+  String weanedOn(String date);
+
+  /// No description provided for @nameOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get nameOptional;
+
+  /// No description provided for @bornOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Born: {date}'**
+  String bornOn(String date);
+
+  /// No description provided for @damOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Dam (optional)'**
+  String get damOptional;
+
+  /// No description provided for @birthWeightOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth weight (optional)'**
+  String get birthWeightOptional;
+
+  /// No description provided for @birthWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth weight'**
+  String get birthWeight;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @notWeaned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not weaned'**
+  String get notWeaned;
+
+  /// No description provided for @clearWeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear weaning date'**
+  String get clearWeaning;
+
+  /// No description provided for @breedingRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Breeding record'**
+  String get breedingRecord;
+
+  /// No description provided for @tapAgainToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap again to delete'**
+  String get tapAgainToDelete;
+
+  /// Used in '{what} deleted'
+  ///
+  /// In en, this message translates to:
+  /// **'Calf details'**
+  String get calfDetailsWhat;
+
+  /// No description provided for @ageNotBorn.
+  ///
+  /// In en, this message translates to:
+  /// **'not born yet'**
+  String get ageNotBorn;
+
+  /// No description provided for @ageDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String ageDays(int count);
+
+  /// No description provided for @ageWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} weeks'**
+  String ageWeeks(int count);
+
+  /// No description provided for @ageMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months'**
+  String ageMonths(int count);
+
+  /// No description provided for @ageYearsLong.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year} other{{count} years}}'**
+  String ageYearsLong(int count);
+
+  /// No description provided for @enterKgRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter kg between 0 and 200'**
+  String get enterKgRange;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

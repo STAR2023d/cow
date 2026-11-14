@@ -917,4 +917,432 @@ class L10nSw extends L10n {
   String dueInDays(int count) {
     return 'baada ya siku $count';
   }
+
+  @override
+  String get expenseSaved => 'Matumizi yamehifadhiwa';
+
+  @override
+  String get expenseTitle => 'Matumizi';
+
+  @override
+  String get required => 'Inahitajika';
+
+  @override
+  String get amount => 'Kiasi';
+
+  @override
+  String get saveExpense => 'Hifadhi matumizi';
+
+  @override
+  String get catFeed => 'Chakula';
+
+  @override
+  String get catVet => 'Daktari na dawa';
+
+  @override
+  String get catLabour => 'Vibarua';
+
+  @override
+  String get catTransport => 'Usafiri';
+
+  @override
+  String get incomeCalfSale => 'Mauzo ya ndama';
+
+  @override
+  String get income => 'Mapato';
+
+  @override
+  String get exportPdf => 'Hamisha PDF';
+
+  @override
+  String periodRange(String start, String end) {
+    return '$start hadi $end';
+  }
+
+  @override
+  String get openingBalance => 'Salio la mwanzo';
+
+  @override
+  String milkCashRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pesa ya maziwa (kumbukumbu $count)',
+      one: 'Pesa ya maziwa (kumbukumbu 1)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String otherIncomeEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mapato mengine ($count)',
+      one: 'Mapato mengine (1)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String expensesEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Matumizi ($count)',
+      one: 'Matumizi (1)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closingBalance => 'Salio la mwisho';
+
+  @override
+  String get milkRecords => 'Kumbukumbu za maziwa';
+
+  @override
+  String get otherIncome => 'Mapato mengine';
+
+  @override
+  String savedFile(String path) {
+    return 'Imehifadhiwa $path';
+  }
+
+  @override
+  String savedFileNotOpened(String path) {
+    return 'Imehifadhiwa $path (imeshindikana kuifungua)';
+  }
+
+  @override
+  String couldNotSavePdf(String error) {
+    return 'Imeshindikana kuhifadhi PDF: $error';
+  }
+
+  @override
+  String get couldNotLoadMonth =>
+      'Imeshindikana kupakia mwezi huu. Tafadhali jaribu tena.';
+
+  @override
+  String get nothingThisMonth => 'Hakuna kilichoandikwa mwezi huu.';
+
+  @override
+  String get profit => 'Faida';
+
+  @override
+  String get milk => 'Maziwa';
+
+  @override
+  String litresProduced(String litres) {
+    return '$litres zimezalishwa';
+  }
+
+  @override
+  String get costPerLitreNone =>
+      'Gharama kwa lita: hakuna maziwa yaliyoandikwa';
+
+  @override
+  String costPerLitre(String amount) {
+    return 'Gharama kwa lita: $amount';
+  }
+
+  @override
+  String get incomeVsExpenses => 'Mapato na matumizi';
+
+  @override
+  String milkAndOther(String milk, String other) {
+    return 'Maziwa $milk  •  Mapato mengine $other';
+  }
+
+  @override
+  String get whereMoneyWent => 'Pesa zilikoenda';
+
+  @override
+  String get noExpensesMonth => 'Hakuna matumizi yaliyoandikwa mwezi huu.';
+
+  @override
+  String get earningsPerBuyer => 'Mapato kwa kila mnunuzi';
+
+  @override
+  String get noBuyersMonth =>
+      'Hakuna wanunuzi walioandikwa mwezi huu. Ongeza mnunuzi unapoandika maziwa kuona nani analipa zaidi.';
+
+  @override
+  String get notRecorded => 'Hakijaandikwa';
+
+  @override
+  String shareOfMilkIncome(String percent) {
+    return '$percent% ya mapato ya maziwa';
+  }
+
+  @override
+  String monthInProgress(String month, int day) {
+    return '$month, 1 hadi $day (mwezi unaendelea)';
+  }
+
+  @override
+  String pdfAmountsGenerated(String date) {
+    return 'Kiasi kwa KES. Imetengenezwa $date.';
+  }
+
+  @override
+  String pdfPage(int page, int pages) {
+    return 'Ukurasa $page wa $pages';
+  }
+
+  @override
+  String statementTitle(String start, String end) {
+    return 'Taarifa ya Fedha: $start hadi $end';
+  }
+
+  @override
+  String monthlyReportTitle(String period) {
+    return 'Ripoti ya Mwezi: $period';
+  }
+
+  @override
+  String get none => 'Hakuna';
+
+  @override
+  String get colDate => 'Tarehe';
+
+  @override
+  String get colSession => 'Kipindi';
+
+  @override
+  String get colLitres => 'Lita';
+
+  @override
+  String get colCash => 'Pesa';
+
+  @override
+  String get colType => 'Aina';
+
+  @override
+  String get colNote => 'Maelezo';
+
+  @override
+  String get colAmount => 'Kiasi';
+
+  @override
+  String get colCategory => 'Kundi';
+
+  @override
+  String get colDescription => 'Maelezo';
+
+  @override
+  String get colShare => 'Sehemu';
+
+  @override
+  String get colBuyer => 'Mnunuzi';
+
+  @override
+  String get colShareMilk => 'Sehemu ya mapato ya maziwa';
+
+  @override
+  String get thisMonth => 'Mwezi huu';
+
+  @override
+  String get lastMonth => 'Mwezi uliopita';
+
+  @override
+  String get milkIncome => 'Mapato ya maziwa';
+
+  @override
+  String get totalIncome => 'Jumla ya mapato';
+
+  @override
+  String get litresProducedLabel => 'Lita zilizozalishwa';
+
+  @override
+  String get costPerLitreLabel => 'Gharama kwa lita';
+
+  @override
+  String get noMilkLogged => 'hakuna maziwa yaliyoandikwa';
+
+  @override
+  String get dailyAnalytics => 'Maziwa ya leo';
+
+  @override
+  String get totalToday => 'JUMLA YA MAZIWA LEO';
+
+  @override
+  String get aiFarmInsights => 'Maarifa ya AI ya shamba';
+
+  @override
+  String get sessionBreakdown => 'Mgawanyo kwa vipindi';
+
+  @override
+  String get todaysLogs => 'Kumbukumbu za leo';
+
+  @override
+  String get noMilkToday => 'Bado hakuna maziwa yaliyoandikwa leo.';
+
+  @override
+  String amountLine(String amount) {
+    return 'Kiasi: $amount';
+  }
+
+  @override
+  String sessionLine(String session) {
+    return 'Kipindi: $session';
+  }
+
+  @override
+  String get calfDetails => 'Maelezo ya ndama';
+
+  @override
+  String get addCalf => 'Ongeza ndama';
+
+  @override
+  String get noCalvesYet =>
+      'Bado hakuna ndama. Ndama wanaonekana hapa kuzaa kukiandikwa kwenye ukurasa wa uzazi wa ng\'ombe, au gusa Ongeza ndama kwa ndama aliyenunuliwa au aliyezaliwa kabla ya kutumia programu.';
+
+  @override
+  String calfSummary(int total, int kept, int sold) {
+    return 'Ndama $total · $kept wamebakizwa · $sold wameuzwa';
+  }
+
+  @override
+  String calfSummaryAwaiting(int count) {
+    return ' · $count wanasubiri uamuzi';
+  }
+
+  @override
+  String calfSummaryByHand(int count) {
+    return ' · $count wameongezwa kwa mkono';
+  }
+
+  @override
+  String get unknownDam => 'Mama hajulikani';
+
+  @override
+  String get unnamedCalf => 'Ndama asiye na jina';
+
+  @override
+  String calfOf(String dam) {
+    return 'Ndama wa $dam';
+  }
+
+  @override
+  String get kept => 'Amebakizwa';
+
+  @override
+  String get sold => 'Ameuzwa';
+
+  @override
+  String soldFor(String amount) {
+    return 'Ameuzwa · $amount';
+  }
+
+  @override
+  String get awaitingOutcome => 'Anasubiri uamuzi';
+
+  @override
+  String get boughtIn => 'Amenunuliwa';
+
+  @override
+  String get onFarm => 'Yupo shambani';
+
+  @override
+  String get female => 'Jike';
+
+  @override
+  String get male => 'Dume';
+
+  @override
+  String get sexNotRecorded => 'Jinsia haijaandikwa';
+
+  @override
+  String damLine(String dam) {
+    return 'Mama: $dam';
+  }
+
+  @override
+  String bornLine(String date, String age) {
+    return 'Alizaliwa $date ($age)';
+  }
+
+  @override
+  String kgAtBirth(String kg) {
+    return 'kg $kg wakati wa kuzaliwa';
+  }
+
+  @override
+  String weanedOn(String date) {
+    return 'Aliachishwa kunyonya $date';
+  }
+
+  @override
+  String get nameOptional => 'Jina (si lazima)';
+
+  @override
+  String bornOn(String date) {
+    return 'Alizaliwa: $date';
+  }
+
+  @override
+  String get damOptional => 'Mama (si lazima)';
+
+  @override
+  String get birthWeightOptional => 'Uzito wa kuzaliwa (si lazima)';
+
+  @override
+  String get birthWeight => 'Uzito wa kuzaliwa';
+
+  @override
+  String get notes => 'Maelezo';
+
+  @override
+  String get notWeaned => 'Bado ananyonya';
+
+  @override
+  String get clearWeaning => 'Ondoa tarehe ya kuachishwa';
+
+  @override
+  String get breedingRecord => 'Kumbukumbu ya uzazi';
+
+  @override
+  String get tapAgainToDelete => 'Gusa tena kufuta';
+
+  @override
+  String get calfDetailsWhat => 'Maelezo ya ndama';
+
+  @override
+  String get ageNotBorn => 'bado hajazaliwa';
+
+  @override
+  String ageDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'siku $count',
+      one: 'siku 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ageWeeks(int count) {
+    return 'wiki $count';
+  }
+
+  @override
+  String ageMonths(int count) {
+    return 'miezi $count';
+  }
+
+  @override
+  String ageYearsLong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'miaka $count',
+      one: 'mwaka 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get enterKgRange => 'Weka kg kati ya 0 na 200';
 }

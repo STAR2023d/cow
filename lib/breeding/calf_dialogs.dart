@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/calf_register.dart';
 import 'package:cow/database/app_database.dart';
@@ -13,8 +14,7 @@ double? _weight(String text) {
   return v == null || v <= 0 || v > 200 ? double.nan : v;
 }
 
-String? _weightError(String? v) =>
-    (_weight(v ?? '')?.isNaN ?? false) ? 'Enter kg between 0 and 200' : null;
+bool _badWeight(String? v) => _weight(v ?? '')?.isNaN ?? false;
 
 const _textStyle = TextStyle();
 
@@ -68,7 +68,7 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add calf', style: _textStyle),
+      title: Text(context.l10n.addCalf, style: _textStyle),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -78,18 +78,17 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
               TextFormField(
                 controller: _name,
                 style: _textStyle,
-                decoration: const InputDecoration(labelText: 'Name (optional)'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.nameOptional,
+                ),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Born: ${shortDate(_born)}',
+                  context.l10n.bornOn(shortDate(_born)),
                   style: TextStyle(color: context.farm.muted),
                 ),
-                trailing: Icon(
-                  Icons.calendar_today,
-                  color: context.farm.muted,
-                ),
+                trailing: Icon(Icons.calendar_today, color: context.farm.muted),
                 onTap: () async {
                   final picked = await showDatePicker(
                     context: context,
@@ -101,9 +100,12 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
                 },
               ),
               SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(value: 'female', label: Text('Female')),
-                  ButtonSegment(value: 'male', label: Text('Male')),
+                segments: [
+                  ButtonSegment(
+                    value: 'female',
+                    label: Text(context.l10n.female),
+                  ),
+                  ButtonSegment(value: 'male', label: Text(context.l10n.male)),
                 ],
                 selected: {_sex},
                 onSelectionChanged: (s) => setState(() => _sex = s.first),
@@ -112,9 +114,14 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
               DropdownButtonFormField<int?>(
                 initialValue: _damId,
                 style: _textStyle,
-                decoration: const InputDecoration(labelText: 'Dam (optional)'),
+                decoration: InputDecoration(
+                  labelText: context.l10n.damOptional,
+                ),
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('Unknown')),
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text(context.l10n.unknownBreed),
+                  ),
                   for (final c in widget.cows)
                     DropdownMenuItem(value: c.id, child: Text(c.name)),
                 ],
@@ -126,23 +133,24 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(
-                  labelText: 'Birth weight (optional)',
+                decoration: InputDecoration(
+                  labelText: context.l10n.birthWeightOptional,
                   suffixText: 'kg',
                 ),
-                validator: _weightError,
+                validator: (v) =>
+                    _badWeight(v) ? context.l10n.enterKgRange : null,
               ),
               TextFormField(
                 controller: _notes,
                 style: _textStyle,
                 maxLength: 300,
                 maxLines: 2,
-                decoration: const InputDecoration(labelText: 'Notes'),
+                decoration: InputDecoration(labelText: context.l10n.notes),
               ),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Bought in',
+                  context.l10n.boughtIn,
                   style: TextStyle(color: context.farm.muted),
                 ),
                 value: _boughtIn,
@@ -155,9 +163,9 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.cancel),
         ),
-        ElevatedButton(onPressed: _save, child: const Text('Save')),
+        ElevatedButton(onPressed: _save, child: Text(context.l10n.save)),
       ],
     );
   }
@@ -237,24 +245,25 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(
-                  labelText: 'Birth weight',
+                decoration: InputDecoration(
+                  labelText: context.l10n.birthWeight,
                   suffixText: 'kg',
                 ),
-                validator: _weightError,
+                validator: (v) =>
+                    _badWeight(v) ? context.l10n.enterKgRange : null,
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   _weaned == null
-                      ? 'Not weaned'
-                      : 'Weaned on ${shortDate(_weaned!)}',
+                      ? context.l10n.notWeaned
+                      : context.l10n.weanedOn(shortDate(_weaned!)),
                   style: TextStyle(color: context.farm.muted),
                 ),
                 trailing: _weaned == null
                     ? Icon(Icons.calendar_today, color: context.farm.muted)
                     : IconButton(
-                        tooltip: 'Clear weaning date',
+                        tooltip: context.l10n.clearWeaning,
                         icon: Icon(Icons.close, color: context.farm.muted),
                         onPressed: () => setState(() => _weaned = null),
                       ),
@@ -276,7 +285,7 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
                 style: _textStyle,
                 maxLength: 300,
                 maxLines: 3,
-                decoration: const InputDecoration(labelText: 'Notes'),
+                decoration: InputDecoration(labelText: context.l10n.notes),
               ),
             ],
           ),
@@ -286,7 +295,7 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
         if (calf.fromCycle)
           TextButton(
             onPressed: () => Navigator.pop(context, OpenBreedingRecord()),
-            child: const Text('Breeding record'),
+            child: Text(context.l10n.breedingRecord),
           )
         else
           TextButton(
@@ -294,13 +303,17 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
                 ? Navigator.pop(context, DeleteCalf())
                 : setState(() => _confirmDelete = true),
             style: TextButton.styleFrom(foregroundColor: context.farm.danger),
-            child: Text(_confirmDelete ? 'Tap again to delete' : 'Delete'),
+            child: Text(
+              _confirmDelete
+                  ? context.l10n.tapAgainToDelete
+                  : context.l10n.delete,
+            ),
           ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.cancel),
         ),
-        ElevatedButton(onPressed: _save, child: const Text('Save')),
+        ElevatedButton(onPressed: _save, child: Text(context.l10n.save)),
       ],
     );
   }

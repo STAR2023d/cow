@@ -1,7 +1,9 @@
 import 'package:cow/breeding/breeding_logic.dart';
 import 'package:cow/breeding/breeding_schema.dart';
+import 'package:cow/breeding/calf_register.dart';
 import 'package:cow/health/health_presets.dart';
 import 'package:cow/l10n/app_localizations.dart';
+import 'package:cow/models/period_runner.dart';
 
 /// Translated names for values that are stored or computed in English.
 /// The English values stay as they are (the database, the AI vet prompt
@@ -81,4 +83,56 @@ String dueText(L10n l10n, int days) {
   if (days == 0) return l10n.dueToday;
   if (days == 1) return l10n.dueTomorrow;
   return l10n.dueInDays(days);
+}
+
+/// Expense category key ('feed', 'vet', ...) in the app language
+/// (English: `ExpenseCategory.label`).
+String expenseCategoryLabel(L10n l10n, String key) => switch (key) {
+  'feed' => l10n.catFeed,
+  'vet' => l10n.catVet,
+  'labour' => l10n.catLabour,
+  'transport' => l10n.catTransport,
+  _ => l10n.other,
+};
+
+/// Income category ('calf_sale', ...) in the app language
+/// (English: `incomeLabel`).
+String incomeCategoryLabel(L10n l10n, String category) => switch (category) {
+  'calf_sale' => l10n.incomeCalfSale,
+  '' => l10n.income,
+  _ => incomeLabel(category),
+};
+
+/// A calf's mother as the register names her: 'Unknown dam', 'Cow #4' or
+/// her name.
+String damLabel(L10n l10n, String dam) {
+  if (dam == 'Unknown dam') return l10n.unknownDam;
+  final n = RegExp(r'^Cow #(\d+)$').firstMatch(dam);
+  return n == null ? dam : l10n.cowNumber(int.parse(n.group(1)!));
+}
+
+/// The calf's own name, or "Calf of [dam]", or "Unnamed calf".
+String calfTitle(L10n l10n, CalfEntry c) =>
+    c.calfName ??
+    (c.damName == 'Unknown dam'
+        ? l10n.unnamedCalf
+        : l10n.calfOf(damLabel(l10n, c.damName)));
+
+/// A calf's age on [now], same rules as `CalfEntry.ageOn`.
+String calfAgeText(L10n l10n, DateTime bornOn, DateTime now) {
+  final days = DateTime.utc(
+    now.year,
+    now.month,
+    now.day,
+  ).difference(DateTime.utc(bornOn.year, bornOn.month, bornOn.day)).inDays;
+  if (days < 0) return l10n.ageNotBorn;
+  if (days < 14) return l10n.ageDays(days);
+  if (days < 61) return l10n.ageWeeks(days ~/ 7);
+  final months =
+      (now.year - bornOn.year) * 12 +
+      now.month -
+      bornOn.month -
+      (now.day < bornOn.day ? 1 : 0);
+  if (months < 24) return l10n.ageMonths(months);
+  return l10n.ageYearsLong(months ~/ 12);
 }

@@ -913,4 +913,437 @@ class L10nEn extends L10n {
   String dueInDays(int count) {
     return 'in $count days';
   }
+
+  @override
+  String get expenseSaved => 'Expense saved';
+
+  @override
+  String get expenseTitle => 'Expense';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get saveExpense => 'Save expense';
+
+  @override
+  String get catFeed => 'Feed';
+
+  @override
+  String get catVet => 'Vet & medicine';
+
+  @override
+  String get catLabour => 'Labour';
+
+  @override
+  String get catTransport => 'Transport';
+
+  @override
+  String get incomeCalfSale => 'Calf sale';
+
+  @override
+  String get income => 'Income';
+
+  @override
+  String get exportPdf => 'Export PDF';
+
+  @override
+  String periodRange(String start, String end) {
+    return '$start to $end';
+  }
+
+  @override
+  String get openingBalance => 'Opening balance';
+
+  @override
+  String milkCashRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Milk cash ($count records)',
+      one: 'Milk cash (1 record)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String otherIncomeEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Other income ($count entries)',
+      one: 'Other income (1 entry)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String expensesEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Expenses ($count entries)',
+      one: 'Expenses (1 entry)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get closingBalance => 'Closing balance';
+
+  @override
+  String get milkRecords => 'Milk records';
+
+  @override
+  String get otherIncome => 'Other income';
+
+  @override
+  String savedFile(String path) {
+    return 'Saved $path';
+  }
+
+  @override
+  String savedFileNotOpened(String path) {
+    return 'Saved $path (could not open it)';
+  }
+
+  @override
+  String couldNotSavePdf(String error) {
+    return 'Could not save the PDF: $error';
+  }
+
+  @override
+  String get couldNotLoadMonth =>
+      'Couldn\'t load this month. Please try again.';
+
+  @override
+  String get nothingThisMonth => 'Nothing recorded this month.';
+
+  @override
+  String get profit => 'Profit';
+
+  @override
+  String get milk => 'Milk';
+
+  @override
+  String litresProduced(String litres) {
+    return '$litres produced';
+  }
+
+  @override
+  String get costPerLitreNone => 'Cost per litre: no milk logged';
+
+  @override
+  String costPerLitre(String amount) {
+    return 'Cost per litre: $amount';
+  }
+
+  @override
+  String get incomeVsExpenses => 'Income vs expenses';
+
+  @override
+  String milkAndOther(String milk, String other) {
+    return 'Milk $milk  •  Other income $other';
+  }
+
+  @override
+  String get whereMoneyWent => 'Where the money went';
+
+  @override
+  String get noExpensesMonth => 'No expenses recorded this month.';
+
+  @override
+  String get earningsPerBuyer => 'Earnings per buyer';
+
+  @override
+  String get noBuyersMonth =>
+      'No buyers recorded this month. Add a buyer when logging milk to see who pays the most.';
+
+  @override
+  String get notRecorded => 'Not recorded';
+
+  @override
+  String shareOfMilkIncome(String percent) {
+    return '$percent% of milk income';
+  }
+
+  @override
+  String monthInProgress(String month, int day) {
+    return '$month, 1 to $day (month in progress)';
+  }
+
+  @override
+  String pdfAmountsGenerated(String date) {
+    return 'Amounts in KES. Generated $date.';
+  }
+
+  @override
+  String pdfPage(int page, int pages) {
+    return 'Page $page of $pages';
+  }
+
+  @override
+  String statementTitle(String start, String end) {
+    return 'Financial Statement: $start to $end';
+  }
+
+  @override
+  String monthlyReportTitle(String period) {
+    return 'Monthly Report: $period';
+  }
+
+  @override
+  String get none => 'None';
+
+  @override
+  String get colDate => 'Date';
+
+  @override
+  String get colSession => 'Session';
+
+  @override
+  String get colLitres => 'Litres';
+
+  @override
+  String get colCash => 'Cash';
+
+  @override
+  String get colType => 'Type';
+
+  @override
+  String get colNote => 'Note';
+
+  @override
+  String get colAmount => 'Amount';
+
+  @override
+  String get colCategory => 'Category';
+
+  @override
+  String get colDescription => 'Description';
+
+  @override
+  String get colShare => 'Share';
+
+  @override
+  String get colBuyer => 'Buyer';
+
+  @override
+  String get colShareMilk => 'Share of milk income';
+
+  @override
+  String get thisMonth => 'This month';
+
+  @override
+  String get lastMonth => 'Last month';
+
+  @override
+  String get milkIncome => 'Milk income';
+
+  @override
+  String get totalIncome => 'Total income';
+
+  @override
+  String get litresProducedLabel => 'Litres produced';
+
+  @override
+  String get costPerLitreLabel => 'Cost per litre';
+
+  @override
+  String get noMilkLogged => 'no milk logged';
+
+  @override
+  String get dailyAnalytics => 'Today\'s milk';
+
+  @override
+  String get totalToday => 'TOTAL PRODUCTION TODAY';
+
+  @override
+  String get aiFarmInsights => 'AI farm insights';
+
+  @override
+  String get sessionBreakdown => 'Session breakdown';
+
+  @override
+  String get todaysLogs => 'Today\'s logs';
+
+  @override
+  String get noMilkToday => 'No milk has been logged yet today.';
+
+  @override
+  String amountLine(String amount) {
+    return 'Amount: $amount';
+  }
+
+  @override
+  String sessionLine(String session) {
+    return 'Session: $session';
+  }
+
+  @override
+  String get calfDetails => 'Calf details';
+
+  @override
+  String get addCalf => 'Add calf';
+
+  @override
+  String get noCalvesYet =>
+      'No calves yet. Calves appear here once a calving is recorded on a cow\'s breeding screen, or tap Add calf for one bought in or born before you used the app.';
+
+  @override
+  String calfSummary(int total, int kept, int sold) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total calves',
+      one: '1 calf',
+    );
+    return '$_temp0 · $kept kept · $sold sold';
+  }
+
+  @override
+  String calfSummaryAwaiting(int count) {
+    return ' · $count awaiting outcome';
+  }
+
+  @override
+  String calfSummaryByHand(int count) {
+    return ' · $count added by hand';
+  }
+
+  @override
+  String get unknownDam => 'Unknown dam';
+
+  @override
+  String get unnamedCalf => 'Unnamed calf';
+
+  @override
+  String calfOf(String dam) {
+    return 'Calf of $dam';
+  }
+
+  @override
+  String get kept => 'Kept';
+
+  @override
+  String get sold => 'Sold';
+
+  @override
+  String soldFor(String amount) {
+    return 'Sold · $amount';
+  }
+
+  @override
+  String get awaitingOutcome => 'Awaiting outcome';
+
+  @override
+  String get boughtIn => 'Bought in';
+
+  @override
+  String get onFarm => 'On farm';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get sexNotRecorded => 'Sex not recorded';
+
+  @override
+  String damLine(String dam) {
+    return 'Dam: $dam';
+  }
+
+  @override
+  String bornLine(String date, String age) {
+    return 'Born $date ($age)';
+  }
+
+  @override
+  String kgAtBirth(String kg) {
+    return '$kg kg at birth';
+  }
+
+  @override
+  String weanedOn(String date) {
+    return 'Weaned on $date';
+  }
+
+  @override
+  String get nameOptional => 'Name (optional)';
+
+  @override
+  String bornOn(String date) {
+    return 'Born: $date';
+  }
+
+  @override
+  String get damOptional => 'Dam (optional)';
+
+  @override
+  String get birthWeightOptional => 'Birth weight (optional)';
+
+  @override
+  String get birthWeight => 'Birth weight';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get notWeaned => 'Not weaned';
+
+  @override
+  String get clearWeaning => 'Clear weaning date';
+
+  @override
+  String get breedingRecord => 'Breeding record';
+
+  @override
+  String get tapAgainToDelete => 'Tap again to delete';
+
+  @override
+  String get calfDetailsWhat => 'Calf details';
+
+  @override
+  String get ageNotBorn => 'not born yet';
+
+  @override
+  String ageDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ageWeeks(int count) {
+    return '$count weeks';
+  }
+
+  @override
+  String ageMonths(int count) {
+    return '$count months';
+  }
+
+  @override
+  String ageYearsLong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years',
+      one: '1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get enterKgRange => 'Enter kg between 0 and 200';
 }

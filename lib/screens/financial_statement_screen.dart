@@ -1,6 +1,7 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
-import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/period_runner.dart';
 import 'package:cow/services/pdf_export.dart';
 import 'package:cow/services/statement_pdf.dart';
@@ -44,10 +45,10 @@ class _StatementScreenState extends State<StatementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Financial Statement'),
+        title: Text(context.l10n.navStatement),
         actions: [
           IconButton(
-            tooltip: 'Export PDF',
+            tooltip: context.l10n.exportPdf,
             icon: _exporting
                 ? const SizedBox.square(
                     dimension: 20,
@@ -76,7 +77,10 @@ class _StatementScreenState extends State<StatementScreen> {
                     onPressed: () => _shiftPeriod(-1),
                   ),
                   Text(
-                    '${_fmt(s.periodStart)}  to  ${_fmt(s.periodEnd)}',
+                    context.l10n.periodRange(
+                      _fmt(s.periodStart),
+                      _fmt(s.periodEnd),
+                    ),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
@@ -86,44 +90,46 @@ class _StatementScreenState extends State<StatementScreen> {
                 ],
               ),
               const Divider(height: 32),
-              _row('Opening balance', s.openingBalance),
+              _row(context.l10n.openingBalance, s.openingBalance),
               _row(
-                'Milk cash (${s.milkRecords.length} records)',
+                context.l10n.milkCashRecords(s.milkRecords.length),
                 s.totalMilkCash,
               ),
               _row(
-                'Other income (${s.incomeRecords.length} entries)',
+                context.l10n.otherIncomeEntries(s.incomeRecords.length),
                 s.otherIncome,
               ),
               _row(
-                'Expenses (${s.expenseRecords.length} entries)',
+                context.l10n.expensesEntries(s.expenseRecords.length),
                 -s.totalExpenses,
               ),
               const Divider(),
-              _row('Closing balance', s.closingBalance, bold: true),
+              _row(context.l10n.closingBalance, s.closingBalance, bold: true),
               const SizedBox(height: 24),
               Text(
-                'Milk records',
+                context.l10n.milkRecords,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               ...s.milkRecords.map(
                 (r) => ListTile(
                   dense: true,
-                  title: Text('${_fmt(r.entryDate)} • ${r.session}'),
-                  subtitle: Text('${r.amount.toStringAsFixed(2)} L'),
+                  title: Text(
+                    '${_fmt(r.entryDate)} • ${sessionLabel(context.l10n, r.session)}',
+                  ),
+                  subtitle: Text(litres(r.amount)),
                   trailing: Text(_money(s.cashFor(r))),
                 ),
               ),
               if (s.incomeRecords.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
-                  'Other income',
+                  context.l10n.otherIncome,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 ...s.incomeRecords.map(
                   (i) => ListTile(
                     dense: true,
-                    title: Text(incomeLabel(i.category)),
+                    title: Text(incomeCategoryLabel(context.l10n, i.category)),
                     subtitle: Text(
                       (i.note == null || i.note!.isEmpty)
                           ? _fmt(i.date)
@@ -134,13 +140,16 @@ class _StatementScreenState extends State<StatementScreen> {
                 ),
               ],
               const SizedBox(height: 16),
-              Text('Expenses', style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                context.l10n.navExpenses,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               ...s.expenseRecords.map(
                 (e) => ListTile(
                   dense: true,
                   title: Text(e.description),
                   subtitle: Text(
-                    '${ExpenseCategory.label(e.category)} • ${_fmt(e.date)}',
+                    '${expenseCategoryLabel(context.l10n, e.category)} • ${_fmt(e.date)}',
                   ),
                   trailing: Text('-${_money(e.amount)}'),
                 ),
@@ -154,20 +163,21 @@ class _StatementScreenState extends State<StatementScreen> {
 
   /// Saves the shown month as a PDF in Documents/Mwauras Farm and opens it.
   Future<void> _exportPdf() async {
+    final l10n = context.l10n;
     setState(() => _exporting = true);
     String message;
     try {
       final s = await _future;
       final file = await savePdf(
-        await buildStatementPdf(s),
+        await buildStatementPdf(s, l10n: l10n),
         statementFileName(s),
       );
       final opened = await openFile(file);
       message = opened
-          ? 'Saved ${file.path}'
-          : 'Saved ${file.path} (could not open it)';
+          ? l10n.savedFile(file.path)
+          : l10n.savedFileNotOpened(file.path);
     } catch (e) {
-      message = 'Could not save the PDF: $e';
+      message = l10n.couldNotSavePdf('$e');
     }
     if (!mounted) return;
     setState(() => _exporting = false);

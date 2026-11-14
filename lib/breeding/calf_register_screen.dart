@@ -1,3 +1,5 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/breeding/calf_dialogs.dart';
@@ -66,7 +68,7 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
         if (!mounted) return;
         await deleteWithUndo(
           context,
-          what: 'Calf details',
+          what: context.l10n.calfDetailsWhat,
           delete: () => db.deleteCalf(row.id),
           restore: () => db.restoreCalf(row),
         );
@@ -111,13 +113,13 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Calf Register')),
+      appBar: AppBar(title: Text(context.l10n.navCalfRegister)),
       floatingActionButton: widget.db == null
           ? null
           : FloatingActionButton.extended(
               onPressed: _addCalf,
               icon: const Icon(Icons.add),
-              label: const Text('Add calf'),
+              label: Text(context.l10n.addCalf),
             ),
       body: StreamBuilder<List<CowData>>(
         stream: _cows,
@@ -140,9 +142,7 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
                   child: Padding(
                     padding: EdgeInsets.all(24),
                     child: Text(
-                      'No calves yet. Calves appear here once a calving is '
-                      'recorded on a cow\'s breeding screen, or tap Add calf '
-                      'for one bought in or born before you used the app.',
+                      context.l10n.noCalvesYet,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: context.farm.muted),
                     ),
@@ -159,7 +159,7 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
                       calf: c,
                       onTap: widget.db == null
                           ? null
-                          : () => _editCalf(c, _CalfTile.titleOf(c)),
+                          : () => _editCalf(c, calfTitle(context.l10n, c)),
                     ),
                 ],
               );
@@ -182,10 +182,13 @@ class _Summary extends StatelessWidget {
     final awaiting = count(CalfOutcome.awaiting);
     final onFarm = count(CalfOutcome.onFarm);
     return Text(
-      '${calves.length} calves · ${count(CalfOutcome.kept)} kept · '
-      '${count(CalfOutcome.sold)} sold'
-      '${awaiting > 0 ? ' · $awaiting awaiting outcome' : ''}'
-      '${onFarm > 0 ? ' · $onFarm added by hand' : ''}',
+      context.l10n.calfSummary(
+            calves.length,
+            count(CalfOutcome.kept),
+            count(CalfOutcome.sold),
+          ) +
+          (awaiting > 0 ? context.l10n.calfSummaryAwaiting(awaiting) : '') +
+          (onFarm > 0 ? context.l10n.calfSummaryByHand(onFarm) : ''),
       style: TextStyle(color: context.farm.muted, fontSize: 14),
     );
   }
@@ -199,27 +202,23 @@ class _CalfTile extends StatelessWidget {
 
   static final _kg = NumberFormat('#,##0.#');
 
-  static String titleOf(CalfEntry c) =>
-      c.calfName ??
-      (c.damName == 'Unknown dam' ? 'Unnamed calf' : 'Calf of ${c.damName}');
-
   (String, Color, IconData) _outcome(BuildContext context) =>
       switch (calf.outcome) {
-        CalfOutcome.kept => ('Kept', context.farm.good, Icons.pets),
+        CalfOutcome.kept => (context.l10n.kept, context.farm.good, Icons.pets),
         CalfOutcome.sold => (
           calf.cycle!.saleAmount == null
-              ? 'Sold'
-              : 'Sold · ${ksh(calf.cycle!.saleAmount!)}',
+              ? context.l10n.sold
+              : context.l10n.soldFor(ksh(calf.cycle!.saleAmount!)),
           context.farm.info,
           Icons.sell_outlined,
         ),
         CalfOutcome.awaiting => (
-          'Awaiting outcome',
+          context.l10n.awaitingOutcome,
           context.farm.warning,
           Icons.hourglass_empty,
         ),
         CalfOutcome.onFarm => (
-          calf.boughtIn ? 'Bought in' : 'On farm',
+          calf.boughtIn ? context.l10n.boughtIn : context.l10n.onFarm,
           context.farm.muted,
           Icons.child_friendly,
         ),
@@ -229,22 +228,26 @@ class _CalfTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, color, icon) = _outcome(context);
     final sex = switch (calf.sex) {
-      'female' => 'Female',
-      'male' => 'Male',
-      _ => 'Sex not recorded',
+      'female' => context.l10n.female,
+      'male' => context.l10n.male,
+      _ => context.l10n.sexNotRecorded,
     };
     final weight = calf.birthWeightKg;
     final weaned = calf.weanedOn;
     final sub = [
       [
-        if (calf.calfName != null) 'Dam: ${calf.damName}',
-        'Born ${shortDate(calf.bornOn)} (${calf.ageOn(DateTime.now())})',
+        if (calf.calfName != null)
+          context.l10n.damLine(damLabel(context.l10n, calf.damName)),
+        context.l10n.bornLine(
+          shortDate(calf.bornOn),
+          calfAgeText(context.l10n, calf.bornOn, DateTime.now()),
+        ),
         sex,
       ].join(' · '),
       if (weight != null || weaned != null)
         [
-          if (weight != null) '${_kg.format(weight)} kg at birth',
-          if (weaned != null) 'Weaned on ${shortDate(weaned)}',
+          if (weight != null) context.l10n.kgAtBirth(_kg.format(weight)),
+          if (weaned != null) context.l10n.weanedOn(shortDate(weaned)),
         ].join(' · '),
     ].join('\n');
 
@@ -252,7 +255,7 @@ class _CalfTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(titleOf(calf), style: const TextStyle()),
+        title: Text(calfTitle(context.l10n, calf)),
         subtitle: Text(sub, style: TextStyle(color: context.farm.muted)),
         isThreeLine: weight != null || weaned != null,
         trailing: Text(

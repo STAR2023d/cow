@@ -1,6 +1,7 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
-import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
 import 'package:cow/screens/widgets/finance_advisor_card.dart';
 import 'package:cow/services/monthly_report_pdf.dart';
@@ -73,20 +74,25 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
 
   /// Saves the shown month as a PDF in Documents/Mwauras Farm and opens it.
   Future<void> _exportPdf() async {
+    final l10n = context.l10n;
     setState(() => _exporting = true);
     String message;
     try {
       final data = await _future;
       final file = await savePdf(
-        await buildMonthlyReportPdf(data.current, previous: data.previous),
+        await buildMonthlyReportPdf(
+          data.current,
+          previous: data.previous,
+          l10n: l10n,
+        ),
         monthlyReportFileName(data.current),
       );
       final opened = await openFile(file);
       message = opened
-          ? 'Saved ${file.path}'
-          : 'Saved ${file.path} (could not open it)';
+          ? l10n.savedFile(file.path)
+          : l10n.savedFileNotOpened(file.path);
     } catch (e) {
-      message = 'Could not save the PDF: $e';
+      message = l10n.couldNotSavePdf('$e');
     }
     if (!mounted) return;
     setState(() => _exporting = false);
@@ -99,10 +105,10 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Monthly Report'),
+        title: Text(context.l10n.navMonthlyReport),
         actions: [
           IconButton(
-            tooltip: 'Export PDF',
+            tooltip: context.l10n.exportPdf,
             icon: _exporting
                 ? const SizedBox.square(
                     dimension: 20,
@@ -144,7 +150,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                 return Padding(
                   padding: EdgeInsets.all(32),
                   child: Text(
-                    "Couldn't load this month. Please try again.",
+                    context.l10n.couldNotLoadMonth,
                     style: TextStyle(color: context.farm.warning),
                   ),
                 );
@@ -178,7 +184,7 @@ class _ReportBody extends StatelessWidget {
         padding: EdgeInsets.all(32),
         child: Center(
           child: Text(
-            'Nothing recorded this month.',
+            context.l10n.nothingThisMonth,
             style: TextStyle(color: context.farm.muted),
           ),
         ),
@@ -196,19 +202,19 @@ class _ReportBody extends StatelessWidget {
         Row(
           children: [
             _SummaryTile(
-              label: 'Income',
+              label: context.l10n.income,
               value: ksh(report.totalIncome),
               color: context.farm.good,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
-              label: 'Expenses',
+              label: context.l10n.navExpenses,
               value: ksh(report.totalExpenses),
               color: context.farm.warning,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
-              label: 'Profit',
+              label: context.l10n.profit,
               value: ksh(report.net),
               color: report.net >= 0 ? context.farm.good : context.farm.danger,
             ),
@@ -216,17 +222,17 @@ class _ReportBody extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _Panel(
-          title: 'Milk',
+          title: context.l10n.milk,
           children: [
             Text(
-              '${report.litres.toStringAsFixed(1)} litres produced',
+              context.l10n.litresProduced(litres(report.litres)),
               style: const TextStyle(),
             ),
             const SizedBox(height: 4),
             Text(
               cost == null
-                  ? 'Cost per litre: no milk logged'
-                  : 'Cost per litre: ${ksh(cost, cents: true)}',
+                  ? context.l10n.costPerLitreNone
+                  : context.l10n.costPerLitre(ksh(cost, cents: true)),
               style: TextStyle(color: context.farm.muted),
             ),
           ],
@@ -237,10 +243,10 @@ class _ReportBody extends StatelessWidget {
         ],
         const SizedBox(height: 16),
         _Panel(
-          title: 'Income vs expenses',
+          title: context.l10n.incomeVsExpenses,
           children: [
             _Bar(
-              label: 'Income',
+              label: context.l10n.income,
               value: report.totalIncome,
               max: biggest,
               color: context.farm.good,
@@ -248,7 +254,7 @@ class _ReportBody extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _Bar(
-              label: 'Expenses',
+              label: context.l10n.navExpenses,
               value: report.totalExpenses,
               max: biggest,
               color: context.farm.warning,
@@ -256,25 +262,27 @@ class _ReportBody extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Milk ${ksh(report.milkCash)}'
-              '  •  Other income ${ksh(report.otherIncome)}',
+              context.l10n.milkAndOther(
+                ksh(report.milkCash),
+                ksh(report.otherIncome),
+              ),
               style: TextStyle(color: context.farm.muted, fontSize: 12),
             ),
           ],
         ),
         const SizedBox(height: 16),
         _Panel(
-          title: 'Where the money went',
+          title: context.l10n.whereMoneyWent,
           children: [
             if (report.categoriesBySpend.isEmpty)
               Text(
-                'No expenses recorded this month.',
+                context.l10n.noExpensesMonth,
                 style: TextStyle(color: context.farm.muted),
               )
             else
               for (final entry in report.categoriesBySpend) ...[
                 _Bar(
-                  label: ExpenseCategory.label(entry.key),
+                  label: expenseCategoryLabel(context.l10n, entry.key),
                   labelWidth: 110,
                   value: entry.value,
                   max: report.totalExpenses,
@@ -310,18 +318,17 @@ class _BuyerPanel extends StatelessWidget {
     final buyers = report.earningsByBuyer;
     final top = buyers.fold<double>(0, (m, b) => b.cash > m ? b.cash : m);
     return _Panel(
-      title: 'Earnings per buyer',
+      title: context.l10n.earningsPerBuyer,
       children: [
         if (!report.hasBuyers)
           Text(
-            'No buyers recorded this month. Add a buyer when logging milk '
-            'to see who pays the most.',
+            context.l10n.noBuyersMonth,
             style: TextStyle(color: context.farm.muted),
           )
         else
           for (final b in buyers) ...[
             _Bar(
-              label: b.buyer ?? 'Not recorded',
+              label: b.buyer ?? context.l10n.notRecorded,
               labelWidth: 110,
               value: b.cash,
               max: top,
@@ -331,8 +338,7 @@ class _BuyerPanel extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 110, top: 2, bottom: 8),
               child: Text(
-                '${b.litres.toStringAsFixed(1)} L'
-                '${report.milkCash > 0 ? '  •  ${(b.cash / report.milkCash * 100).toStringAsFixed(0)}% of milk income' : ''}',
+                '${litres(b.litres)}${report.milkCash > 0 ? '  •  ${context.l10n.shareOfMilkIncome((b.cash / report.milkCash * 100).toStringAsFixed(0))}' : ''}',
                 style: TextStyle(color: context.farm.muted, fontSize: 12),
               ),
             ),
@@ -408,10 +414,7 @@ class _Panel extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           ...children,

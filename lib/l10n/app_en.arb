@@ -727,5 +727,366 @@
         "type": "int"
       }
     }
-  }
+  },
+  "expenseSaved": "Expense saved",
+  "expenseTitle": "Expense",
+  "required": "Required",
+  "amount": "Amount",
+  "saveExpense": "Save expense",
+  "catFeed": "Feed",
+  "catVet": "Vet & medicine",
+  "catLabour": "Labour",
+  "catTransport": "Transport",
+  "incomeCalfSale": "Calf sale",
+  "income": "Income",
+  "exportPdf": "Export PDF",
+  "periodRange": "{start} to {end}",
+  "@periodRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "openingBalance": "Opening balance",
+  "milkCashRecords": "{count, plural, =1{Milk cash (1 record)} other{Milk cash ({count} records)}}",
+  "@milkCashRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "otherIncomeEntries": "{count, plural, =1{Other income (1 entry)} other{Other income ({count} entries)}}",
+  "@otherIncomeEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "expensesEntries": "{count, plural, =1{Expenses (1 entry)} other{Expenses ({count} entries)}}",
+  "@expensesEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closingBalance": "Closing balance",
+  "milkRecords": "Milk records",
+  "otherIncome": "Other income",
+  "savedFile": "Saved {path}",
+  "@savedFile": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "savedFileNotOpened": "Saved {path} (could not open it)",
+  "@savedFileNotOpened": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotSavePdf": "Could not save the PDF: {error}",
+  "@couldNotSavePdf": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "couldNotLoadMonth": "Couldn't load this month. Please try again.",
+  "nothingThisMonth": "Nothing recorded this month.",
+  "profit": "Profit",
+  "milk": "Milk",
+  "litresProduced": "{litres} produced",
+  "@litresProduced": {
+    "placeholders": {
+      "litres": {
+        "type": "String"
+      }
+    }
+  },
+  "costPerLitreNone": "Cost per litre: no milk logged",
+  "costPerLitre": "Cost per litre: {amount}",
+  "@costPerLitre": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "incomeVsExpenses": "Income vs expenses",
+  "milkAndOther": "Milk {milk}  •  Other income {other}",
+  "@milkAndOther": {
+    "placeholders": {
+      "milk": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "whereMoneyWent": "Where the money went",
+  "noExpensesMonth": "No expenses recorded this month.",
+  "earningsPerBuyer": "Earnings per buyer",
+  "noBuyersMonth": "No buyers recorded this month. Add a buyer when logging milk to see who pays the most.",
+  "notRecorded": "Not recorded",
+  "shareOfMilkIncome": "{percent}% of milk income",
+  "@shareOfMilkIncome": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "monthInProgress": "{month}, 1 to {day} (month in progress)",
+  "@monthInProgress": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfAmountsGenerated": "Amounts in KES. Generated {date}.",
+  "@pdfAmountsGenerated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfPage": "Page {page} of {pages}",
+  "@pdfPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "statementTitle": "Financial Statement: {start} to {end}",
+  "@statementTitle": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "monthlyReportTitle": "Monthly Report: {period}",
+  "@monthlyReportTitle": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "none": "None",
+  "colDate": "Date",
+  "colSession": "Session",
+  "colLitres": "Litres",
+  "colCash": "Cash",
+  "colType": "Type",
+  "colNote": "Note",
+  "colAmount": "Amount",
+  "colCategory": "Category",
+  "colDescription": "Description",
+  "colShare": "Share",
+  "colBuyer": "Buyer",
+  "colShareMilk": "Share of milk income",
+  "thisMonth": "This month",
+  "lastMonth": "Last month",
+  "milkIncome": "Milk income",
+  "totalIncome": "Total income",
+  "litresProducedLabel": "Litres produced",
+  "costPerLitreLabel": "Cost per litre",
+  "noMilkLogged": "no milk logged",
+  "dailyAnalytics": "Today's milk",
+  "totalToday": "TOTAL PRODUCTION TODAY",
+  "aiFarmInsights": "AI farm insights",
+  "sessionBreakdown": "Session breakdown",
+  "todaysLogs": "Today's logs",
+  "noMilkToday": "No milk has been logged yet today.",
+  "amountLine": "Amount: {amount}",
+  "@amountLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionLine": "Session: {session}",
+  "@sessionLine": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      }
+    }
+  },
+  "calfDetails": "Calf details",
+  "addCalf": "Add calf",
+  "noCalvesYet": "No calves yet. Calves appear here once a calving is recorded on a cow's breeding screen, or tap Add calf for one bought in or born before you used the app.",
+  "calfSummary": "{total, plural, =1{1 calf} other{{total} calves}} · {kept} kept · {sold} sold",
+  "@calfSummary": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "kept": {
+        "type": "int"
+      },
+      "sold": {
+        "type": "int"
+      }
+    }
+  },
+  "calfSummaryAwaiting": " · {count} awaiting outcome",
+  "@calfSummaryAwaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calfSummaryByHand": " · {count} added by hand",
+  "@calfSummaryByHand": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unknownDam": "Unknown dam",
+  "unnamedCalf": "Unnamed calf",
+  "calfOf": "Calf of {dam}",
+  "@calfOf": {
+    "placeholders": {
+      "dam": {
+        "type": "String"
+      }
+    }
+  },
+  "kept": "Kept",
+  "sold": "Sold",
+  "soldFor": "Sold · {amount}",
+  "@soldFor": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "awaitingOutcome": "Awaiting outcome",
+  "boughtIn": "Bought in",
+  "onFarm": "On farm",
+  "female": "Female",
+  "male": "Male",
+  "sexNotRecorded": "Sex not recorded",
+  "damLine": "Dam: {dam}",
+  "@damLine": {
+    "placeholders": {
+      "dam": {
+        "type": "String"
+      }
+    }
+  },
+  "bornLine": "Born {date} ({age})",
+  "@bornLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "kgAtBirth": "{kg} kg at birth",
+  "@kgAtBirth": {
+    "placeholders": {
+      "kg": {
+        "type": "String"
+      }
+    }
+  },
+  "weanedOn": "Weaned on {date}",
+  "@weanedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nameOptional": "Name (optional)",
+  "bornOn": "Born: {date}",
+  "@bornOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "damOptional": "Dam (optional)",
+  "birthWeightOptional": "Birth weight (optional)",
+  "birthWeight": "Birth weight",
+  "notes": "Notes",
+  "notWeaned": "Not weaned",
+  "clearWeaning": "Clear weaning date",
+  "breedingRecord": "Breeding record",
+  "tapAgainToDelete": "Tap again to delete",
+  "calfDetailsWhat": "Calf details",
+  "@calfDetailsWhat": {
+    "description": "Used in '{what} deleted'"
+  },
+  "ageNotBorn": "not born yet",
+  "ageDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@ageDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ageWeeks": "{count} weeks",
+  "@ageWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ageMonths": "{count} months",
+  "@ageMonths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ageYearsLong": "{count, plural, =1{1 year} other{{count} years}}",
+  "@ageYearsLong": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "enterKgRange": "Enter kg between 0 and 200"
 }

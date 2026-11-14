@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
@@ -22,8 +23,8 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Daily Production Analytics",
+        title: Text(
+          context.l10n.dailyAnalytics,
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     child: Column(
                       children: [
                         Text(
-                          "TOTAL PRODUCTION TODAY",
+                          context.l10n.totalToday,
                           style: TextStyle(
                             color: context.farm.warning,
                             fontSize: 25,
@@ -93,21 +94,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.trending_up,
-                              color: context.farm.good,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "+8% vs yesterday",
-                              style: TextStyle(color: context.farm.good),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -116,12 +102,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const SizedBox(height: 16),
 
                 // AI ADVISORY INSIGHTS CARD
-                const Text(
-                  "AI Farm Insights",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(
+                  context.l10n.aiFarmInsights,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 ProductionInsightsCard(
@@ -139,12 +122,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 ),
 
                 const SizedBox(height: 24),
-                const Text(
-                  "Session Breakdown",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(
+                  context.l10n.sessionBreakdown,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
@@ -152,7 +132,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                   children: [
                     Expanded(
                       child: _buildSessionBar(
-                        title: "Morning",
+                        title: context.l10n.sessionMorning,
                         amount: morningTotal,
                         total: grandTotal,
                         color: context.farm.warning,
@@ -160,7 +140,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     ),
                     Expanded(
                       child: _buildSessionBar(
-                        title: "Afternoon",
+                        title: context.l10n.sessionAfternoon,
                         amount: middayTotal,
                         total: grandTotal,
                         color: context.farm.warning,
@@ -168,7 +148,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     ),
                     Expanded(
                       child: _buildSessionBar(
-                        title: "Evening",
+                        title: context.l10n.sessionEvening,
                         amount: eveningTotal,
                         total: grandTotal,
                         color: context.farm.warning,
@@ -178,12 +158,9 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 ),
 
                 const Divider(height: 32),
-                const Text(
-                  "Today's Live Logs",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(
+                  context.l10n.todaysLogs,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
@@ -192,7 +169,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     padding: EdgeInsets.symmetric(vertical: 32.0),
                     child: Center(
                       child: Text(
-                        "No milk has been logged yet today.",
+                        context.l10n.noMilkToday,
                         style: TextStyle(
                           color: context.farm.muted,
                           fontStyle: FontStyle.italic,
@@ -229,7 +206,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Amount: ${litres(entry.amount)}",
+                                context.l10n.amountLine(litres(entry.amount)),
                                 style: TextStyle(
                                   fontSize: 25.0,
                                   fontWeight: FontWeight.bold,
@@ -237,7 +214,12 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                                 ),
                               ),
                               Text(
-                                "Session: ${entry.session.toUpperCase()}",
+                                context.l10n.sessionLine(
+                                  sessionLabel(
+                                    context.l10n,
+                                    entry.session,
+                                  ).toUpperCase(),
+                                ),
                                 style: const TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
@@ -281,12 +263,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             LinearProgressIndicator(
               value: percent,
@@ -296,7 +273,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             ),
             const SizedBox(height: 4),
             Text(
-              "${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)",
+              '${litres(amount)} (${(percent * 100).toStringAsFixed(0)}%)',
               style: TextStyle(color: context.farm.muted),
             ),
           ],
