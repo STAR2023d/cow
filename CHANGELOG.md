@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Undo for deletes: milk entries, feeding records, health records and calf details delete at once and show "... deleted" with Undo for 6 seconds (the milk entry confirm box is gone). Deleting a cow still asks first
 - Light theme (now the default, easier to read outdoors) and a Light / Dark / Phone switch at the bottom of the drawer, remembered between runs (`shared_preferences`). Colours now come from the theme: about 330 fixed colours in 29 files replaced by theme text colours and named colours (`context.farm.good/warning/danger/info/special/muted/faint`, `lib/theme/app_theme.dart`); light-mode colours pass a 4.5:1 contrast test on white. Quick-action circles are 48 px and tinted
 - One format everywhere (`lib/utils/format.dart`): money as `KSh 5,500` (statement lines with cents), litres as `6.5 L`, dates as `14 Nov 2026` (`Sat 14 Nov` for things due soon, `14 Nov 2026, 07:30` for milk entries). PDFs use the same dates and grouped amounts; PDF file names keep `2026-11-01`
 - Log milk: a big button on the dashboard (and in the drawer) opens a whole-herd sheet. Pick today, yesterday or another day and the session once (suggested from the time of day), type each cow's litres and save once. Each cow shows her usual yield for that session, any figure already saved, and a milk-hold warning; figures far above usual (or over 40 L) ask "Save anyway?"
@@ -9,7 +10,7 @@
 - Monthly Report: export the month as a PDF (totals with last month, cost per litre, spending by category, earnings per buyer)
 - Financial Statement: export the period shown as a PDF (saved to Documents/Mwauras Farm and opened in the PDF viewer)
 - Milk Entry: edit the litres and buyer of an entry (tap the row or the pencil icon)
-- Milk Entry: delete a wrong entry from the history list (bin icon, asks first)
+- Milk Entry: delete a wrong entry from the history list (bin icon)
 - AI: opt-in live check (`test/live/ai_live_test.dart`) sends a short request and one vet case to each provider that has settings; skipped in a plain `flutter test`
 - AI: Gemini time limit raised from 45 s to 90 s (the vet case timed out at 45 s in the live check)
 - AI: Gemini, Claude (Anthropic) and OpenAI / OpenAI-compatible providers over plain HTTP; `google_generative_ai` removed

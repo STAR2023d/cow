@@ -2,6 +2,7 @@ import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:cow/screens/widgets/undo_delete.dart';
 import 'package:flutter/material.dart';
 
 const List<String> feedTypes = [
@@ -33,10 +34,7 @@ class FeedingScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text(
-            'Log Feeding',
-            style: TextStyle(),
-          ),
+          title: const Text('Log Feeding', style: TextStyle()),
           content: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -219,7 +217,13 @@ class FeedingScreen extends StatelessWidget {
                           Icons.delete_outline,
                           color: context.farm.danger,
                         ),
-                        onPressed: () => db.deleteFeedingLog(log.id),
+                        tooltip: 'Delete',
+                        onPressed: () => deleteWithUndo(
+                          context,
+                          what: 'Feeding record',
+                          delete: () => db.deleteFeedingLog(log.id),
+                          restore: () => db.restoreFeedingLog(log),
+                        ),
                       ),
                     ),
                   );

@@ -5,6 +5,7 @@ import 'package:cow/breeding/calf_register.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' show Value;
+import 'package:cow/screens/widgets/undo_delete.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -61,7 +62,14 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
       case null:
         return;
       case DeleteCalf():
-        await db.deleteCalf(calf.details!.id);
+        final row = calf.details!;
+        if (!mounted) return;
+        await deleteWithUndo(
+          context,
+          what: 'Calf details',
+          delete: () => db.deleteCalf(row.id),
+          restore: () => db.restoreCalf(row),
+        );
       case OpenBreedingRecord():
         if (!mounted) return;
         await Navigator.push(
@@ -195,26 +203,27 @@ class _CalfTile extends StatelessWidget {
       c.calfName ??
       (c.damName == 'Unknown dam' ? 'Unnamed calf' : 'Calf of ${c.damName}');
 
-  (String, Color, IconData) _outcome(BuildContext context) => switch (calf.outcome) {
-    CalfOutcome.kept => ('Kept', context.farm.good, Icons.pets),
-    CalfOutcome.sold => (
-      calf.cycle!.saleAmount == null
-          ? 'Sold'
-          : 'Sold · ${ksh(calf.cycle!.saleAmount!)}',
-      context.farm.info,
-      Icons.sell_outlined,
-    ),
-    CalfOutcome.awaiting => (
-      'Awaiting outcome',
-      context.farm.warning,
-      Icons.hourglass_empty,
-    ),
-    CalfOutcome.onFarm => (
-      calf.boughtIn ? 'Bought in' : 'On farm',
-      context.farm.muted,
-      Icons.child_friendly,
-    ),
-  };
+  (String, Color, IconData) _outcome(BuildContext context) =>
+      switch (calf.outcome) {
+        CalfOutcome.kept => ('Kept', context.farm.good, Icons.pets),
+        CalfOutcome.sold => (
+          calf.cycle!.saleAmount == null
+              ? 'Sold'
+              : 'Sold · ${ksh(calf.cycle!.saleAmount!)}',
+          context.farm.info,
+          Icons.sell_outlined,
+        ),
+        CalfOutcome.awaiting => (
+          'Awaiting outcome',
+          context.farm.warning,
+          Icons.hourglass_empty,
+        ),
+        CalfOutcome.onFarm => (
+          calf.boughtIn ? 'Bought in' : 'On farm',
+          context.farm.muted,
+          Icons.child_friendly,
+        ),
+      };
 
   @override
   Widget build(BuildContext context) {

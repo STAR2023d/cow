@@ -4,6 +4,7 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
 import 'package:cow/screens/widgets/edit_milk_entry_dialog.dart';
 import 'package:cow/screens/widgets/milk_hold_banner.dart';
+import 'package:cow/screens/widgets/undo_delete.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -312,7 +313,7 @@ class _MilkDataState extends State<MilkData> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              ),
+                            ),
                             IconButton(
                               tooltip: 'Edit entry',
                               icon: const Icon(Icons.edit_outlined),
@@ -325,10 +326,12 @@ class _MilkDataState extends State<MilkData> {
                                 Icons.delete_outline,
                                 color: context.farm.danger,
                               ),
-                              onPressed: () => _confirmDelete(
-                                database,
-                                entry,
-                                formattedDate,
+                              onPressed: () => deleteWithUndo(
+                                context,
+                                what: 'Milk entry',
+                                delete: () =>
+                                    database.deleteMilkEntry(entry.id),
+                                restore: () => database.restoreMilkEntry(entry),
                               ),
                             ),
                           ],
@@ -368,41 +371,5 @@ class _MilkDataState extends State<MilkData> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Milk entry updated')));
-  }
-
-  /// Asks before deleting, since milk figures feed earnings and reports.
-  Future<void> _confirmDelete(
-    AppDatabase database,
-    MilkTableData entry,
-    String when,
-  ) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete this entry?'),
-        content: Text(
-          '${litres(entry.amount)}, '
-          '${entry.session} on $when.\n'
-          'This cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: context.farm.danger),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true) return;
-    await database.deleteMilkEntry(entry.id);
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Milk entry deleted')));
   }
 }

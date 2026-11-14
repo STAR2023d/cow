@@ -842,6 +842,16 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteCalf(int id) =>
       (delete(calves)..where((t) => t.id.equals(id))).go();
 
+  // --- Undo: put a deleted row back exactly as it was (same id). ---
+  Future<void> restoreMilkEntry(MilkTableData row) =>
+      into(milkTable).insertOnConflictUpdate(row);
+  Future<void> restoreFeedingLog(FeedingLogData row) =>
+      into(feedingLog).insertOnConflictUpdate(row);
+  Future<void> restoreHealthRecord(HealthRecordData row) =>
+      into(healthRecord).insertOnConflictUpdate(row);
+  Future<void> restoreCalf(Calf row) =>
+      into(calves).insertOnConflictUpdate(row);
+
   // Unified Connection File
   static QueryExecutor _openConnection() {
     return driftDatabase(

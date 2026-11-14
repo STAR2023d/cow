@@ -4,6 +4,7 @@ import 'package:cow/health/health_presets.dart';
 import 'package:cow/health/milk_withdrawal.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:cow/screens/widgets/undo_delete.dart';
 import 'package:flutter/material.dart';
 
 const List<String> healthRecordTypes = [
@@ -63,10 +64,7 @@ class HealthScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text(
-            'Log Health Record',
-            style: TextStyle(),
-          ),
+          title: const Text('Log Health Record', style: TextStyle()),
           content: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -288,7 +286,11 @@ class HealthScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.health_and_safety, size: 64, color: context.farm.muted),
+                  Icon(
+                    Icons.health_and_safety,
+                    size: 64,
+                    color: context.farm.muted,
+                  ),
                   SizedBox(height: 16),
                   Text(
                     'No health records yet',
@@ -363,7 +365,13 @@ class HealthScreen extends StatelessWidget {
                           Icons.delete_outline,
                           color: context.farm.danger,
                         ),
-                        onPressed: () => db.deleteHealthRecord(r.id),
+                        tooltip: 'Delete',
+                        onPressed: () => deleteWithUndo(
+                          context,
+                          what: 'Health record',
+                          delete: () => db.deleteHealthRecord(r.id),
+                          restore: () => db.restoreHealthRecord(r),
+                        ),
                       ),
                     ),
                   );
