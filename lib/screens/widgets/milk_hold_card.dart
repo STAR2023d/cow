@@ -47,10 +47,9 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(16.0),
                     border: Border.all(
-                      color: Colors.orange.withValues(alpha: 0.6),
+                      color: context.farm.warning.withValues(alpha: 0.6),
                     ),
                   ),
                   child: Column(
@@ -58,9 +57,9 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.warning_amber_rounded,
-                            color: Colors.orange,
+                            color: context.farm.warning,
                             size: 18,
                           ),
                           const SizedBox(width: 8),
@@ -69,8 +68,7 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                              ),
                           ),
                         ],
                       ),
@@ -83,7 +81,7 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                             'do not sell until '
                             '${fmt.format(h.withdrawal.safeFrom)} '
                             '(${_daysLeft(h.withdrawal.daysLeft(now))})',
-                            style: const TextStyle(color: Colors.white70),
+                            style: TextStyle(color: context.farm.muted),
                           ),
                         ),
                     ],

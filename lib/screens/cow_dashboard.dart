@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'dart:io';
 import 'package:cow/abstract/dialog_deletion.dart';
 import 'package:cow/breeding/breeding_screen.dart';
@@ -37,12 +38,12 @@ class HerdDashboard extends StatelessWidget {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.pets, size: 64, color: Colors.grey),
+                children: [
+                  Icon(Icons.pets, size: 64, color: context.farm.muted),
                   SizedBox(height: 16),
                   Text(
                     'No cows in your herd yet!',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: context.farm.muted),
                   ),
                 ],
               ),
@@ -90,7 +91,7 @@ class HerdDashboard extends StatelessWidget {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: context.farm.faint,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child:
@@ -102,17 +103,17 @@ class HerdDashboard extends StatelessWidget {
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
-                                            const Icon(
+                                            Icon(
                                               Icons.broken_image,
                                               size: 40,
-                                              color: Colors.grey,
+                                              color: context.farm.muted,
                                             ),
                                   ),
                                 )
-                              : const Icon(
+                              : Icon(
                                   Icons.insert_photo,
                                   size: 40,
-                                  color: Colors.grey,
+                                  color: context.farm.muted,
                                 ),
                         ),
                         const SizedBox(width: 16),
@@ -130,15 +131,15 @@ class HerdDashboard extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 'Tag: ${cow.tag ?? "No Tag"}',
-                                style: const TextStyle(
-                                  color: Colors.grey,
+                                style: TextStyle(
+                                  color: context.farm.muted,
                                   fontSize: 14,
                                 ),
                               ),
                               Text(
                                 'Breed: ${cow.breed ?? "Unknown"} • Age: ${cow.age ?? "N/A"} yrs',
-                                style: const TextStyle(
-                                  color: Colors.grey,
+                                style: TextStyle(
+                                  color: context.farm.muted,
                                   fontSize: 13,
                                 ),
                               ),
@@ -147,9 +148,9 @@ class HerdDashboard extends StatelessWidget {
                         ),
                         IconButton(
                           tooltip: 'Breeding',
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.favorite_border,
-                            color: Colors.pinkAccent,
+                            color: context.farm.danger,
                           ),
                           onPressed: () => Navigator.push(
                             context,
@@ -162,9 +163,9 @@ class HerdDashboard extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.delete_outline,
-                            color: Colors.redAccent,
+                            color: context.farm.danger,
                           ),
                           onPressed: () =>
                               _startTwoStepDeleteProcess(context, db, cow),

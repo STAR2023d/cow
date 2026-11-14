@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/services/ai/ai_generator.dart';
 import 'package:cow/services/ai/ai_messages.dart';
@@ -191,7 +192,7 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
             const SizedBox(height: 16),
             Text(
               _failure!.message,
-              style: const TextStyle(color: Colors.orangeAccent),
+              style: TextStyle(color: context.farm.warning),
             ),
           ],
           if (_assessment != null) ...[
@@ -222,20 +223,20 @@ class _DangerBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.red.withValues(alpha: 0.15),
+        color: context.farm.danger.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.redAccent),
+        border: Border.all(color: context.farm.danger),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
+          Icon(Icons.warning_amber_rounded, color: context.farm.danger),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               'Danger sign: ${flags.join(', ')}. Call a vet or your animal '
               "health officer now. Don't wait for the app.",
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(),
             ),
           ),
         ],
@@ -249,19 +250,19 @@ class _AssessmentCard extends StatelessWidget {
 
   const _AssessmentCard({required this.assessment});
 
-  (Color, IconData, String) get _style => switch (assessment.urgency) {
+  (Color, IconData, String) _style(BuildContext context) => switch (assessment.urgency) {
     VetUrgency.emergency => (
-      Colors.redAccent,
+      context.farm.danger,
       Icons.warning_amber_rounded,
       'Call a vet now',
     ),
     VetUrgency.seeVetSoon => (
-      Colors.orangeAccent,
+      context.farm.warning,
       Icons.local_hospital,
       'A vet should see her soon',
     ),
     VetUrgency.monitorAtHome => (
-      Colors.greenAccent,
+      context.farm.good,
       Icons.visibility,
       'Monitor her at home',
     ),
@@ -269,7 +270,7 @@ class _AssessmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (color, icon, title) = _style;
+    final (color, icon, title) = _style(context);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -300,14 +301,14 @@ class _AssessmentCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               assessment.summary,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(),
             ),
           ],
           if (assessment.redFlags.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
               'Danger signs noticed: ${assessment.redFlags.join(', ')}',
-              style: const TextStyle(color: Colors.redAccent),
+              style: TextStyle(color: context.farm.danger),
             ),
           ],
           _Section('Possible causes', assessment.possibleCauses),
@@ -316,10 +317,10 @@ class _AssessmentCard extends StatelessWidget {
           if (assessment.milkAdvice.isNotEmpty)
             _Section('Milk', [assessment.milkAdvice]),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'This is guidance, not a diagnosis. If you are worried, contact '
             'a vet or your animal health officer.',
-            style: TextStyle(color: Colors.white54, fontSize: 12),
+            style: TextStyle(color: context.farm.muted, fontSize: 12),
           ),
         ],
       ),
@@ -344,7 +345,6 @@ class _Section extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -354,7 +354,7 @@ class _Section extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2),
               child: Text(
                 '• $item',
-                style: const TextStyle(color: Colors.white70),
+                style: TextStyle(color: context.farm.muted),
               ),
             ),
           ),

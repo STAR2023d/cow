@@ -73,37 +73,34 @@ class _ProductionInsightsCardState extends State<ProductionInsightsCard> {
     final hasMilk = widget.snapshot.logs.isNotEmpty;
 
     return Card(
-      color: AppColors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.purpleAccent, width: 1.5),
+        side: BorderSide(color: context.farm.special, width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.insights, color: Colors.purpleAccent, size: 28),
+                Icon(Icons.insights, color: context.farm.special, size: 28),
                 SizedBox(width: 8),
                 Text(
                   'AI Production Insights',
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const Divider(color: Colors.purpleAccent, height: 20),
+            Divider(color: context.farm.special, height: 20),
             if (insights != null) ...[
               if (insights.headline.isNotEmpty)
                 Text(
                   insights.headline,
                   style: const TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                     height: 1.4,
                   ),
@@ -112,29 +109,29 @@ class _ProductionInsightsCardState extends State<ProductionInsightsCard> {
               _Section('Milking sessions', insights.sessionNotes),
               _Section('Tips', insights.tips),
               if (_isStale)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 12),
                   child: Text(
                     'More milk has been logged since this analysis.',
-                    style: TextStyle(color: Colors.orangeAccent),
+                    style: TextStyle(color: context.farm.warning),
                   ),
                 ),
             ] else if (!hasMilk)
-              const Text(
+              Text(
                 'Log some milk today to get insights.',
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(color: context.farm.muted),
               )
             else
-              const Text(
+              Text(
                 "Tap the button to analyse today's milk.",
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(color: context.farm.muted),
               ),
             if (_failure != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   _failure!.message,
-                  style: const TextStyle(color: Colors.orangeAccent),
+                  style: TextStyle(color: context.farm.warning),
                 ),
               ),
             const SizedBox(height: 12),
@@ -182,7 +179,6 @@ class _Section extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -192,7 +188,7 @@ class _Section extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2),
               child: Text(
                 '• $item',
-                style: const TextStyle(color: Colors.white70),
+                style: TextStyle(color: context.farm.muted),
               ),
             ),
           ),

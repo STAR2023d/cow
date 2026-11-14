@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
@@ -124,29 +125,29 @@ class _MilkDataState extends State<MilkData> {
                         suffixText: 'litres',
                         prefixIcon: const Icon(Icons.opacity),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
+                          borderSide: BorderSide(
+                            color: context.farm.muted,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.blue,
+                          borderSide: BorderSide(
+                            color: context.farm.info,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
+                          borderSide: BorderSide(
+                            color: context.farm.danger,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.redAccent,
+                          borderSide: BorderSide(
+                            color: context.farm.danger,
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
@@ -238,15 +239,15 @@ class _MilkDataState extends State<MilkData> {
               vertical: 4.0,
             ),
             child: Row(
-              children: const [
-                Icon(Icons.history, color: Colors.grey),
+              children: [
+                Icon(Icons.history, color: context.farm.muted),
                 SizedBox(width: 8),
                 Text(
                   'Production History Log',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: context.farm.muted,
                   ),
                 ),
               ],
@@ -265,10 +266,10 @@ class _MilkDataState extends State<MilkData> {
                 final history = snapshot.data ?? [];
 
                 if (history.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No milk entries logged yet for this cow.',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: context.farm.muted),
                     ),
                   );
                 }
@@ -288,8 +289,8 @@ class _MilkDataState extends State<MilkData> {
                       child: ListTile(
                         onTap: () => _editEntry(database, entry, formattedDate),
                         leading: CircleAvatar(
-                          backgroundColor: Colors.blue.withValues(),
-                          child: const Icon(Icons.opacity, color: Colors.blue),
+                          backgroundColor: context.farm.info.withValues(),
+                          child: Icon(Icons.opacity, color: context.farm.info),
                         ),
                         title: Text(
                           litres(entry.amount),
@@ -311,8 +312,7 @@ class _MilkDataState extends State<MilkData> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              backgroundColor: Colors.grey[200],
-                            ),
+                              ),
                             IconButton(
                               tooltip: 'Edit entry',
                               icon: const Icon(Icons.edit_outlined),
@@ -321,9 +321,9 @@ class _MilkDataState extends State<MilkData> {
                             ),
                             IconButton(
                               tooltip: 'Delete entry',
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.delete_outline,
-                                color: Colors.redAccent,
+                                color: context.farm.danger,
                               ),
                               onPressed: () => _confirmDelete(
                                 database,
@@ -392,7 +392,7 @@ class _MilkDataState extends State<MilkData> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: context.farm.danger),
             child: const Text('Delete'),
           ),
         ],

@@ -48,10 +48,9 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(16.0),
                     border: Border.all(
-                      color: Colors.lightBlueAccent.withValues(alpha: 0.5),
+                      color: context.farm.info.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Column(
@@ -59,9 +58,9 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.medical_services_outlined,
-                            color: Colors.lightBlueAccent,
+                            color: context.farm.info,
                             size: 18,
                           ),
                           const SizedBox(width: 8),
@@ -70,8 +69,7 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                              ),
                           ),
                         ],
                       ),
@@ -87,8 +85,8 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
                             '+${reminders.length - _maxShown} more',
-                            style: const TextStyle(
-                              color: Colors.white54,
+                            style: TextStyle(
+                              color: context.farm.muted,
                               fontSize: 12,
                             ),
                           ),
@@ -112,22 +110,22 @@ class _ReminderRow extends StatelessWidget {
 
   const _ReminderRow({required this.reminder, required this.cowName});
 
-  (String, Color) get _label {
+  (String, Color) _label(BuildContext context) {
     final d = reminder.daysUntil;
     if (d < 0) {
       return (
         d == -1 ? 'Overdue by 1 day' : 'Overdue by ${-d} days',
-        Colors.redAccent,
+        context.farm.danger,
       );
     }
-    if (d == 0) return ('Today', Colors.orange);
-    if (d == 1) return ('Tomorrow', Colors.white);
-    return ('In $d days', Colors.white54);
+    if (d == 0) return ('Today', context.farm.warning);
+    if (d == 1) return ('Tomorrow', Theme.of(context).colorScheme.onSurface);
+    return ('In $d days', context.farm.muted);
   }
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = _label;
+    final (label, color) = _label(context);
     final rec = reminder.record;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -139,7 +137,7 @@ class _ReminderRow extends StatelessWidget {
               '$cowName · ${rec.recordType}: ${rec.description}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: context.farm.muted),
             ),
           ),
           const SizedBox(width: 8),
@@ -152,7 +150,7 @@ class _ReminderRow extends StatelessWidget {
               ),
               Text(
                 weekdayDate(reminder.dueOn),
-                style: const TextStyle(color: Colors.white54, fontSize: 12),
+                style: TextStyle(color: context.farm.muted, fontSize: 12),
               ),
             ],
           ),

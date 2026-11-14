@@ -44,10 +44,9 @@ class BreedingAlertsCard extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(16.0),
                     border: Border.all(
-                      color: Colors.orangeAccent.withValues(alpha: 0.5),
+                      color: context.farm.warning.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Column(
@@ -55,9 +54,9 @@ class BreedingAlertsCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.notifications_active,
-                            color: Colors.orangeAccent,
+                            color: context.farm.warning,
                             size: 18,
                           ),
                           const SizedBox(width: 8),
@@ -66,8 +65,7 @@ class BreedingAlertsCard extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                              ),
                           ),
                         ],
                       ),
@@ -78,8 +76,8 @@ class BreedingAlertsCard extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
                             '+${alerts.length - _maxShown} more',
-                            style: const TextStyle(
-                              color: Colors.white54,
+                            style: TextStyle(
+                              color: context.farm.muted,
                               fontSize: 12,
                             ),
                           ),
@@ -126,8 +124,8 @@ class _AlertRow extends StatelessWidget {
     if (days != null) text += ' (${dueLabel(days)})';
 
     final color = (days != null && days < 0)
-        ? Colors.redAccent
-        : Colors.orangeAccent;
+        ? context.farm.danger
+        : context.farm.warning;
 
     return InkWell(
       onTap: () => Navigator.push(
@@ -146,10 +144,10 @@ class _AlertRow extends StatelessWidget {
             Expanded(
               child: Text(
                 text,
-                style: const TextStyle(color: Colors.white, fontSize: 13),
+                style: const TextStyle(fontSize: 13),
               ),
             ),
-            const Icon(Icons.chevron_right, size: 18, color: Colors.white38),
+            Icon(Icons.chevron_right, size: 18, color: context.farm.muted),
           ],
         ),
       ),

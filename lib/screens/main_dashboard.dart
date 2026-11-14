@@ -9,7 +9,6 @@ import 'package:cow/screens/widgets/milk_hold_card.dart';
 import 'package:cow/screens/widgets/milk_yield_card.dart';
 import 'package:cow/screens/widgets/quick_actions_hub.dart';
 import 'package:cow/screens/widgets/recent_activity_card.dart';
-import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,14 +23,12 @@ class MainDashboard extends StatelessWidget {
     final db = Provider.of<AppDatabase>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Dashboard',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: AppColors.appBar,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(),
         elevation: 0,
       ),
 

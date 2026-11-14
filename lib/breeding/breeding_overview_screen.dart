@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_labels.dart';
 import 'package:cow/breeding/breeding_rows.dart';
@@ -28,10 +29,10 @@ class BreedingOverviewScreen extends StatelessWidget {
               }
               final rows = buildBreedingRows(cowSnap.data!, cycleSnap.data!);
               if (rows.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
                     'No cows yet',
-                    style: TextStyle(color: Colors.white54),
+                    style: TextStyle(color: context.farm.muted),
                   ),
                 );
               }
@@ -60,7 +61,7 @@ class _CowBreedingTile extends StatelessWidget {
     final days = row.daysUntilDue(DateTime.now());
 
     String? milestoneText;
-    var milestoneColor = Colors.white70;
+    var milestoneColor = context.farm.muted;
 
     if (milestone != null) {
       if (due == null || days == null) {
@@ -69,16 +70,16 @@ class _CowBreedingTile extends StatelessWidget {
         milestoneText =
             '${milestone.label}: ${shortDate(due)} • ${dueLabel(days)}';
         if (days < 0) {
-          milestoneColor = Colors.redAccent;
+          milestoneColor = context.farm.danger;
         } else if (days <= 7) {
-          milestoneColor = Colors.orangeAccent;
+          milestoneColor = context.farm.warning;
         }
       }
     }
 
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.favorite_border, color: Colors.pinkAccent),
+        leading: Icon(Icons.favorite_border, color: context.farm.danger),
         title: Text(row.cow.name),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

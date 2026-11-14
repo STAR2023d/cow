@@ -1,5 +1,6 @@
 //  Stateful Engine managing Verification Steps & Progress Feedback
 
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
 
@@ -88,9 +89,9 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.delete_forever_rounded,
-              color: Colors.orange,
+              color: context.farm.warning,
               size: 54,
             ),
             const SizedBox(height: 16),
@@ -102,7 +103,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
             Text(
               'Are you sure you want to delete ${widget.cow.name} from the herd listing?',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
+              style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 24),
             Row(
@@ -110,16 +111,16 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
+                  child: Text(
                     'Cancel',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: context.farm.muted),
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _advanceToStepTwo,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: context.farm.warning,
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('Continue'),
@@ -134,25 +135,25 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.report_problem_rounded,
-              color: Colors.red,
+              color: context.farm.danger,
               size: 54,
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Irreversible Deletion!',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: context.farm.danger,
               ),
             ),
             const SizedBox(height: 12),
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                style: const TextStyle(fontSize: 14),
                 children: [
                   const TextSpan(
                     text: 'This action is permanent and cannot be undone. ',
@@ -172,16 +173,16 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
+                  child: Text(
                     'Cancel',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: context.farm.muted),
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _beginExecution,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: context.farm.danger,
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('Delete Permanently'),
@@ -206,9 +207,9 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                 style: const TextStyle(fontSize: 14),
               ),
             ] else ...[
-              const Icon(
+              Icon(
                 Icons.check_circle_outline,
-                color: Colors.green,
+                color: context.farm.good,
                 size: 56,
               ),
               const SizedBox(height: 12),

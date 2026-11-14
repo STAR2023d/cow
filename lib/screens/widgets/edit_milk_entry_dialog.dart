@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 /// What the farmer changed in [EditMilkEntryDialog]. A null [buyer] means
@@ -58,7 +59,7 @@ class _EditMilkEntryDialogState extends State<EditMilkEntryDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.label, style: const TextStyle(color: Colors.grey)),
+            Text(widget.label, style: TextStyle(color: context.farm.muted)),
             const SizedBox(height: 12),
             TextFormField(
               controller: _amount,

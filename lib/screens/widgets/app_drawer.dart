@@ -36,20 +36,15 @@ class AppDrawer extends StatelessWidget {
 
     return Drawer(
       width: 260,
-      backgroundColor: AppColors.card,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(color: AppColors.card),
+            decoration: BoxDecoration(),
             child: Center(
               child: Text(
                 "MWAURA'S FARM",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
             ),
           ),
@@ -91,6 +86,50 @@ class AppDrawer extends StatelessWidget {
             'Milk Analytics',
             (_) => const AnalyticsDashboard(),
           ),
+          const Divider(),
+          const _ThemeChoice(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Light, dark or the phone's setting. Light reads best outdoors.
+class _ThemeChoice extends StatelessWidget {
+  const _ThemeChoice();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<ThemeController>();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Screen colours', style: TextStyle(color: context.farm.muted)),
+          const SizedBox(height: 8),
+          SegmentedButton<ThemeMode>(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(
+                value: ThemeMode.light,
+                icon: Icon(Icons.light_mode),
+                label: Text('Light'),
+              ),
+              ButtonSegment(
+                value: ThemeMode.dark,
+                icon: Icon(Icons.dark_mode),
+                label: Text('Dark'),
+              ),
+              ButtonSegment(
+                value: ThemeMode.system,
+                icon: Icon(Icons.phone_android),
+                label: Text('Phone'),
+              ),
+            ],
+            selected: {controller.mode},
+            onSelectionChanged: (s) => controller.setMode(s.first),
+          ),
         ],
       ),
     );
@@ -107,8 +146,8 @@ class _Section extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(
         title.toUpperCase(),
-        style: const TextStyle(
-          color: Colors.white70,
+        style: TextStyle(
+          color: context.farm.muted,
           fontSize: 13,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,
@@ -132,11 +171,8 @@ class _DrawerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(
-        title,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
-      ),
+      leading: Icon(icon),
+      title: Text(title, style: const TextStyle(fontSize: 16)),
       onTap: onTap,
     );
   }

@@ -27,8 +27,7 @@ class QuickActionsHub extends StatelessWidget {
             offset: Offset(0, 2),
           ),
         ],
-        color: AppColors.card,
-      ),
+        ),
       padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,8 +37,7 @@ class QuickActionsHub extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+              ),
           ),
           const SizedBox(height: 16.0),
           Row(
@@ -134,7 +132,7 @@ class _QuickAction extends StatelessWidget {
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12, color: Colors.white70),
+          style: TextStyle(fontSize: 12, color: context.farm.muted),
         ),
       ],
     );

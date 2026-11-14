@@ -16,9 +16,8 @@ class RecentActivityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.farm.faint),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,8 +27,7 @@ class RecentActivityCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+              ),
           ),
           const SizedBox(height: 12.0),
           StreamBuilder<List<TypedResult>>(
@@ -49,9 +47,9 @@ class RecentActivityCard extends StatelessWidget {
               }
               final rows = snapshot.data ?? [];
               if (rows.isEmpty) {
-                return const Text(
+                return Text(
                   'No recent activity',
-                  style: TextStyle(fontSize: 14, color: Colors.white70),
+                  style: TextStyle(fontSize: 14, color: context.farm.muted),
                 );
               }
               return Column(
@@ -62,9 +60,9 @@ class RecentActivityCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 6.0),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.opacity,
-                          color: Colors.blueAccent,
+                          color: context.farm.info,
                           size: 18,
                         ),
                         const SizedBox(width: 10),
@@ -72,15 +70,14 @@ class RecentActivityCard extends StatelessWidget {
                           child: Text(
                             '${cowData.name} • ${entry.session} • ${entry.amount.toStringAsFixed(1)} L',
                             style: const TextStyle(
-                              color: Colors.white,
                               fontSize: 13,
                             ),
                           ),
                         ),
                         Text(
                           dayMonth(entry.entryDate),
-                          style: const TextStyle(
-                            color: Colors.white38,
+                          style: TextStyle(
+                            color: context.farm.muted,
                             fontSize: 12,
                           ),
                         ),

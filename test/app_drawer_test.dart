@@ -1,5 +1,6 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
+import 'package:cow/theme/app_theme.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,8 +16,11 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      Provider<AppDatabase>.value(
-        value: db,
+      MultiProvider(
+        providers: [
+          Provider<AppDatabase>.value(value: db),
+          ChangeNotifierProvider(create: (_) => ThemeController()),
+        ],
         child: const MaterialApp(
           home: Scaffold(drawer: AppDrawer(), body: Text('home')),
         ),
@@ -48,6 +52,8 @@ void main() {
     ]) {
       expect(find.text(item), findsOneWidget, reason: item);
     }
+    expect(find.text('Light'), findsOneWidget);
+    expect(find.text('Dark'), findsOneWidget);
     for (final gone in ['Home', 'Search', 'Dashboard', 'Settings']) {
       expect(find.text(gone), findsNothing, reason: gone);
     }

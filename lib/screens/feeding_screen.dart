@@ -33,10 +33,9 @@ class FeedingScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: AppColors.card,
           title: const Text(
             'Log Feeding',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(),
           ),
           content: Form(
             key: formKey,
@@ -49,8 +48,7 @@ class FeedingScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<String>(
                           initialValue: value,
-                          dropdownColor: AppColors.card,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(),
                           decoration: const InputDecoration(
                             labelText: 'Feed Type',
                           ),
@@ -69,8 +67,7 @@ class FeedingScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<int?>(
                           initialValue: value,
-                          dropdownColor: AppColors.card,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(),
                           decoration: const InputDecoration(
                             labelText: 'Cow (optional)',
                             hintText: 'Whole herd',
@@ -96,7 +93,7 @@ class FeedingScreen extends StatelessWidget {
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Quantity (kg)',
                     ),
@@ -111,7 +108,7 @@ class FeedingScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: notesController,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Notes (optional)',
                     ),
@@ -155,7 +152,6 @@ class FeedingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Feeding'), centerTitle: true),
       body: StreamBuilder<List<FeedingLogData>>(
         stream: db.watchFeedingLogs(),
@@ -165,15 +161,15 @@ class FeedingScreen extends StatelessWidget {
           }
           final logs = snapshot.data ?? [];
           if (logs.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.grass, size: 64, color: Colors.grey),
+                  Icon(Icons.grass, size: 64, color: context.farm.muted),
                   SizedBox(height: 16),
                   Text(
                     'No feeding records yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: context.farm.muted),
                   ),
                 ],
               ),
@@ -199,30 +195,29 @@ class FeedingScreen extends StatelessWidget {
                       ? (cowsById[log.cowId] ?? 'Unknown cow')
                       : 'Whole herd';
                   return Card(
-                    color: AppColors.card,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      leading: const CircleAvatar(
+                      leading: CircleAvatar(
                         backgroundColor: Colors.black26,
-                        child: Icon(Icons.grass, color: Colors.greenAccent),
+                        child: Icon(Icons.grass, color: context.farm.good),
                       ),
                       title: Text(
                         '${log.feedType} • ${log.quantityKg.toStringAsFixed(1)} kg',
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(),
                       ),
                       subtitle: Text(
                         '$cowName  •  ${shortDate(log.date)}'
                         '${log.notes != null ? '\n${log.notes}' : ''}',
-                        style: const TextStyle(color: Colors.white60),
+                        style: TextStyle(color: context.farm.muted),
                       ),
                       isThreeLine: log.notes != null,
                       trailing: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_outline,
-                          color: Colors.redAccent,
+                          color: context.farm.danger,
                         ),
                         onPressed: () => db.deleteFeedingLog(log.id),
                       ),

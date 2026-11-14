@@ -103,7 +103,6 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Calf Register')),
       floatingActionButton: widget.db == null
           ? null
@@ -129,7 +128,7 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
                 calfSnap.data!,
               );
               if (calves.isEmpty) {
-                return const Center(
+                return Center(
                   child: Padding(
                     padding: EdgeInsets.all(24),
                     child: Text(
@@ -137,7 +136,7 @@ class _CalfRegisterScreenState extends State<CalfRegisterScreen> {
                       'recorded on a cow\'s breeding screen, or tap Add calf '
                       'for one bought in or born before you used the app.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white54),
+                      style: TextStyle(color: context.farm.muted),
                     ),
                   ),
                 );
@@ -179,7 +178,7 @@ class _Summary extends StatelessWidget {
       '${count(CalfOutcome.sold)} sold'
       '${awaiting > 0 ? ' · $awaiting awaiting outcome' : ''}'
       '${onFarm > 0 ? ' · $onFarm added by hand' : ''}',
-      style: const TextStyle(color: Colors.white70, fontSize: 14),
+      style: TextStyle(color: context.farm.muted, fontSize: 14),
     );
   }
 }
@@ -196,30 +195,30 @@ class _CalfTile extends StatelessWidget {
       c.calfName ??
       (c.damName == 'Unknown dam' ? 'Unnamed calf' : 'Calf of ${c.damName}');
 
-  (String, Color, IconData) get _outcome => switch (calf.outcome) {
-    CalfOutcome.kept => ('Kept', Colors.greenAccent, Icons.pets),
+  (String, Color, IconData) _outcome(BuildContext context) => switch (calf.outcome) {
+    CalfOutcome.kept => ('Kept', context.farm.good, Icons.pets),
     CalfOutcome.sold => (
       calf.cycle!.saleAmount == null
           ? 'Sold'
           : 'Sold · ${ksh(calf.cycle!.saleAmount!)}',
-      Colors.lightBlueAccent,
+      context.farm.info,
       Icons.sell_outlined,
     ),
     CalfOutcome.awaiting => (
       'Awaiting outcome',
-      Colors.orange,
+      context.farm.warning,
       Icons.hourglass_empty,
     ),
     CalfOutcome.onFarm => (
       calf.boughtIn ? 'Bought in' : 'On farm',
-      Colors.white70,
+      context.farm.muted,
       Icons.child_friendly,
     ),
   };
 
   @override
   Widget build(BuildContext context) {
-    final (label, color, icon) = _outcome;
+    final (label, color, icon) = _outcome(context);
     final sex = switch (calf.sex) {
       'female' => 'Female',
       'male' => 'Male',
@@ -241,12 +240,11 @@ class _CalfTile extends StatelessWidget {
     ].join('\n');
 
     return Card(
-      color: AppColors.card,
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(titleOf(calf), style: const TextStyle(color: Colors.white)),
-        subtitle: Text(sub, style: const TextStyle(color: Colors.white54)),
+        title: Text(titleOf(calf), style: const TextStyle()),
+        subtitle: Text(sub, style: TextStyle(color: context.farm.muted)),
         isThreeLine: weight != null || weaned != null,
         trailing: Text(
           label,

@@ -126,7 +126,6 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
               Text(
                 monthYear(_month),
                 style: const TextStyle(
-                  color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -142,11 +141,11 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
             future: _future,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.all(32),
                   child: Text(
                     "Couldn't load this month. Please try again.",
-                    style: TextStyle(color: Colors.orangeAccent),
+                    style: TextStyle(color: context.farm.warning),
                   ),
                 );
               }
@@ -175,12 +174,12 @@ class _ReportBody extends StatelessWidget {
     final report = data.current;
 
     if (report.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(32),
         child: Center(
           child: Text(
             'Nothing recorded this month.',
-            style: TextStyle(color: Colors.white54),
+            style: TextStyle(color: context.farm.muted),
           ),
         ),
       );
@@ -199,19 +198,19 @@ class _ReportBody extends StatelessWidget {
             _SummaryTile(
               label: 'Income',
               value: ksh(report.totalIncome),
-              color: Colors.greenAccent,
+              color: context.farm.good,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
               label: 'Expenses',
               value: ksh(report.totalExpenses),
-              color: Colors.orangeAccent,
+              color: context.farm.warning,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
               label: 'Profit',
               value: ksh(report.net),
-              color: report.net >= 0 ? Colors.greenAccent : Colors.redAccent,
+              color: report.net >= 0 ? context.farm.good : context.farm.danger,
             ),
           ],
         ),
@@ -221,14 +220,14 @@ class _ReportBody extends StatelessWidget {
           children: [
             Text(
               '${report.litres.toStringAsFixed(1)} litres produced',
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(),
             ),
             const SizedBox(height: 4),
             Text(
               cost == null
                   ? 'Cost per litre: no milk logged'
                   : 'Cost per litre: ${ksh(cost, cents: true)}',
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: context.farm.muted),
             ),
           ],
         ),
@@ -244,7 +243,7 @@ class _ReportBody extends StatelessWidget {
               label: 'Income',
               value: report.totalIncome,
               max: biggest,
-              color: Colors.greenAccent,
+              color: context.farm.good,
               valueText: ksh(report.totalIncome),
             ),
             const SizedBox(height: 8),
@@ -252,14 +251,14 @@ class _ReportBody extends StatelessWidget {
               label: 'Expenses',
               value: report.totalExpenses,
               max: biggest,
-              color: Colors.orangeAccent,
+              color: context.farm.warning,
               valueText: ksh(report.totalExpenses),
             ),
             const SizedBox(height: 8),
             Text(
               'Milk ${ksh(report.milkCash)}'
               '  •  Other income ${ksh(report.otherIncome)}',
-              style: const TextStyle(color: Colors.white54, fontSize: 12),
+              style: TextStyle(color: context.farm.muted, fontSize: 12),
             ),
           ],
         ),
@@ -268,9 +267,9 @@ class _ReportBody extends StatelessWidget {
           title: 'Where the money went',
           children: [
             if (report.categoriesBySpend.isEmpty)
-              const Text(
+              Text(
                 'No expenses recorded this month.',
-                style: TextStyle(color: Colors.white54),
+                style: TextStyle(color: context.farm.muted),
               )
             else
               for (final entry in report.categoriesBySpend) ...[
@@ -279,7 +278,7 @@ class _ReportBody extends StatelessWidget {
                   labelWidth: 110,
                   value: entry.value,
                   max: report.totalExpenses,
-                  color: Colors.lightBlueAccent,
+                  color: context.farm.info,
                   valueText:
                       '${ksh(entry.value)} '
                       '(${(entry.value / report.totalExpenses * 100).toStringAsFixed(0)}%)',
@@ -314,10 +313,10 @@ class _BuyerPanel extends StatelessWidget {
       title: 'Earnings per buyer',
       children: [
         if (!report.hasBuyers)
-          const Text(
+          Text(
             'No buyers recorded this month. Add a buyer when logging milk '
             'to see who pays the most.',
-            style: TextStyle(color: Colors.white54),
+            style: TextStyle(color: context.farm.muted),
           )
         else
           for (final b in buyers) ...[
@@ -326,7 +325,7 @@ class _BuyerPanel extends StatelessWidget {
               labelWidth: 110,
               value: b.cash,
               max: top,
-              color: b.buyer == null ? Colors.white38 : Colors.tealAccent,
+              color: b.buyer == null ? context.farm.muted : context.farm.good,
               valueText: ksh(b.cash),
             ),
             Padding(
@@ -334,7 +333,7 @@ class _BuyerPanel extends StatelessWidget {
               child: Text(
                 '${b.litres.toStringAsFixed(1)} L'
                 '${report.milkCash > 0 ? '  •  ${(b.cash / report.milkCash * 100).toStringAsFixed(0)}% of milk income' : ''}',
-                style: const TextStyle(color: Colors.white54, fontSize: 12),
+                style: TextStyle(color: context.farm.muted, fontSize: 12),
               ),
             ),
           ],
@@ -360,16 +359,15 @@ class _SummaryTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.card,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white10),
+          border: Border.all(color: context.farm.faint),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label,
-              style: const TextStyle(color: Colors.white60, fontSize: 12),
+              style: TextStyle(color: context.farm.muted, fontSize: 12),
             ),
             const SizedBox(height: 4),
             FittedBox(
@@ -402,9 +400,8 @@ class _Panel extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.farm.faint),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,7 +409,6 @@ class _Panel extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -452,7 +448,7 @@ class _Bar extends StatelessWidget {
           width: labelWidth,
           child: Text(
             label,
-            style: const TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(color: context.farm.muted, fontSize: 13),
           ),
         ),
         Expanded(
@@ -461,7 +457,7 @@ class _Bar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: fraction,
               minHeight: 14,
-              backgroundColor: Colors.white12,
+              backgroundColor: context.farm.faint,
               color: color,
             ),
           ),
@@ -472,7 +468,7 @@ class _Bar extends StatelessWidget {
           child: Text(
             valueText,
             textAlign: TextAlign.right,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
+            style: const TextStyle(fontSize: 13),
           ),
         ),
       ],

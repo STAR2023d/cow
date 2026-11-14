@@ -80,7 +80,7 @@ class _CowAddState extends State<CowAdd> {
             content: Text(
               '${_nameController.text} saved successfully (ID: $insertedId)!',
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: context.farm.good,
           ),
         );
 
@@ -93,7 +93,7 @@ class _CowAddState extends State<CowAdd> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save data: $error'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.farm.danger,
           ),
         );
       }
@@ -103,7 +103,6 @@ class _CowAddState extends State<CowAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Add Cow'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -118,9 +117,8 @@ class _CowAddState extends State<CowAdd> {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[400]!),
+                    border: Border.all(color: context.farm.muted),
                   ),
                   child: _selectedImage != null
                       ? ClipRRect(
@@ -133,12 +131,11 @@ class _CowAddState extends State<CowAdd> {
                             Icon(
                               Icons.camera_alt,
                               size: 40,
-                              color: Colors.white,
-                            ),
+                              ),
                             const SizedBox(height: 8),
                             Text(
                               'Tap to Upload Cow Image',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(),
                             ),
                           ],
                         ),
@@ -148,7 +145,6 @@ class _CowAddState extends State<CowAdd> {
 
               // Tag Input Field
               TextFormField(
-                cursorColor: Colors.white,
                 decoration: const InputDecoration(
                   labelText: 'Tag Number',
                   border: OutlineInputBorder(),
@@ -161,7 +157,6 @@ class _CowAddState extends State<CowAdd> {
 
               // Name Input Field
               TextFormField(
-                cursorColor: Colors.white,
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Cow Name',
@@ -201,7 +196,6 @@ class _CowAddState extends State<CowAdd> {
 
               // Age Input Field
               TextFormField(
-                cursorColor: Colors.white,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Age (Years)',
@@ -226,12 +220,12 @@ class _CowAddState extends State<CowAdd> {
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: AppColors.card,
+                  foregroundColor: context.cardColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Text(
                   'Save Cow',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ],

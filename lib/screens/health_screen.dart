@@ -63,10 +63,9 @@ class HealthScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: AppColors.card,
           title: const Text(
             'Log Health Record',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(),
           ),
           content: Form(
             key: formKey,
@@ -86,10 +85,10 @@ class HealthScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     'Presets only suggest a follow-up date. Change it as '
                     'needed: your vet\'s advice comes first.',
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    style: TextStyle(color: context.farm.muted, fontSize: 12),
                   ),
                   const SizedBox(height: 12),
                   ValueListenableBuilder<int>(
@@ -97,8 +96,7 @@ class HealthScreen extends StatelessWidget {
                     builder: (context, value, _) =>
                         DropdownButtonFormField<int>(
                           initialValue: value,
-                          dropdownColor: AppColors.card,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(),
                           decoration: const InputDecoration(labelText: 'Cow'),
                           items: cows
                               .map(
@@ -118,8 +116,7 @@ class HealthScreen extends StatelessWidget {
                         DropdownButtonFormField<String>(
                           key: ValueKey(value),
                           initialValue: value,
-                          dropdownColor: AppColors.card,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(),
                           decoration: const InputDecoration(
                             labelText: 'Record Type',
                           ),
@@ -139,11 +136,11 @@ class HealthScreen extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         'Date: ${_fmt(value)}',
-                        style: const TextStyle(color: Colors.white70),
+                        style: TextStyle(color: context.farm.muted),
                       ),
-                      trailing: const Icon(
+                      trailing: Icon(
                         Icons.calendar_today,
-                        color: Colors.white70,
+                        color: context.farm.muted,
                       ),
                       onTap: () async {
                         final picked = await showDatePicker(
@@ -158,7 +155,7 @@ class HealthScreen extends StatelessWidget {
                   ),
                   TextFormField(
                     controller: descriptionController,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Description'),
                     maxLines: 2,
                     maxLength: 300,
@@ -169,7 +166,7 @@ class HealthScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   TextFormField(
                     controller: medicineController,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Medicine (optional)',
                     ),
@@ -178,15 +175,15 @@ class HealthScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   TextFormField(
                     controller: withdrawalController,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Milk withdrawal days (optional)',
                       helperText:
                           'From the medicine label or your vet. The app only '
                           'counts the days you enter.',
                       helperMaxLines: 2,
-                      helperStyle: TextStyle(color: Colors.white38),
+                      helperStyle: TextStyle(color: context.farm.muted),
                     ),
                     validator: (v) {
                       final text = v?.trim() ?? '';
@@ -207,18 +204,18 @@ class HealthScreen extends StatelessWidget {
                         value == null
                             ? 'No follow-up date'
                             : 'Follow-up: ${_fmt(value)}',
-                        style: const TextStyle(color: Colors.white70),
+                        style: TextStyle(color: context.farm.muted),
                       ),
                       trailing: value == null
-                          ? const Icon(
+                          ? Icon(
                               Icons.calendar_today,
-                              color: Colors.white70,
+                              color: context.farm.muted,
                             )
                           : IconButton(
                               tooltip: 'Remove follow-up',
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.close,
-                                color: Colors.white70,
+                                color: context.farm.muted,
                               ),
                               onPressed: () => followUpController.value = null,
                             ),
@@ -278,7 +275,6 @@ class HealthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Health'), centerTitle: true),
       body: StreamBuilder<List<HealthRecordData>>(
         stream: db.watchHealthRecords(),
@@ -288,15 +284,15 @@ class HealthScreen extends StatelessWidget {
           }
           final records = snapshot.data ?? [];
           if (records.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.health_and_safety, size: 64, color: Colors.grey),
+                  Icon(Icons.health_and_safety, size: 64, color: context.farm.muted),
                   SizedBox(height: 16),
                   Text(
                     'No health records yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: context.farm.muted),
                   ),
                 ],
               ),
@@ -322,7 +318,6 @@ class HealthScreen extends StatelessWidget {
                   final cowName = cowsById[r.cowId] ?? 'Unknown cow';
                   final withdrawal = milkWithdrawalOf(r);
                   return Card(
-                    color: AppColors.card,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -332,31 +327,31 @@ class HealthScreen extends StatelessWidget {
                         backgroundColor: Colors.black26,
                         child: Icon(
                           _iconFor(r.recordType),
-                          color: Colors.orangeAccent,
+                          color: context.farm.warning,
                         ),
                       ),
                       title: Text(
                         '$cowName • ${r.recordType}',
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             r.description,
-                            style: const TextStyle(color: Colors.white60),
+                            style: TextStyle(color: context.farm.muted),
                           ),
                           if (r.medicine != null && r.medicine!.isNotEmpty)
                             Text(
                               'Medicine: ${r.medicine}',
-                              style: const TextStyle(color: Colors.white60),
+                              style: TextStyle(color: context.farm.muted),
                             ),
                           Text(
                             _fmt(r.date) +
                                 (r.followUpDate != null
                                     ? '  •  Follow-up: ${_fmt(r.followUpDate!)}'
                                     : ''),
-                            style: const TextStyle(color: Colors.white60),
+                            style: TextStyle(color: context.farm.muted),
                           ),
                           if (withdrawal != null)
                             _WithdrawalLine(withdrawal: withdrawal, now: now),
@@ -364,9 +359,9 @@ class HealthScreen extends StatelessWidget {
                       ),
                       isThreeLine: true,
                       trailing: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_outline,
-                          color: Colors.redAccent,
+                          color: context.farm.danger,
                         ),
                         onPressed: () => db.deleteHealthRecord(r.id),
                       ),
@@ -421,7 +416,7 @@ class _WithdrawalLine extends StatelessWidget {
         padding: const EdgeInsets.only(top: 4),
         child: Text(
           'Milk hold ended ${_fmt(withdrawal.lastWithheldDay)}',
-          style: const TextStyle(color: Colors.white38),
+          style: TextStyle(color: context.farm.muted),
         ),
       );
     }
@@ -431,14 +426,14 @@ class _WithdrawalLine extends StatelessWidget {
       padding: const EdgeInsets.only(top: 4),
       child: Row(
         children: [
-          const Icon(Icons.block, size: 16, color: Colors.orangeAccent),
+          Icon(Icons.block, size: 16, color: context.farm.warning),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               'Milk on hold: safe from ${_fmt(withdrawal.safeFrom)} '
               '($left ${left == 1 ? 'day' : 'days'} left)',
-              style: const TextStyle(
-                color: Colors.orangeAccent,
+              style: TextStyle(
+                color: context.farm.warning,
                 fontWeight: FontWeight.bold,
               ),
             ),

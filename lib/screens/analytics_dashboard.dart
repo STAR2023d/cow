@@ -21,12 +21,10 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     final database = Provider.of<AppDatabase>(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           "Daily Production Analytics",
           style: TextStyle(
-            color: Colors.white,
             fontSize: 28,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
@@ -70,7 +68,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
               children: [
                 // GRAND TOTAL SCOREBOARD CARD
                 Card(
-                  color: AppColors.card,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -79,10 +76,10 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
                       children: [
-                        const Text(
+                        Text(
                           "TOTAL PRODUCTION TODAY",
                           style: TextStyle(
-                            color: AppColors.highlight,
+                            color: context.farm.warning,
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
@@ -92,7 +89,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         Text(
                           litres(grandTotal),
                           style: const TextStyle(
-                            color: Colors.white,
                             fontSize: 36,
                             fontWeight: FontWeight.w900,
                           ),
@@ -100,15 +96,15 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.trending_up,
-                              color: Colors.green,
+                              color: context.farm.good,
                               size: 18,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               "+8% vs yesterday",
-                              style: TextStyle(color: Colors.green[300]),
+                              style: TextStyle(color: context.farm.good),
                             ),
                           ],
                         ),
@@ -123,7 +119,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const Text(
                   "AI Farm Insights",
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -147,7 +142,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const Text(
                   "Session Breakdown",
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -161,7 +155,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         title: "Morning",
                         amount: morningTotal,
                         total: grandTotal,
-                        color: Colors.amber,
+                        color: context.farm.warning,
                       ),
                     ),
                     Expanded(
@@ -169,7 +163,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         title: "Afternoon",
                         amount: middayTotal,
                         total: grandTotal,
-                        color: Colors.amber,
+                        color: context.farm.warning,
                       ),
                     ),
                     Expanded(
@@ -177,7 +171,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         title: "Evening",
                         amount: eveningTotal,
                         total: grandTotal,
-                        color: Colors.amber,
+                        color: context.farm.warning,
                       ),
                     ),
                   ],
@@ -187,7 +181,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const Text(
                   "Today's Live Logs",
                   style: TextStyle(
-                    color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -195,13 +188,13 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                 const SizedBox(height: 8),
 
                 if (joinedEntries.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: 32.0),
                     child: Center(
                       child: Text(
                         "No milk has been logged yet today.",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: context.farm.muted,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -218,18 +211,17 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                       final cow = row.readTable(database.cow);
 
                       return Card(
-                        color: AppColors.card,
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.opacity, color: Colors.white),
+                          leading: CircleAvatar(
+                            backgroundColor: context.farm.info,
+                            child: Icon(Icons.opacity),
                           ),
                           title: Text(
                             cow.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue,
+                              color: context.farm.info,
                               fontSize: 30.0,
                             ),
                           ),
@@ -238,10 +230,10 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             children: [
                               Text(
                                 "Amount: ${litres(entry.amount)}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 25.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.lightGreen,
+                                  color: context.farm.good,
                                 ),
                               ),
                               Text(
@@ -253,16 +245,16 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                               ),
                               Text(
                                 DateFormat.jm().format(entry.entryDate),
-                                style: const TextStyle(
-                                  color: Colors.grey,
+                                style: TextStyle(
+                                  color: context.farm.muted,
                                   fontSize: 14,
                                 ),
                               ),
                             ],
                           ),
-                          trailing: const Icon(
+                          trailing: Icon(
                             Icons.check_circle,
-                            color: Colors.green,
+                            color: context.farm.good,
                             size: 18,
                           ),
                         ),
@@ -285,7 +277,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
   }) {
     final percent = total == 0 ? 0.0 : amount / total;
     return Card(
-      color: AppColors.card,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -293,21 +284,20 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
             Text(
               title,
               style: const TextStyle(
-                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
             LinearProgressIndicator(
               value: percent,
-              backgroundColor: Colors.grey[700],
+              backgroundColor: context.farm.muted,
               color: color,
               minHeight: 8,
             ),
             const SizedBox(height: 4),
             Text(
               "${amount.toStringAsFixed(1)}L (${(percent * 100).toStringAsFixed(0)}%)",
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: context.farm.muted),
             ),
           ],
         ),

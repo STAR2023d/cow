@@ -13,9 +13,8 @@ class HerdSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.farm.faint),
       ),
       child: StreamBuilder<List<CowData>>(
         stream: db.watchAllCow(),
@@ -33,18 +32,18 @@ class HerdSummaryCard extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "MY HERD SUMMARY",
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white60,
+                  color: context.farm.muted,
                   letterSpacing: 0.5,
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.0),
-                child: Icon(Icons.pets, color: Colors.white70, size: 28),
+                child: Icon(Icons.pets, color: context.farm.muted, size: 28),
               ),
               Column(
                 children: [
@@ -53,13 +52,12 @@ class HerdSummaryCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
                       height: 1.0,
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Total Animals",
-                    style: TextStyle(fontSize: 11, color: Colors.white38),
+                    style: TextStyle(fontSize: 11, color: context.farm.muted),
                   ),
                 ],
               ),
@@ -75,9 +73,9 @@ class HerdSummaryCard extends StatelessWidget {
                 ),
                 child: Text(
                   breedSummary,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 9,
-                    color: Colors.white70,
+                    color: context.farm.muted,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,

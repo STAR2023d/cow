@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_schema.dart';
 import 'package:cow/breeding/breeding_status_card.dart';
@@ -28,8 +29,7 @@ class BreedingScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+              ),
           ),
           const SizedBox(height: 8),
           StreamBuilder<List<BreedingCycle>>(
@@ -39,9 +39,9 @@ class BreedingScreen extends StatelessWidget {
                   .where((c) => !c.isActive)
                   .toList();
               if (past.isEmpty) {
-                return const Text(
+                return Text(
                   'No past cycles yet',
-                  style: TextStyle(color: Colors.white54),
+                  style: TextStyle(color: context.farm.muted),
                 );
               }
               return Column(

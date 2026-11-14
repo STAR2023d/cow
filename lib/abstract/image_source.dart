@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; 
 
@@ -22,7 +23,7 @@ class ImageSourceSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.photo_library, color: Colors.blue),
+            leading: Icon(Icons.photo_library, color: context.farm.info),
             title: const Text('Upload from Gallery'),
             onTap: () {
               Navigator.pop(context); // Close the sheet
@@ -30,7 +31,7 @@ class ImageSourceSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.camera_alt, color: Colors.green),
+            leading: Icon(Icons.camera_alt, color: context.farm.good),
             title: const Text('Take a New Photo'),
             onTap: () {
               Navigator.pop(context); // Close the sheet

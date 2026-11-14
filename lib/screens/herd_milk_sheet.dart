@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/milk_withdrawal.dart';
@@ -367,7 +368,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
           if (hold != null)
             Text(
               'Milk on hold until ${shortDate(hold)}: do not sell',
-              style: const TextStyle(color: Colors.orange),
+              style: TextStyle(color: context.farm.warning),
             ),
         ],
       ),

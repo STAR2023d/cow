@@ -73,21 +73,19 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.purpleAccent, width: 1.5),
+        border: Border.all(color: context.farm.special, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.auto_awesome, color: Colors.purpleAccent),
+              Icon(Icons.auto_awesome, color: context.farm.special),
               SizedBox(width: 8),
               Text(
                 'AI Finance Advisor',
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -95,7 +93,7 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
             ],
           ),
           if (alerts.isNotEmpty)
-            _Bullets('Things to watch', alerts, color: Colors.orangeAccent),
+            _Bullets('Things to watch', alerts, color: context.farm.warning),
           if (advice != null) ...[
             if (advice.headline.isNotEmpty)
               Padding(
@@ -103,7 +101,6 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
                 child: Text(
                   advice.headline,
                   style: const TextStyle(
-                    color: Colors.white,
                     fontSize: 16,
                     height: 1.4,
                   ),
@@ -119,26 +116,26 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
                   children: [
                     Text(
                       'You asked: $_askedQuestion',
-                      style: const TextStyle(
-                        color: Colors.white54,
+                      style: TextStyle(
+                        color: context.farm.muted,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       advice.answer,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(),
                     ),
                   ],
                 ),
               ),
           ] else if (alerts.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 12),
               child: Text(
                 'Nothing unusual spotted. Tap Get advice for an AI summary '
                 'of this month.',
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(color: context.farm.muted),
               ),
             ),
           if (_failure != null)
@@ -146,7 +143,7 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
               padding: const EdgeInsets.only(top: 12),
               child: Text(
                 _failure!.message,
-                style: const TextStyle(color: Colors.orangeAccent),
+                style: TextStyle(color: context.farm.warning),
               ),
             ),
           const SizedBox(height: 16),
@@ -185,9 +182,9 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
 class _Bullets extends StatelessWidget {
   final String title;
   final List<String> items;
-  final Color color;
+  final Color? color;
 
-  const _Bullets(this.title, this.items, {this.color = Colors.white70});
+  const _Bullets(this.title, this.items, {this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +197,6 @@ class _Bullets extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -208,7 +204,10 @@ class _Bullets extends StatelessWidget {
           ...items.map(
             (item) => Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Text('• $item', style: TextStyle(color: color)),
+              child: Text(
+                '• $item',
+                style: TextStyle(color: color ?? context.farm.muted),
+              ),
             ),
           ),
         ],

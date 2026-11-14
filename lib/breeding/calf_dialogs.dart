@@ -16,7 +16,7 @@ double? _weight(String text) {
 String? _weightError(String? v) =>
     (_weight(v ?? '')?.isNaN ?? false) ? 'Enter kg between 0 and 200' : null;
 
-const _textStyle = TextStyle(color: Colors.white);
+const _textStyle = TextStyle();
 
 /// Dialog to add a calf that has no breeding cycle (bought in, or born
 /// before the app was used). Returns the row to insert, or null.
@@ -68,7 +68,6 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.card,
       title: const Text('Add calf', style: _textStyle),
       content: Form(
         key: _formKey,
@@ -85,11 +84,11 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   'Born: ${shortDate(_born)}',
-                  style: const TextStyle(color: Colors.white70),
+                  style: TextStyle(color: context.farm.muted),
                 ),
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.calendar_today,
-                  color: Colors.white70,
+                  color: context.farm.muted,
                 ),
                 onTap: () async {
                   final picked = await showDatePicker(
@@ -112,7 +111,6 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
               const SizedBox(height: 8),
               DropdownButtonFormField<int?>(
                 initialValue: _damId,
-                dropdownColor: AppColors.card,
                 style: _textStyle,
                 decoration: const InputDecoration(labelText: 'Dam (optional)'),
                 items: [
@@ -143,9 +141,9 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
               ),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
+                title: Text(
                   'Bought in',
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(color: context.farm.muted),
                 ),
                 value: _boughtIn,
                 onChanged: (v) => setState(() => _boughtIn = v),
@@ -226,7 +224,6 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
   Widget build(BuildContext context) {
     final calf = widget.calf;
     return AlertDialog(
-      backgroundColor: AppColors.card,
       title: Text(widget.title, style: _textStyle),
       content: Form(
         key: _formKey,
@@ -252,13 +249,13 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
                   _weaned == null
                       ? 'Not weaned'
                       : 'Weaned on ${shortDate(_weaned!)}',
-                  style: const TextStyle(color: Colors.white70),
+                  style: TextStyle(color: context.farm.muted),
                 ),
                 trailing: _weaned == null
-                    ? const Icon(Icons.calendar_today, color: Colors.white70)
+                    ? Icon(Icons.calendar_today, color: context.farm.muted)
                     : IconButton(
                         tooltip: 'Clear weaning date',
-                        icon: const Icon(Icons.close, color: Colors.white70),
+                        icon: Icon(Icons.close, color: context.farm.muted),
                         onPressed: () => setState(() => _weaned = null),
                       ),
                 onTap: () async {
@@ -296,7 +293,7 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
             onPressed: () => _confirmDelete
                 ? Navigator.pop(context, DeleteCalf())
                 : setState(() => _confirmDelete = true),
-            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            style: TextButton.styleFrom(foregroundColor: context.farm.danger),
             child: Text(_confirmDelete ? 'Tap again to delete' : 'Delete'),
           ),
         TextButton(

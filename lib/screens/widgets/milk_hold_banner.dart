@@ -1,3 +1,4 @@
+import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/milk_withdrawal.dart';
@@ -38,19 +39,19 @@ class _MilkHoldBannerState extends State<MilkHoldBanner> {
           margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.orange.shade100,
-            border: Border.all(color: Colors.orange.shade700),
+            color: context.farm.warning.withValues(alpha: 0.12),
+            border: Border.all(color: context.farm.warning),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             children: [
-              Icon(Icons.warning_amber_rounded, color: Colors.orange.shade800),
+              Icon(Icons.warning_amber_rounded, color: context.farm.warning),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Milk on hold: do not sell until $safeFrom',
                   style: TextStyle(
-                    color: Colors.orange.shade900,
+                    color: context.farm.warning,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

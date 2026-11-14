@@ -20,6 +20,7 @@ class _HoverActionButtonState extends State<HoverActionButton> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return ElevatedButton(
       onHover: (hovering) {
         setState(() {
@@ -28,29 +29,19 @@ class _HoverActionButtonState extends State<HoverActionButton> {
       },
       onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: _isHovered
-            ? const Color.fromARGB(255, 0, 145, 255) // Bright blue on hover
-            : const Color.fromARGB(255, 252, 253, 254), // White by default
-        // 1. Visible Tap Animation colors
+        // Tinted circle that reads in light and dark mode; stronger on
+        // hover (desktop) and the ripple shows the press on a phone.
+        backgroundColor: _isHovered ? scheme.primary : scheme.primaryContainer,
         foregroundColor: _isHovered
-            ? Colors
-                  .white30 // Ripple effect color when background is blue
-            : Colors.black, // Ripple effect color when background is white
-
+            ? scheme.onPrimary
+            : scheme.onPrimaryContainer,
         elevation: _isHovered ? 4 : 0,
         padding: const EdgeInsets.all(12),
         shape: const CircleBorder(),
-
-        // 2. Ensuring explicit, un-clippable constraints for a perfect circle
-        minimumSize: const Size(44, 44),
-        maximumSize: const Size(44, 44),
+        minimumSize: const Size(48, 48),
+        maximumSize: const Size(48, 48),
       ),
-      // 3. Dynamically inversion of icon color on hover for accessibility
-      child: Icon(
-        widget.icon,
-        size: 20,
-        color: _isHovered ? Colors.white : Colors.black,
-      ),
+      child: Icon(widget.icon, size: 22),
     );
   }
 }

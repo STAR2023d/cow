@@ -22,9 +22,8 @@ class MilkYieldCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: context.farm.faint),
       ),
       child: StreamBuilder<Map<DateTime, double>>(
         stream: db.watchDailyTotalsInRange(start, end),
@@ -53,12 +52,12 @@ class MilkYieldCard extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "MILK YIELD (LITERS)",
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white60,
+                  color: context.farm.muted,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -107,9 +106,9 @@ class MilkYieldCard extends StatelessWidget {
                         dayLabels[i],
                         textAlign: TextAlign.center,
                         maxLines: 1,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 9,
-                          color: Colors.white38,
+                          color: context.farm.muted,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -122,8 +121,7 @@ class MilkYieldCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                  ),
               ),
               Text(
                 percentChange == null
@@ -132,8 +130,8 @@ class MilkYieldCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   color: (percentChange ?? 0) >= 0
-                      ? Colors.greenAccent
-                      : Colors.redAccent,
+                      ? context.farm.good
+                      : context.farm.danger,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -157,12 +155,12 @@ class _GraphBar extends StatelessWidget {
       width: 6,
       height: height,
       decoration: BoxDecoration(
-        color: isPeak ? AppColors.accent : Colors.white24,
+        color: isPeak ? Theme.of(context).colorScheme.primary : context.farm.faint,
         borderRadius: BorderRadius.circular(3),
         boxShadow: isPeak
             ? [
-                const BoxShadow(
-                  color: AppColors.accent,
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary,
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),

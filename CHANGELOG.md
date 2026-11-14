@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Light theme (now the default, easier to read outdoors) and a Light / Dark / Phone switch at the bottom of the drawer, remembered between runs (`shared_preferences`). Colours now come from the theme: about 330 fixed colours in 29 files replaced by theme text colours and named colours (`context.farm.good/warning/danger/info/special/muted/faint`, `lib/theme/app_theme.dart`); light-mode colours pass a 4.5:1 contrast test on white. Quick-action circles are 48 px and tinted
 - One format everywhere (`lib/utils/format.dart`): money as `KSh 5,500` (statement lines with cents), litres as `6.5 L`, dates as `14 Nov 2026` (`Sat 14 Nov` for things due soon, `14 Nov 2026, 07:30` for milk entries). PDFs use the same dates and grouped amounts; PDF file names keep `2026-11-01`
 - Log milk: a big button on the dashboard (and in the drawer) opens a whole-herd sheet. Pick today, yesterday or another day and the session once (suggested from the time of day), type each cow's litres and save once. Each cow shows her usual yield for that session, any figure already saved, and a milk-hold warning; figures far above usual (or over 40 L) ask "Save anyway?"
 - Drawer: grouped into Herd, Daily care and Money; removed Home, Search, Dashboard and Settings (they did nothing); added Breeding and Financial Statement; the drawer now closes before a screen opens, so Back returns Home
