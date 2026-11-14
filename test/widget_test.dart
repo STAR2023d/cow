@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +8,8 @@ void main() {
   Future<BuildContext> themed(WidgetTester tester, ThemeData theme) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         theme: theme,
         home: const Scaffold(body: SizedBox()),
       ),

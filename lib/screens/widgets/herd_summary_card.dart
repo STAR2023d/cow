@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,18 +23,18 @@ class HerdSummaryCard extends StatelessWidget {
           final cows = snapshot.data ?? [];
           final byBreed = <String, int>{};
           for (final c in cows) {
-            final breed = c.breed ?? 'Unknown';
+            final breed = c.breed ?? context.l10n.unknownBreed;
             byBreed[breed] = (byBreed[breed] ?? 0) + 1;
           }
           final breedSummary = byBreed.isEmpty
-              ? 'No cows yet'
+              ? context.l10n.noCowsYet
               : byBreed.entries.map((e) => '${e.value} ${e.key}').join('  •  ');
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "MY HERD SUMMARY",
+                context.l10n.herdSummaryTitle,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -56,7 +57,7 @@ class HerdSummaryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Total Animals",
+                    context.l10n.totalAnimals,
                     style: TextStyle(fontSize: 11, color: context.farm.muted),
                   ),
                 ],

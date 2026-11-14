@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/reminders.dart';
@@ -65,11 +66,11 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Health reminders (${reminders.length})',
+                            context.l10n.healthRemindersCount(reminders.length),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -78,13 +79,16 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
                         _ReminderRow(
                           reminder: r,
                           cowName:
-                              names[r.record.cowId] ?? 'Cow #${r.record.cowId}',
+                              names[r.record.cowId] ??
+                              context.l10n.cowNumber(r.record.cowId),
                         ),
                       if (reminders.length > _maxShown)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '+${reminders.length - _maxShown} more',
+                            context.l10n.moreCount(
+                              reminders.length - _maxShown,
+                            ),
                             style: TextStyle(
                               color: context.farm.muted,
                               fontSize: 12,
@@ -113,14 +117,13 @@ class _ReminderRow extends StatelessWidget {
   (String, Color) _label(BuildContext context) {
     final d = reminder.daysUntil;
     if (d < 0) {
-      return (
-        d == -1 ? 'Overdue by 1 day' : 'Overdue by ${-d} days',
-        context.farm.danger,
-      );
+      return (context.l10n.overdueBy(-d), context.farm.danger);
     }
-    if (d == 0) return ('Today', context.farm.warning);
-    if (d == 1) return ('Tomorrow', Theme.of(context).colorScheme.onSurface);
-    return ('In $d days', context.farm.muted);
+    if (d == 0) return (context.l10n.today, context.farm.warning);
+    if (d == 1) {
+      return (context.l10n.tomorrow, Theme.of(context).colorScheme.onSurface);
+    }
+    return (context.l10n.inDays(d), context.farm.muted);
   }
 
   @override

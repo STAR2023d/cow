@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/milk_withdrawal.dart';
 import 'package:cow/theme/app_theme.dart';
@@ -64,11 +65,11 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Milk on hold (${holds.length})',
+                            context.l10n.milkOnHoldCount(holds.length),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -77,10 +78,11 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 3),
                           child: Text(
-                            '${names[h.cowId] ?? 'Cow #${h.cowId}'}: '
-                            'do not sell until '
-                            '${fmt.format(h.withdrawal.safeFrom)} '
-                            '(${_daysLeft(h.withdrawal.daysLeft(now))})',
+                            context.l10n.holdCardLine(
+                              names[h.cowId] ?? context.l10n.cowNumber(h.cowId),
+                              fmt.format(h.withdrawal.safeFrom),
+                              context.l10n.daysLeft(h.withdrawal.daysLeft(now)),
+                            ),
                             style: TextStyle(color: context.farm.muted),
                           ),
                         ),
@@ -95,6 +97,4 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
       },
     );
   }
-
-  String _daysLeft(int d) => d == 1 ? '1 day left' : '$d days left';
 }

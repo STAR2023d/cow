@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/breeding/breeding_schema.dart';
 import 'package:cow/breeding/calf_register.dart';
 import 'package:cow/breeding/calf_register_screen.dart';
@@ -169,6 +170,8 @@ void main() {
   Future<void> show(WidgetTester tester, List<BreedingCycle> cycles) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: CalfRegisterScreen(
           cows: Stream.value(_cows),
           cycles: Stream.value(cycles),
@@ -195,6 +198,8 @@ void main() {
   testWidgets('a calf row shows birth weight and weaning date', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: CalfRegisterScreen(
           cows: Stream.value(_cows),
           cycles: Stream.value(const []),

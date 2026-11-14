@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/breeding/calf_register_screen.dart';
 import 'package:cow/database/app_database.dart';
@@ -40,56 +41,110 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(),
             child: Center(
               child: Text(
-                "MWAURA'S FARM",
+                context.l10n.appTitle.toUpperCase(),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
             ),
           ),
-          const _Section('Herd'),
-          item(Icons.water_drop, 'Log Milk', (_) => HerdMilkSheet(db: db)),
-          item(Icons.pets, 'Herd & Milk', (_) => HerdDashboard()),
+          _Section(context.l10n.sectionHerd),
+          item(
+            Icons.water_drop,
+            context.l10n.navLogMilk,
+            (_) => HerdMilkSheet(db: db),
+          ),
+          item(Icons.pets, context.l10n.navHerdMilk, (_) => HerdDashboard()),
           item(
             Icons.favorite,
-            'Breeding',
+            context.l10n.navBreeding,
             (_) => const BreedingOverviewScreen(),
           ),
           item(
             Icons.child_friendly,
-            'Calf Register',
+            context.l10n.navCalfRegister,
             (_) => CalfRegisterScreen(db: db),
           ),
-          const _Section('Daily care'),
-          item(Icons.grass, 'Feeding', (_) => FeedingScreen(db: db)),
-          item(Icons.health_and_safety, 'Health', (_) => HealthScreen(db: db)),
+          _Section(context.l10n.sectionDailyCare),
+          item(
+            Icons.grass,
+            context.l10n.navFeeding,
+            (_) => FeedingScreen(db: db),
+          ),
+          item(
+            Icons.health_and_safety,
+            context.l10n.navHealth,
+            (_) => HealthScreen(db: db),
+          ),
           item(
             Icons.medical_services,
-            'Vet Assistant',
+            context.l10n.navVetAssistant,
             (_) => const VetAssistantScreen(),
           ),
-          const _Section('Money'),
-          item(Icons.sell, 'Milk Price', (_) => MilkPriceScreen(db: db)),
-          item(Icons.money, 'Expenses', (_) => ExpenseEntryScreen(db: db)),
+          _Section(context.l10n.sectionMoney),
+          item(
+            Icons.sell,
+            context.l10n.navMilkPrice,
+            (_) => MilkPriceScreen(db: db),
+          ),
+          item(
+            Icons.money,
+            context.l10n.navExpenses,
+            (_) => ExpenseEntryScreen(db: db),
+          ),
           item(
             Icons.receipt_long,
-            'Financial Statement',
+            context.l10n.navStatement,
             (_) => StatementScreen(db: db),
           ),
           item(
             Icons.bar_chart,
-            'Monthly Report',
+            context.l10n.navMonthlyReport,
             (_) => MonthlyReportScreen(db: db),
           ),
           item(
             Icons.analytics,
-            'Milk Analytics',
+            context.l10n.navMilkAnalytics,
             (_) => const AnalyticsDashboard(),
           ),
           const Divider(),
+          const _LanguageChoice(),
           const _ThemeChoice(),
+        ],
+      ),
+    );
+  }
+}
+
+/// English or Kiswahili. Each language is named in its own words so a
+/// farmer can always find theirs.
+class _LanguageChoice extends StatelessWidget {
+  const _LanguageChoice();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<LanguageController>();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.language,
+            style: TextStyle(color: context.farm.muted),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<String>(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(value: 'en', label: Text('English')),
+              ButtonSegment(value: 'sw', label: Text('Kiswahili')),
+            ],
+            selected: {controller.locale.languageCode},
+            onSelectionChanged: (s) => controller.setLanguage(s.first),
+          ),
         ],
       ),
     );
@@ -108,25 +163,28 @@ class _ThemeChoice extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Screen colours', style: TextStyle(color: context.farm.muted)),
+          Text(
+            context.l10n.screenColours,
+            style: TextStyle(color: context.farm.muted),
+          ),
           const SizedBox(height: 8),
           SegmentedButton<ThemeMode>(
             showSelectedIcon: false,
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: ThemeMode.light,
                 icon: Icon(Icons.light_mode),
-                label: Text('Light'),
+                label: Text(context.l10n.themeLight),
               ),
               ButtonSegment(
                 value: ThemeMode.dark,
                 icon: Icon(Icons.dark_mode),
-                label: Text('Dark'),
+                label: Text(context.l10n.themeDark),
               ),
               ButtonSegment(
                 value: ThemeMode.system,
                 icon: Icon(Icons.phone_android),
-                label: Text('Phone'),
+                label: Text(context.l10n.themePhone),
               ),
             ],
             selected: {controller.mode},

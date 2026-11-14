@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_price.dart';
 import 'package:cow/screens/widgets/set_price_dialog.dart';
@@ -25,14 +26,14 @@ class MilkPriceScreen extends StatelessWidget {
     if (saved && context.mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Milk price saved')));
+      ).showSnackBar(SnackBar(content: Text(context.l10n.priceSaved)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Milk price')),
+      appBar: AppBar(title: Text(context.l10n.milkPrice)),
       body: StreamBuilder<List<PriceSetting>>(
         stream: db.watchPriceHistory(),
         builder: (context, snapshot) {
@@ -54,8 +55,13 @@ class MilkPriceScreen extends StatelessWidget {
                     children: [
                       Text(
                         current == null
-                            ? 'No price yet'
-                            : '${ksh(current.pricePerLitre, cents: current.pricePerLitre % 1 != 0)} per litre',
+                            ? context.l10n.noPriceYet
+                            : context.l10n.perLitre(
+                                ksh(
+                                  current.pricePerLitre,
+                                  cents: current.pricePerLitre % 1 != 0,
+                                ),
+                              ),
                         style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -63,7 +69,7 @@ class MilkPriceScreen extends StatelessWidget {
                       ),
                       if (current != null)
                         Text(
-                          'since ${shortDate(current.effectiveDate)}',
+                          context.l10n.since(shortDate(current.effectiveDate)),
                           style: TextStyle(color: context.farm.muted),
                         ),
                       const SizedBox(height: 16),
@@ -71,7 +77,7 @@ class MilkPriceScreen extends StatelessWidget {
                         width: double.infinity,
                         child: FilledButton.icon(
                           icon: const Icon(Icons.edit),
-                          label: const Text('Change price'),
+                          label: Text(context.l10n.changePrice),
                           onPressed: () =>
                               _change(context, current?.pricePerLitre),
                         ),
@@ -82,13 +88,12 @@ class MilkPriceScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'You set the price here when your buyer changes it. '
-                'You never type it when logging milk.',
+                context.l10n.priceExplain,
                 style: TextStyle(color: context.farm.muted),
               ),
               const SizedBox(height: 24),
               Text(
-                'Price history',
+                context.l10n.priceHistory,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               for (final p in history)
@@ -99,21 +104,23 @@ class MilkPriceScreen extends StatelessWidget {
                   ),
                   subtitle: Text(
                     p.effectiveDate.isAfter(now)
-                        ? 'from ${shortDate(p.effectiveDate)} (upcoming)'
-                        : 'from ${shortDate(p.effectiveDate)}',
+                        ? context.l10n.fromDateUpcoming(
+                            shortDate(p.effectiveDate),
+                          )
+                        : context.l10n.fromDate(shortDate(p.effectiveDate)),
                   ),
                   // Keep at least one price, or earnings would have none.
                   trailing: history.length < 2
                       ? null
                       : IconButton(
-                          tooltip: 'Delete',
+                          tooltip: context.l10n.delete,
                           icon: Icon(
                             Icons.delete_outline,
                             color: context.farm.danger,
                           ),
                           onPressed: () => deleteWithUndo(
                             context,
-                            what: 'Price',
+                            what: context.l10n.priceWhat,
                             delete: () => db.deletePrice(p.id),
                             restore: () => db.restorePrice(p),
                           ),

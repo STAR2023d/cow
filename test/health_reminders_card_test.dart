@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/health_reminders_card.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ HealthRecordData _rec(int id, int daysFromToday) => HealthRecordData(
 Future<void> _show(WidgetTester tester, List<HealthRecordData> records) async {
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: L10n.localizationsDelegates,
+      supportedLocales: L10n.supportedLocales,
       home: Scaffold(
         body: SingleChildScrollView(
           child: HealthRemindersCard(

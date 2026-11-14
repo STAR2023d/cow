@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_alerts_card.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/herd_milk_sheet.dart';
@@ -25,8 +26,8 @@ class MainDashboard extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Dashboard',
+        title: Text(
+          context.l10n.dashboard,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(),
@@ -53,8 +54,8 @@ class MainDashboard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 18),
                 ),
                 icon: const Icon(Icons.water_drop, size: 26),
-                label: const Text(
-                  'Log milk',
+                label: Text(
+                  context.l10n.logMilk,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () => Navigator.push(

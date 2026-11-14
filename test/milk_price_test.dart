@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_price.dart';
 import 'package:cow/screens/widgets/milk_price_card.dart';
@@ -63,6 +64,8 @@ void main() {
     NewPrice? result;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async => result = await showDialog<NewPrice>(
@@ -100,6 +103,8 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Scaffold(
           body: MilkPriceCard(
             db: db,

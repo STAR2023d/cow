@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/screens/widgets/edit_milk_entry_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +7,8 @@ void main() {
   Future<void> open(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async {
@@ -33,6 +36,8 @@ void main() {
     MilkEntryEdit? result;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async => result = await showDialog<MilkEntryEdit>(

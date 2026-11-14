@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/breeding/breeding_rows.dart';
 import 'package:cow/breeding/breeding_screen.dart';
@@ -61,11 +62,11 @@ class BreedingAlertsCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Breeding Alerts (${alerts.length})',
+                            context.l10n.breedingAlertsCount(alerts.length),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -75,7 +76,7 @@ class BreedingAlertsCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '+${alerts.length - _maxShown} more',
+                            context.l10n.moreCount(alerts.length - _maxShown),
                             style: TextStyle(
                               color: context.farm.muted,
                               fontSize: 12,
@@ -92,7 +93,7 @@ class BreedingAlertsCard extends StatelessWidget {
                                   const BreedingOverviewScreen(),
                             ),
                           ),
-                          child: const Text('View all'),
+                          child: Text(context.l10n.viewAll),
                         ),
                       ),
                     ],
@@ -141,12 +142,7 @@ class _AlertRow extends StatelessWidget {
           children: [
             Icon(Icons.circle, size: 8, color: color),
             const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(fontSize: 13),
-              ),
-            ),
+            Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
             Icon(Icons.chevron_right, size: 18, color: context.farm.muted),
           ],
         ),

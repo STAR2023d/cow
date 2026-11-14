@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
   Widget build(BuildContext context) {
     final isToday = _from == widget.today;
     return AlertDialog(
-      title: const Text('Change milk price'),
+      title: Text(context.l10n.changeMilkPrice),
       content: Form(
         key: _formKey,
         child: Column(
@@ -59,7 +60,7 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
           children: [
             if (widget.current != null)
               Text(
-                'Now: ${ksh(widget.current!, cents: true)} per litre',
+                context.l10n.nowPerLitre(ksh(widget.current!, cents: true)),
                 style: TextStyle(color: context.farm.muted),
               ),
             const SizedBox(height: 12),
@@ -69,8 +70,8 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: const InputDecoration(
-                labelText: 'New price per litre',
+              decoration: InputDecoration(
+                labelText: context.l10n.newPricePerLitre,
                 prefixText: 'KSh ',
                 border: OutlineInputBorder(),
               ),
@@ -78,26 +79,30 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
                 final p = double.tryParse(
                   (v ?? '').trim().replaceAll(',', '.'),
                 );
-                if (p == null || p <= 0) return 'Enter a price above 0';
-                if (p > 1000) return 'That looks too high for one litre';
+                if (p == null || p <= 0) {
+                  return context.l10n.enterPriceAboveZero;
+                }
+                if (p > 1000) return context.l10n.priceTooHigh;
                 return null;
               },
               onFieldSubmitted: (_) => _save(),
             ),
             const SizedBox(height: 16),
-            const Text('Applies from'),
+            Text(context.l10n.appliesFrom),
             const SizedBox(height: 4),
             Wrap(
               spacing: 8,
               children: [
                 ChoiceChip(
-                  label: const Text('Today'),
+                  label: Text(context.l10n.today),
                   selected: isToday,
                   onSelected: (_) => setState(() => _from = widget.today),
                 ),
                 ChoiceChip(
                   avatar: const Icon(Icons.calendar_today, size: 18),
-                  label: Text(isToday ? 'Other day' : shortDate(_from)),
+                  label: Text(
+                    isToday ? context.l10n.otherDay : shortDate(_from),
+                  ),
                   selected: !isToday,
                   onSelected: (_) => _pickDay(),
                 ),
@@ -105,8 +110,7 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Earnings for milk from ${shortDate(_from)} onward will use '
-              'the new price. Earlier milk keeps its old price.',
+              context.l10n.priceChangeNote(shortDate(_from)),
               style: TextStyle(color: context.farm.muted, fontSize: 13),
             ),
           ],
@@ -115,9 +119,9 @@ class _SetPriceDialogState extends State<SetPriceDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.cancel),
         ),
-        FilledButton(onPressed: _save, child: const Text('Save')),
+        FilledButton(onPressed: _save, child: Text(context.l10n.save)),
       ],
     );
   }

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Kiswahili UI, stage 1: language switch in the drawer (English / Kiswahili, remembered), Flutter localizations with ARB files (`lib/l10n/`), and the dashboard, drawer, Log milk sheet, milk price screens and undo messages translated. Kiswahili needs review by a native speaker (see `docs/SWAHILI.md`)
 - AI: default Gemini model is now `gemini-3.5-flash-lite` (`gemini-3.8-flash` gave no answer within 90 s in the live check; flash-lite answered in seconds)
 - Milk price setting: Milk price screen (drawer → Money and dashboard card) to change the price per litre with an "applies from" day and a history (delete with Undo). Prices apply from the start of their day and a second price on the same day replaces the first. Until a price is set, the dashboard asks for it (earnings were silently using KSh 50). The milk sheet's Save button shows the value, e.g. "≈ KSh 852"
 - Undo for deletes: milk entries, feeding records, health records and calf details delete at once and show "... deleted" with Undo for 6 seconds (the milk entry confirm box is gone). Deleting a cow still asks first

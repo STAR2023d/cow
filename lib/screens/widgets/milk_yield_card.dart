@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -121,12 +122,14 @@ class MilkYieldCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  ),
+                ),
               ),
               Text(
                 percentChange == null
-                    ? 'No data for yesterday'
-                    : '${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(0)}% from yesterday',
+                    ? context.l10n.noDataYesterday
+                    : context.l10n.changeFromYesterday(
+                        '${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(0)}',
+                      ),
                 style: TextStyle(
                   fontSize: 11,
                   color: (percentChange ?? 0) >= 0
@@ -155,7 +158,9 @@ class _GraphBar extends StatelessWidget {
       width: 6,
       height: height,
       decoration: BoxDecoration(
-        color: isPeak ? Theme.of(context).colorScheme.primary : context.farm.faint,
+        color: isPeak
+            ? Theme.of(context).colorScheme.primary
+            : context.farm.faint,
         borderRadius: BorderRadius.circular(3),
         boxShadow: isPeak
             ? [

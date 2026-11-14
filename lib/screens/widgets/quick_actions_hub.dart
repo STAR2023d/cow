@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/cow_add.dart';
@@ -27,17 +28,14 @@ class QuickActionsHub extends StatelessWidget {
             offset: Offset(0, 2),
           ),
         ],
-        ),
+      ),
       padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
             'Quick Actions',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16.0),
           Row(
@@ -46,7 +44,7 @@ class QuickActionsHub extends StatelessWidget {
               Expanded(
                 child: _QuickAction(
                   icon: Icons.add,
-                  label: 'Add Cow',
+                  label: context.l10n.qaAddCow,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const CowAdd()),
@@ -56,7 +54,7 @@ class QuickActionsHub extends StatelessWidget {
               Expanded(
                 child: _QuickAction(
                   icon: Icons.receipt_long,
-                  label: 'Statement',
+                  label: context.l10n.qaStatement,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -68,7 +66,7 @@ class QuickActionsHub extends StatelessWidget {
               Expanded(
                 child: _QuickAction(
                   icon: Icons.grass,
-                  label: 'Feeding',
+                  label: context.l10n.navFeeding,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -80,7 +78,7 @@ class QuickActionsHub extends StatelessWidget {
               Expanded(
                 child: _QuickAction(
                   icon: Icons.health_and_safety,
-                  label: 'Health',
+                  label: context.l10n.navHealth,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -92,7 +90,7 @@ class QuickActionsHub extends StatelessWidget {
               Expanded(
                 child: _QuickAction(
                   icon: Icons.favorite,
-                  label: 'Breeding',
+                  label: context.l10n.navBreeding,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(

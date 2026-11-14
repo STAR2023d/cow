@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/undo_delete.dart';
 import 'package:drift/drift.dart' show Value;
@@ -49,6 +50,8 @@ void main() {
     var deleted = 0, restored = 0;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Scaffold(
           body: Builder(
             builder: (context) => TextButton(
@@ -78,6 +81,8 @@ void main() {
   testWidgets('the message goes away by itself', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Scaffold(
           body: Builder(
             builder: (context) => TextButton(

@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/widgets/milk_hold_banner.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ void main() {
   Future<void> show(WidgetTester tester, int cowId) async {
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Scaffold(
           body: MilkHoldBanner(
             key: ValueKey(cowId),

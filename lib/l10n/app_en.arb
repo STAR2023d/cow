@@ -1,0 +1,350 @@
+{
+  "@@locale": "en",
+  "appTitle": "Mwaura's Farm",
+  "@appTitle": {
+    "description": "App name"
+  },
+  "dashboard": "Dashboard",
+  "logMilk": "Log milk",
+  "@logMilk": {
+    "description": "Big dashboard button that opens the whole-herd milk sheet"
+  },
+  "sectionHerd": "Herd",
+  "@sectionHerd": {
+    "description": "Drawer section heading"
+  },
+  "sectionDailyCare": "Daily care",
+  "@sectionDailyCare": {
+    "description": "Drawer section heading"
+  },
+  "sectionMoney": "Money",
+  "@sectionMoney": {
+    "description": "Drawer section heading"
+  },
+  "navLogMilk": "Log Milk",
+  "navHerdMilk": "Herd & Milk",
+  "navBreeding": "Breeding",
+  "navCalfRegister": "Calf Register",
+  "navFeeding": "Feeding",
+  "navHealth": "Health",
+  "navVetAssistant": "Vet Assistant",
+  "@navVetAssistant": {
+    "description": "AI helper for sick cows"
+  },
+  "navMilkPrice": "Milk Price",
+  "navExpenses": "Expenses",
+  "navStatement": "Financial Statement",
+  "navMonthlyReport": "Monthly Report",
+  "navMilkAnalytics": "Milk Analytics",
+  "screenColours": "Screen colours",
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Light theme"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Dark theme"
+  },
+  "themePhone": "Phone",
+  "@themePhone": {
+    "description": "Follow the phone's setting"
+  },
+  "language": "Language",
+  "qaAddCow": "Add Cow",
+  "qaStatement": "Statement",
+  "headerTagline": "PURE • FRESH • NATURAL",
+  "milkYieldTitle": "MILK YIELD (LITRES)",
+  "noDataYesterday": "No data for yesterday",
+  "changeFromYesterday": "{change}% from yesterday",
+  "@changeFromYesterday": {
+    "description": "change is like +12 or -5",
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "herdSummaryTitle": "MY HERD SUMMARY",
+  "totalAnimals": "Total Animals",
+  "noCowsYet": "No cows yet",
+  "unknownBreed": "Unknown",
+  "@unknownBreed": {
+    "description": "Breed not recorded"
+  },
+  "recentActivity": "Recent Activity",
+  "noRecentActivity": "No recent activity",
+  "milkOnHoldCount": "Milk on hold ({count})",
+  "@milkOnHoldCount": {
+    "description": "Dashboard card: cows whose milk must not be sold after treatment",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cowNumber": "Cow #{id}",
+  "@cowNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "daysLeft": "{count, plural, =1{1 day left} other{{count} days left}}",
+  "@daysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "healthRemindersCount": "Health reminders ({count})",
+  "@healthRemindersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overdueBy": "{count, plural, =1{Overdue by 1 day} other{Overdue by {count} days}}",
+  "@overdueBy": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "yesterday": "Yesterday",
+  "inDays": "{count, plural, =1{In 1 day} other{In {count} days}}",
+  "@inDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "breedingAlertsCount": "Breeding Alerts ({count})",
+  "@breedingAlertsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewAll": "View all",
+  "deleted": "{what} deleted",
+  "@deleted": {
+    "description": "Shown after a delete, with an Undo button",
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "undo": "Undo",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "save": "Save",
+  "set": "Set",
+  "change": "Change",
+  "sessionMorning": "Morning",
+  "@sessionMorning": {
+    "description": "Milking session"
+  },
+  "sessionAfternoon": "Afternoon",
+  "@sessionAfternoon": {
+    "description": "Milking session"
+  },
+  "sessionEvening": "Evening",
+  "@sessionEvening": {
+    "description": "Milking session"
+  },
+  "otherDay": "Other day",
+  "buyerForAll": "Buyer for all (optional)",
+  "couldNotLoadHerd": "Couldn't load the herd.",
+  "noCowsAddFirst": "No cows yet. Add a cow from the dashboard first.",
+  "saveCowsLitres": "{count, plural, =1{Save 1 cow: {litres} ≈ {money}} other{Save {count} cows: {litres} ≈ {money}}}",
+  "@saveCowsLitres": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "litres": {
+        "type": "String"
+      },
+      "money": {
+        "type": "String"
+      }
+    }
+  },
+  "usuallyAbout": "Usually about {litres}",
+  "@usuallyAbout": {
+    "placeholders": {
+      "litres": {
+        "type": "String"
+      }
+    }
+  },
+  "noSessionMilkLast7": "No {session} milk in the last 7 days",
+  "@noSessionMilkLast7": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      }
+    }
+  },
+  "savedLitres": "Saved: {litres}",
+  "@savedLitres": {
+    "placeholders": {
+      "litres": {
+        "type": "String"
+      }
+    }
+  },
+  "milkOnHoldUntil": "Milk on hold until {date}: do not sell",
+  "@milkOnHoldUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "enterNumberAboveZero": "Enter a number above 0",
+  "typeLitresAtLeastOne": "Type the litres for at least one cow.",
+  "checkFiguresTitle": "Check these figures",
+  "checkFiguresBody": "These look much higher than usual:\n\n{lines}\n\nSave them anyway?",
+  "@checkFiguresBody": {
+    "placeholders": {
+      "lines": {
+        "type": "String"
+      }
+    }
+  },
+  "goBackFix": "Go back and fix",
+  "saveAnyway": "Save anyway",
+  "unusualUsual": "{cow}: {litres} (usually about {usual})",
+  "@unusualUsual": {
+    "placeholders": {
+      "cow": {
+        "type": "String"
+      },
+      "litres": {
+        "type": "String"
+      },
+      "usual": {
+        "type": "String"
+      }
+    }
+  },
+  "savedSessionMilk": "{count, plural, =1{Saved {session} milk for 1 cow: {litres}} other{Saved {session} milk for {count} cows: {litres}}}",
+  "@savedSessionMilk": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "session": {
+        "type": "String"
+      },
+      "litres": {
+        "type": "String"
+      }
+    }
+  },
+  "milkPrice": "Milk price",
+  "noPriceYet": "No price yet",
+  "perLitre": "{price} per litre",
+  "@perLitre": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "since": "since {date}",
+  "@since": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "changePrice": "Change price",
+  "priceExplain": "You set the price here when your buyer changes it. You never type it when logging milk.",
+  "priceHistory": "Price history",
+  "fromDate": "from {date}",
+  "@fromDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "fromDateUpcoming": "from {date} (upcoming)",
+  "@fromDateUpcoming": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "priceSaved": "Milk price saved",
+  "priceWhat": "Price",
+  "@priceWhat": {
+    "description": "Used in '{what} deleted'"
+  },
+  "changeMilkPrice": "Change milk price",
+  "nowPerLitre": "Now: {price} per litre",
+  "@nowPerLitre": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "newPricePerLitre": "New price per litre",
+  "enterPriceAboveZero": "Enter a price above 0",
+  "priceTooHigh": "That looks too high for one litre",
+  "appliesFrom": "Applies from",
+  "priceChangeNote": "Earnings for milk from {date} onward will use the new price. Earlier milk keeps its old price.",
+  "@priceChangeNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "setYourMilkPrice": "Set your milk price",
+  "setPriceExplain": "Earnings use KSh 50 per litre until you set what your buyer pays.",
+  "milkPricePerLitre": "Milk price: {price} per litre",
+  "@milkPricePerLitre": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "moreCount": "+{count} more",
+  "@moreCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "holdCardLine": "{cow}: do not sell until {date} ({left})",
+  "@holdCardLine": {
+    "placeholders": {
+      "cow": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  }
+}

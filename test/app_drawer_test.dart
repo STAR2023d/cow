@@ -1,4 +1,6 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/native.dart';
@@ -20,8 +22,11 @@ void main() {
         providers: [
           Provider<AppDatabase>.value(value: db),
           ChangeNotifierProvider(create: (_) => ThemeController()),
+          ChangeNotifierProvider(create: (_) => LanguageController()),
         ],
         child: const MaterialApp(
+          localizationsDelegates: L10n.localizationsDelegates,
+          supportedLocales: L10n.supportedLocales,
           home: Scaffold(drawer: AppDrawer(), body: Text('home')),
         ),
       ),

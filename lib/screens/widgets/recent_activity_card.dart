@@ -1,10 +1,11 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' show TypedResult;
 import 'package:flutter/material.dart';
 
-/// Live "Recent Activity" feed: the most recent milk entries, joined
+/// Live context.l10n.recentActivity feed: the most recent milk entries, joined
 /// with the cow's name.
 class RecentActivityCard extends StatelessWidget {
   final AppDatabase db;
@@ -22,12 +23,9 @@ class RecentActivityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Recent Activity',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              ),
+          Text(
+            context.l10n.recentActivity,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12.0),
           StreamBuilder<List<TypedResult>>(
@@ -48,7 +46,7 @@ class RecentActivityCard extends StatelessWidget {
               final rows = snapshot.data ?? [];
               if (rows.isEmpty) {
                 return Text(
-                  'No recent activity',
+                  context.l10n.noRecentActivity,
                   style: TextStyle(fontSize: 14, color: context.farm.muted),
                 );
               }
@@ -60,18 +58,12 @@ class RecentActivityCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 6.0),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.opacity,
-                          color: context.farm.info,
-                          size: 18,
-                        ),
+                        Icon(Icons.opacity, color: context.farm.info, size: 18),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             '${cowData.name} • ${entry.session} • ${entry.amount.toStringAsFixed(1)} L',
-                            style: const TextStyle(
-                              fontSize: 13,
-                            ),
+                            style: const TextStyle(fontSize: 13),
                           ),
                         ),
                         Text(

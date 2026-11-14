@@ -1,3 +1,4 @@
+import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/herd_milk_sheet.dart';
 import 'package:drift/native.dart';
@@ -32,6 +33,8 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         home: Builder(
           builder: (context) => Scaffold(
             body: TextButton(

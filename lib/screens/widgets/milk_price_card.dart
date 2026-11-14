@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_price.dart';
 import 'package:cow/screens/milk_price_screen.dart';
@@ -61,14 +62,11 @@ class _MilkPriceCardState extends State<MilkPriceCard> {
               ),
               child: ListTile(
                 leading: Icon(Icons.sell, color: context.farm.warning),
-                title: const Text('Set your milk price'),
-                subtitle: const Text(
-                  'Earnings use KSh 50 per litre until you set what your '
-                  'buyer pays.',
-                ),
+                title: Text(context.l10n.setYourMilkPrice),
+                subtitle: Text(context.l10n.setPriceExplain),
                 trailing: FilledButton(
                   onPressed: _open,
-                  child: const Text('Set'),
+                  child: Text(context.l10n.set),
                 ),
               ),
             );
@@ -79,15 +77,20 @@ class _MilkPriceCardState extends State<MilkPriceCard> {
               leading: Icon(Icons.sell, color: context.farm.good),
               title: Text(
                 current == null
-                    ? 'Milk price'
-                    : 'Milk price: ${ksh(current.pricePerLitre, cents: current.pricePerLitre % 1 != 0)} per litre',
+                    ? context.l10n.milkPrice
+                    : context.l10n.milkPricePerLitre(
+                        ksh(
+                          current.pricePerLitre,
+                          cents: current.pricePerLitre % 1 != 0,
+                        ),
+                      ),
               ),
               subtitle: current == null
                   ? null
-                  : Text('since ${shortDate(current.effectiveDate)}'),
+                  : Text(context.l10n.since(shortDate(current.effectiveDate))),
               trailing: TextButton(
                 onPressed: _open,
-                child: const Text('Change'),
+                child: Text(context.l10n.change),
               ),
               onTap: _open,
             ),

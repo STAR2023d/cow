@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
@@ -150,15 +151,16 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       final v = parseLitres(_boxes[cow.id]!.text);
       if (v == null) continue;
       if (v.isNaN) {
-        _errors[cow.id] = 'Enter a number above 0';
+        _errors[cow.id] = context.l10n.enterNumberAboveZero;
         continue;
       }
       values[cow.id] = v;
       if (isUnusualYield(v, data.usual[cow.id])) {
         final usual = data.usual[cow.id];
         unusual.add(
-          '${cow.name}: ${litres(v)}'
-          '${usual == null ? '' : ' (usually about ${litres(usual)})'}',
+          usual == null
+              ? '${cow.name}: ${litres(v)}'
+              : context.l10n.unusualUsual(cow.name, litres(v), litres(usual)),
         );
       }
     }
@@ -167,7 +169,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       return;
     }
     if (values.isEmpty) {
-      _snack('Type the litres for at least one cow.');
+      _snack(context.l10n.typeLitresAtLeastOne);
       return;
     }
     if (unusual.isNotEmpty && !await _confirmUnusual(unusual)) return;
@@ -185,14 +187,17 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     }
     if (!mounted) return;
     final total = values.values.fold<double>(0, (a, b) => a + b);
+    final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     Navigator.pop(context);
     messenger.showSnackBar(
       SnackBar(
         content: Text(
-          'Saved $_session milk for ${values.length} '
-          '${values.length == 1 ? 'cow' : 'cows'}: '
-          '${litres(total)}',
+          l10n.savedSessionMilk(
+            values.length,
+            sessionLabel(l10n, _session),
+            litres(total),
+          ),
         ),
       ),
     );
@@ -202,19 +207,16 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Check these figures'),
-        content: Text(
-          'These look much higher than usual:\n\n'
-          '${lines.join('\n')}\n\nSave them anyway?',
-        ),
+        title: Text(context.l10n.checkFiguresTitle),
+        content: Text(context.l10n.checkFiguresBody(lines.join('\n'))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Go back and fix'),
+            child: Text(context.l10n.goBackFix),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Save anyway'),
+            child: Text(context.l10n.saveAnyway),
           ),
         ],
       ),
@@ -231,23 +233,23 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     final otherDay = _day != _today && _day != yesterday;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Log milk')),
+      appBar: AppBar(title: Text(context.l10n.logMilk)),
       body: FutureBuilder<_SheetData>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text("Couldn't load the herd."));
+            return Center(child: Text(context.l10n.couldNotLoadHerd));
           }
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
           final data = snapshot.data!;
           if (data.cows.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
                 child: Text(
-                  'No cows yet. Add a cow from the dashboard first.',
+                  context.l10n.noCowsAddFirst,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -265,18 +267,20 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     ChoiceChip(
-                      label: const Text('Today'),
+                      label: Text(context.l10n.today),
                       selected: _day == _today,
                       onSelected: (_) => _reload(day: _today),
                     ),
                     ChoiceChip(
-                      label: const Text('Yesterday'),
+                      label: Text(context.l10n.yesterday),
                       selected: _day == yesterday,
                       onSelected: (_) => _reload(day: yesterday),
                     ),
                     ChoiceChip(
                       avatar: const Icon(Icons.calendar_today, size: 18),
-                      label: Text(otherDay ? shortDate(_day) : 'Other day'),
+                      label: Text(
+                        otherDay ? shortDate(_day) : context.l10n.otherDay,
+                      ),
                       selected: otherDay,
                       onSelected: (_) => _pickDate(),
                     ),
@@ -290,7 +294,10 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                   child: SegmentedButton<String>(
                     segments: [
                       for (final s in MilkSession.all)
-                        ButtonSegment(value: s, label: Text(s)),
+                        ButtonSegment(
+                          value: s,
+                          label: Text(sessionLabel(context.l10n, s)),
+                        ),
                     ],
                     selected: {_session},
                     onSelectionChanged: (s) => _reload(session: s.first),
@@ -301,8 +308,8 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                 child: TextField(
                   controller: _buyer,
-                  decoration: const InputDecoration(
-                    labelText: 'Buyer for all (optional)',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.buyerForAll,
                     isDense: true,
                     border: OutlineInputBorder(),
                   ),
@@ -333,9 +340,12 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                       icon: const Icon(Icons.save),
                       label: Text(
                         count == 0
-                            ? 'Save'
-                            : 'Save $count ${count == 1 ? 'cow' : 'cows'}: '
-                                  '${litres(total)} ≈ ${ksh(total * data.price)}',
+                            ? context.l10n.save
+                            : context.l10n.saveCowsLitres(
+                                count,
+                                litres(total),
+                                ksh(total * data.price),
+                              ),
                         style: const TextStyle(fontSize: 16),
                       ),
                       onPressed: _saving ? null : () => _save(data),
@@ -356,9 +366,11 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     final saved = data.saved[cow.id];
     final notes = <String>[
       usual == null
-          ? 'No $_session milk in the last 7 days'
-          : 'Usually about ${litres(usual)}',
-      if (saved != null) 'Saved: ${litres(saved)}',
+          ? context.l10n.noSessionMilkLast7(
+              sessionLabel(context.l10n, _session),
+            )
+          : context.l10n.usuallyAbout(litres(usual)),
+      if (saved != null) context.l10n.savedLitres(litres(saved)),
     ];
 
     return ListTile(
@@ -374,7 +386,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
           Text(notes.join(' • ')),
           if (hold != null)
             Text(
-              'Milk on hold until ${shortDate(hold)}: do not sell',
+              context.l10n.milkOnHoldUntil(shortDate(hold)),
               style: TextStyle(color: context.farm.warning),
             ),
         ],

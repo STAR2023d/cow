@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,8 @@ class FarmHeaderCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
-            "MWAURA'S FARM",
+          Text(
+            context.l10n.appTitle.toUpperCase(),
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w900,
@@ -29,7 +30,7 @@ class FarmHeaderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "PURE • FRESH • NATURAL",
+                context.l10n.headerTagline,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
