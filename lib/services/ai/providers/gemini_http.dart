@@ -14,7 +14,7 @@ class GeminiHttpGenerator implements AiGenerator {
   GeminiHttpGenerator({
     required this.apiKey,
     required this.model,
-    this.timeout = const Duration(seconds: 45),
+    this.timeout = const Duration(seconds: 90),
     this.httpClient,
   });
 
