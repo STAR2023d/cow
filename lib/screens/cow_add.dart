@@ -216,15 +216,21 @@ class _CowAddState extends State<CowAdd> {
               const SizedBox(height: 32),
 
               // Save Button
-              ElevatedButton(
-                onPressed: _submitForm,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: context.cardColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: Text(
-                  context.l10n.saveCow,
-                  style: TextStyle(fontSize: 16),
+              SizedBox(
+                height: 52,
+                child: FilledButton.icon(
+                  onPressed: _submitForm,
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  icon: const Icon(Icons.save_rounded),
+                  label: Text(context.l10n.saveCow),
                 ),
               ),
             ],
