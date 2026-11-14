@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Drawer: grouped into Herd, Daily care and Money; removed Home, Search, Dashboard and Settings (they did nothing); added Breeding and Financial Statement; the drawer now closes before a screen opens, so Back returns Home
 - Monthly Report: export the month as a PDF (totals with last month, cost per litre, spending by category, earnings per buyer)
 - Financial Statement: export the period shown as a PDF (saved to Documents/Mwauras Farm and opened in the PDF viewer)
 - Milk Entry: edit the litres and buyer of an entry (tap the row or the pencil icon)

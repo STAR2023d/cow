@@ -1,9 +1,11 @@
+import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/breeding/calf_register_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/analytics_dashboard.dart';
 import 'package:cow/screens/cow_dashboard.dart';
 import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/feeding_screen.dart';
+import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
 import 'package:cow/screens/monthly_report_screen.dart';
 import 'package:cow/screens/vet_assistant_screen.dart';
@@ -11,7 +13,8 @@ import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// The navigation drawer shown on the main dashboard.
+/// The navigation drawer shown on the main dashboard, grouped by job.
+/// Only real screens are listed: no placeholders that do nothing.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -19,8 +22,19 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final db = Provider.of<AppDatabase>(context, listen: false);
 
+    // Closes the drawer first, so Back from the screen returns to Home.
+    Widget item(IconData icon, String title, WidgetBuilder screen) =>
+        _DrawerItem(
+          icon: icon,
+          title: title,
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: screen));
+          },
+        );
+
     return Drawer(
-      width: 240,
+      width: 260,
       backgroundColor: AppColors.card,
       child: ListView(
         padding: EdgeInsets.zero,
@@ -38,102 +52,65 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
           ),
-          _DrawerItem(
-            icon: Icons.home,
-            title: 'Home',
-            onTap: () => Navigator.pop(context),
+          const _Section('Herd'),
+          item(Icons.pets, 'Herd & Milk', (_) => HerdDashboard()),
+          item(
+            Icons.favorite,
+            'Breeding',
+            (_) => const BreedingOverviewScreen(),
           ),
-          _DrawerItem(
-            icon: Icons.search,
-            title: 'Search',
-            onTap: () => Navigator.pop(context),
+          item(
+            Icons.child_friendly,
+            'Calf Register',
+            (_) => CalfRegisterScreen(db: db),
           ),
-          _DrawerItem(
-            icon: Icons.money,
-            title: 'Expenses',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ExpenseEntryScreen(db: db),
-              ),
-            ),
+          const _Section('Daily care'),
+          item(Icons.grass, 'Feeding', (_) => FeedingScreen(db: db)),
+          item(Icons.health_and_safety, 'Health', (_) => HealthScreen(db: db)),
+          item(
+            Icons.medical_services,
+            'Vet Assistant',
+            (_) => const VetAssistantScreen(),
           ),
-          _DrawerItem(
-            icon: Icons.dashboard,
-            title: 'Dashboard',
-            onTap: () => Navigator.pop(context),
+          const _Section('Money'),
+          item(Icons.money, 'Expenses', (_) => ExpenseEntryScreen(db: db)),
+          item(
+            Icons.receipt_long,
+            'Financial Statement',
+            (_) => StatementScreen(db: db),
           ),
-          _DrawerItem(
-            icon: Icons.pets,
-            title: 'Herd',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HerdDashboard()),
-            ),
+          item(
+            Icons.bar_chart,
+            'Monthly Report',
+            (_) => MonthlyReportScreen(db: db),
           ),
-          _DrawerItem(
-            icon: Icons.grass,
-            title: 'Feeding',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FeedingScreen(db: db)),
-            ),
-          ),
-          _DrawerItem(
-            icon: Icons.health_and_safety,
-            title: 'Health',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HealthScreen(db: db)),
-            ),
-          ),
-          _DrawerItem(
-            icon: Icons.child_friendly,
-            title: 'Calf Register',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CalfRegisterScreen(db: db),
-              ),
-            ),
-          ),
-          _DrawerItem(
-            icon: Icons.medical_services,
-            title: 'Vet Assistant',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const VetAssistantScreen(),
-              ),
-            ),
-          ),
-          _DrawerItem(
-            icon: Icons.bar_chart,
-            title: 'Monthly Report',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MonthlyReportScreen(db: db),
-              ),
-            ),
-          ),
-          _DrawerItem(
-            icon: Icons.analytics,
-            title: 'Analytics',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AnalyticsDashboard(),
-              ),
-            ),
-          ),
-          const Divider(color: Colors.white30),
-          _DrawerItem(
-            icon: Icons.settings,
-            title: 'Settings',
-            onTap: () => Navigator.pop(context),
+          item(
+            Icons.analytics,
+            'Milk Analytics',
+            (_) => const AnalyticsDashboard(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  final String title;
+  const _Section(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
       ),
     );
   }
