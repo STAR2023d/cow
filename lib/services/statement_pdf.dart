@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'dart:typed_data';
 
 import 'package:cow/models/expense_category.dart';
@@ -5,7 +6,7 @@ import 'package:cow/models/period_runner.dart';
 import 'package:cow/services/pdf_layout.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-String _money(double v) => v.toStringAsFixed(2);
+String _money(double v) => amount(v);
 
 /// File name for a statement. Periods are half months, so both dates are
 /// in it, e.g. `statement-2026-11-01-to-2026-11-15.pdf`.
@@ -20,8 +21,8 @@ Future<Uint8List> buildStatementPdf(
   bool compress = true,
 }) => buildFarmPdf(
   title:
-      'Financial Statement: ${pdfDate(s.periodStart)} to '
-      '${pdfDate(s.periodEnd)}',
+      'Financial Statement: ${shortDate(s.periodStart)} to '
+      '${shortDate(s.periodEnd)}',
   generatedAt: generatedAt,
   compress: compress,
   body: [
@@ -49,7 +50,7 @@ Future<Uint8List> buildStatementPdf(
         [
           for (final r in s.milkRecords)
             [
-              pdfDate(r.entryDate),
+              shortDate(r.entryDate),
               r.session,
               r.amount.toStringAsFixed(2),
               _money(s.cashFor(r)),
@@ -64,7 +65,7 @@ Future<Uint8List> buildStatementPdf(
         [
           for (final i in s.incomeRecords)
             [
-              pdfDate(i.date),
+              shortDate(i.date),
               incomeLabel(i.category),
               i.note ?? '',
               _money(i.amount),
@@ -81,7 +82,7 @@ Future<Uint8List> buildStatementPdf(
         [
           for (final e in s.expenseRecords)
             [
-              pdfDate(e.date),
+              shortDate(e.date),
               ExpenseCategory.label(e.category),
               e.description,
               _money(e.amount),

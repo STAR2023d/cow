@@ -1,7 +1,7 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/milk_withdrawal.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// Orange warning shown while [cowId]'s milk is on hold after treatment.
@@ -33,9 +33,7 @@ class _MilkHoldBannerState extends State<MilkHoldBanner> {
           DateTime.now(),
         ).where((h) => h.cowId == widget.cowId);
         if (holds.isEmpty) return const SizedBox.shrink();
-        final safeFrom = DateFormat(
-          'EEE d MMM',
-        ).format(holds.first.withdrawal.safeFrom);
+        final safeFrom = weekdayDate(holds.first.withdrawal.safeFrom);
         return Container(
           margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           padding: const EdgeInsets.all(12),

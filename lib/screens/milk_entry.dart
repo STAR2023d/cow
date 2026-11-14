@@ -1,10 +1,10 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
 import 'package:cow/screens/widgets/edit_milk_entry_dialog.dart';
 import 'package:cow/screens/widgets/milk_hold_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class MilkData extends StatefulWidget {
   final int cowId;
@@ -121,7 +121,7 @@ class _MilkDataState extends State<MilkData> {
                       decoration: InputDecoration(
                         labelText: 'Milk Quantity',
                         hintText: '0.00',
-                        suffixText: 'Liters',
+                        suffixText: 'litres',
                         prefixIcon: const Icon(Icons.opacity),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -212,9 +212,7 @@ class _MilkDataState extends State<MilkData> {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  'Saved $inputAmount Liters successfully!',
-                                ),
+                                content: Text('Saved ${litres(inputAmount)}'),
                               ),
                             );
 
@@ -280,10 +278,7 @@ class _MilkDataState extends State<MilkData> {
                   itemBuilder: (context, index) {
                     final entry = history[index];
 
-                    // Format the SQLite datetime cleanly (e.g., Jun 24, 2026 • 09:30 AM)
-                    final formattedDate = DateFormat(
-                      'MMM d, yyyy • hh:mm a',
-                    ).format(entry.entryDate);
+                    final formattedDate = dateTime(entry.entryDate);
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -297,7 +292,7 @@ class _MilkDataState extends State<MilkData> {
                           child: const Icon(Icons.opacity, color: Colors.blue),
                         ),
                         title: Text(
-                          '${entry.amount.toStringAsFixed(2)} Liters',
+                          litres(entry.amount),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
@@ -386,7 +381,7 @@ class _MilkDataState extends State<MilkData> {
       builder: (context) => AlertDialog(
         title: const Text('Delete this entry?'),
         content: Text(
-          '${entry.amount.toStringAsFixed(2)} litres, '
+          '${litres(entry.amount)}, '
           '${entry.session} on $when.\n'
           'This cannot be undone.',
         ),

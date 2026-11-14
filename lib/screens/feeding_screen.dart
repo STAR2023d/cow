@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' as drift;
@@ -213,7 +214,7 @@ class FeedingScreen extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                       subtitle: Text(
-                        '$cowName  •  ${log.date.day}/${log.date.month}/${log.date.year}'
+                        '$cowName  •  ${shortDate(log.date)}'
                         '${log.notes != null ? '\n${log.notes}' : ''}',
                         style: const TextStyle(color: Colors.white60),
                       ),

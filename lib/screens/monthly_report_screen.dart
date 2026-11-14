@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
@@ -6,7 +7,6 @@ import 'package:cow/services/monthly_report_pdf.dart';
 import 'package:cow/services/pdf_export.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// A month and the one before it (for comparison).
 class _MonthData {
@@ -124,7 +124,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
                 onPressed: () => _shift(-1),
               ),
               Text(
-                DateFormat('MMMM yyyy').format(_month),
+                monthYear(_month),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -165,9 +165,6 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   }
 }
 
-final _money = NumberFormat('#,##0');
-final _money2 = NumberFormat('#,##0.00');
-
 class _ReportBody extends StatelessWidget {
   final _MonthData data;
 
@@ -201,19 +198,19 @@ class _ReportBody extends StatelessWidget {
           children: [
             _SummaryTile(
               label: 'Income',
-              value: _money.format(report.totalIncome),
+              value: ksh(report.totalIncome),
               color: Colors.greenAccent,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
               label: 'Expenses',
-              value: _money.format(report.totalExpenses),
+              value: ksh(report.totalExpenses),
               color: Colors.orangeAccent,
             ),
             const SizedBox(width: 8),
             _SummaryTile(
               label: 'Profit',
-              value: _money.format(report.net),
+              value: ksh(report.net),
               color: report.net >= 0 ? Colors.greenAccent : Colors.redAccent,
             ),
           ],
@@ -230,7 +227,7 @@ class _ReportBody extends StatelessWidget {
             Text(
               cost == null
                   ? 'Cost per litre: no milk logged'
-                  : 'Cost per litre: ${_money2.format(cost)}',
+                  : 'Cost per litre: ${ksh(cost, cents: true)}',
               style: const TextStyle(color: Colors.white70),
             ),
           ],
@@ -248,7 +245,7 @@ class _ReportBody extends StatelessWidget {
               value: report.totalIncome,
               max: biggest,
               color: Colors.greenAccent,
-              valueText: _money.format(report.totalIncome),
+              valueText: ksh(report.totalIncome),
             ),
             const SizedBox(height: 8),
             _Bar(
@@ -256,12 +253,12 @@ class _ReportBody extends StatelessWidget {
               value: report.totalExpenses,
               max: biggest,
               color: Colors.orangeAccent,
-              valueText: _money.format(report.totalExpenses),
+              valueText: ksh(report.totalExpenses),
             ),
             const SizedBox(height: 8),
             Text(
-              'Milk ${_money.format(report.milkCash)}'
-              '  •  Other income ${_money.format(report.otherIncome)}',
+              'Milk ${ksh(report.milkCash)}'
+              '  •  Other income ${ksh(report.otherIncome)}',
               style: const TextStyle(color: Colors.white54, fontSize: 12),
             ),
           ],
@@ -284,7 +281,7 @@ class _ReportBody extends StatelessWidget {
                   max: report.totalExpenses,
                   color: Colors.lightBlueAccent,
                   valueText:
-                      '${_money.format(entry.value)} '
+                      '${ksh(entry.value)} '
                       '(${(entry.value / report.totalExpenses * 100).toStringAsFixed(0)}%)',
                 ),
                 const SizedBox(height: 8),
@@ -330,7 +327,7 @@ class _BuyerPanel extends StatelessWidget {
               value: b.cash,
               max: top,
               color: b.buyer == null ? Colors.white38 : Colors.tealAccent,
-              valueText: _money.format(b.cash),
+              valueText: ksh(b.cash),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 110, top: 2, bottom: 8),

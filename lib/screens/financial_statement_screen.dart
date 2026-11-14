@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/period_runner.dart';
@@ -36,9 +37,8 @@ class _StatementScreenState extends State<StatementScreen> {
     });
   }
 
-  String _fmt(DateTime d) =>
-      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-  String _money(double v) => v.toStringAsFixed(2);
+  String _fmt(DateTime d) => shortDate(d);
+  String _money(double v) => ksh(v, cents: true);
 
   @override
   Widget build(BuildContext context) {

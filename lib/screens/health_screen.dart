@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/health_presets.dart';
 import 'package:cow/health/milk_withdrawal.dart';
@@ -16,7 +17,7 @@ const List<String> healthRecordTypes = [
   'Other',
 ];
 
-String _fmt(DateTime d) => '${d.day}/${d.month}/${d.year}';
+String _fmt(DateTime d) => shortDate(d);
 
 class HealthScreen extends StatelessWidget {
   final AppDatabase db;

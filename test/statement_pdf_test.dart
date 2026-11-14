@@ -52,10 +52,9 @@ void main() {
     for (final expected in [
       // The PDF stores words one by one, so check single words.
       'Statement:',
-      '2026-11-01',
-      '2026-11-15',
+      '1', 'Nov', '15', // 1 Nov 2026 to 15 Nov 2026
       'Closing',
-      '5500.00',
+      '5,500.00',
       '600.00',
       'Dairy',
       'Calf',

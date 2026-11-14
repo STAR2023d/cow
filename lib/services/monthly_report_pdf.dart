@@ -1,12 +1,11 @@
+import 'package:cow/utils/format.dart';
 import 'dart:typed_data';
 
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
 import 'package:cow/services/pdf_layout.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-final _money = NumberFormat('#,##0.00');
 String _pct(double part, double whole) =>
     whole > 0 ? '${(part / whole * 100).toStringAsFixed(0)}%' : '-';
 
@@ -18,7 +17,7 @@ String monthlyReportFileName(MonthlyReport r) =>
 /// The period line, e.g. "November 2026" or, for a month in progress,
 /// "November 2026, 1 to 14 (month in progress)".
 String monthlyReportPeriod(MonthlyReport r) {
-  final name = DateFormat('MMMM yyyy').format(r.month);
+  final name = monthYear(r.month);
   final lastDay = DateTime(r.month.year, r.month.month + 1, 0).day;
   final through = r.throughDay;
   if (through == null || through >= lastDay) return name;
@@ -37,8 +36,8 @@ Future<Uint8List> buildMonthlyReportPdf(
   final p = previous;
   List<String> line(String label, double now, double? before) => [
     label,
-    _money.format(now),
-    if (p != null) before == null ? '-' : _money.format(before),
+    amount(now),
+    if (p != null) before == null ? '-' : amount(before),
   ];
   final cost = r.costPerLitre;
 
@@ -63,7 +62,7 @@ Future<Uint8List> buildMonthlyReportPdf(
       pdfSummaryRow('Litres produced', '${r.litres.toStringAsFixed(1)} L'),
       pdfSummaryRow(
         'Cost per litre',
-        cost == null ? 'no milk logged' : _money.format(cost),
+        cost == null ? 'no milk logged' : amount(cost),
       ),
       pdfHeading('Where the money went'),
       if (r.categoriesBySpend.isEmpty)
@@ -75,7 +74,7 @@ Future<Uint8List> buildMonthlyReportPdf(
             for (final e in r.categoriesBySpend)
               [
                 ExpenseCategory.label(e.key),
-                _money.format(e.value),
+                amount(e.value),
                 _pct(e.value, r.totalExpenses),
               ],
           ],
@@ -90,7 +89,7 @@ Future<Uint8List> buildMonthlyReportPdf(
               [
                 b.buyer ?? 'Not recorded',
                 b.litres.toStringAsFixed(1),
-                _money.format(b.cash),
+                amount(b.cash),
                 _pct(b.cash, r.milkCash),
               ],
           ],

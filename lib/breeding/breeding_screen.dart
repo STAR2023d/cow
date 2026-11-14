@@ -1,8 +1,8 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_schema.dart';
 import 'package:cow/breeding/breeding_status_card.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// One cow's breeding page: where she is now, plus her past cycles.
@@ -60,8 +60,6 @@ class _HistoryTile extends StatelessWidget {
 
   const _HistoryTile({required this.cycle});
 
-  static final _fmt = DateFormat('d MMM yyyy');
-
   String get _outcome {
     switch (cycle.stage) {
       case BreedingStage.failed:
@@ -78,13 +76,11 @@ class _HistoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lines = <String>[
-      'Heat: ${_fmt.format(cycle.heatDate)}',
-      if (cycle.serviceDate != null)
-        'Served: ${_fmt.format(cycle.serviceDate!)}',
+      'Heat: ${shortDate(cycle.heatDate)}',
+      if (cycle.serviceDate != null) 'Served: ${shortDate(cycle.serviceDate!)}',
       if (cycle.actualCalvingDate != null)
-        'Calved: ${_fmt.format(cycle.actualCalvingDate!)}',
-      if (cycle.saleAmount != null)
-        'Calf sold for ${cycle.saleAmount!.toStringAsFixed(0)}',
+        'Calved: ${shortDate(cycle.actualCalvingDate!)}',
+      if (cycle.saleAmount != null) 'Calf sold for ${ksh(cycle.saleAmount!)}',
     ];
 
     return Card(

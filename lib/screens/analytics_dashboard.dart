@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/screens/widgets/production_insights_card.dart';
@@ -89,7 +90,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "${grandTotal.toStringAsFixed(2)} L",
+                          litres(grandTotal),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 36,
@@ -236,7 +237,7 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Amount: ${entry.amount.toStringAsFixed(2)} Liters",
+                                "Amount: ${litres(entry.amount)}",
                                 style: const TextStyle(
                                   fontSize: 25.0,
                                   fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
 import 'breeding_labels.dart';
@@ -266,6 +267,5 @@ class BreedingStatusCard extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime d) =>
-      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+  String _formatDate(DateTime d) => shortDate(d);
 }

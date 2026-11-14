@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,7 @@ class _ExpenseEntryScreenState extends State<ExpenseEntryScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                title: Text('Date: ${_selectedDate.toLocal()}'.split(' ')[0]),
+                title: Text('Date: ${shortDate(_selectedDate)}'),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDate,
               ),

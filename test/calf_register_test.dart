@@ -187,7 +187,7 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Lulu'), findsOneWidget);
-    expect(find.text('Sold · 15,000'), findsOneWidget);
+    expect(find.text('Sold · KSh 15,000'), findsOneWidget);
     expect(find.text('Awaiting outcome'), findsOneWidget);
     expect(find.text('Calf of Daisy'), findsNWidgets(2));
   });
@@ -218,7 +218,7 @@ void main() {
     expect(find.text('Toto'), findsOneWidget);
     expect(find.text('Bought in'), findsOneWidget);
     expect(
-      find.textContaining('32 kg at birth · Weaned on 3/4/2026'),
+      find.textContaining('32 kg at birth · Weaned on 3 Apr 2026'),
       findsOneWidget,
     );
   });

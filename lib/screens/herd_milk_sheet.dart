@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/milk_withdrawal.dart';
 import 'package:cow/models/herd_milk.dart';
@@ -37,7 +38,6 @@ class HerdMilkSheet extends StatefulWidget {
 }
 
 class _HerdMilkSheetState extends State<HerdMilkSheet> {
-  static final _dateFmt = DateFormat('d MMM yyyy');
   static final _litresFmt = NumberFormat('0.##');
 
   late DateTime _day;
@@ -149,8 +149,8 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       if (isUnusualYield(v, data.usual[cow.id])) {
         final usual = data.usual[cow.id];
         unusual.add(
-          '${cow.name}: ${_litresFmt.format(v)} L'
-          '${usual == null ? '' : ' (usually about ${_litresFmt.format(usual)} L)'}',
+          '${cow.name}: ${litres(v)}'
+          '${usual == null ? '' : ' (usually about ${litres(usual)})'}',
         );
       }
     }
@@ -184,7 +184,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
         content: Text(
           'Saved $_session milk for ${values.length} '
           '${values.length == 1 ? 'cow' : 'cows'}: '
-          '${_litresFmt.format(total)} L',
+          '${litres(total)}',
         ),
       ),
     );
@@ -268,9 +268,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                     ),
                     ChoiceChip(
                       avatar: const Icon(Icons.calendar_today, size: 18),
-                      label: Text(
-                        otherDay ? _dateFmt.format(_day) : 'Other day',
-                      ),
+                      label: Text(otherDay ? shortDate(_day) : 'Other day'),
                       selected: otherDay,
                       onSelected: (_) => _pickDate(),
                     ),
@@ -329,7 +327,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
                         count == 0
                             ? 'Save'
                             : 'Save $count ${count == 1 ? 'cow' : 'cows'}: '
-                                  '${_litresFmt.format(total)} L',
+                                  '${litres(total)}',
                         style: const TextStyle(fontSize: 16),
                       ),
                       onPressed: _saving ? null : () => _save(data),
@@ -351,8 +349,8 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     final notes = <String>[
       usual == null
           ? 'No $_session milk in the last 7 days'
-          : 'Usually about ${_litresFmt.format(usual)} L',
-      if (saved != null) 'Saved: ${_litresFmt.format(saved)} L',
+          : 'Usually about ${litres(usual)}',
+      if (saved != null) 'Saved: ${litres(saved)}',
     ];
 
     return ListTile(
@@ -368,7 +366,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
           Text(notes.join(' • ')),
           if (hold != null)
             Text(
-              'Milk on hold until ${_dateFmt.format(hold)}: do not sell',
+              'Milk on hold until ${shortDate(hold)}: do not sell',
               style: const TextStyle(color: Colors.orange),
             ),
         ],

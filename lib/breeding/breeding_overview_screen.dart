@@ -1,9 +1,9 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_labels.dart';
 import 'package:cow/breeding/breeding_rows.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 /// Herd-wide breeding view: every cow, her current stage, and what is
@@ -53,8 +53,6 @@ class _CowBreedingTile extends StatelessWidget {
 
   const _CowBreedingTile({required this.row});
 
-  static final _fmt = DateFormat('d MMM yyyy');
-
   @override
   Widget build(BuildContext context) {
     final milestone = row.milestone;
@@ -69,7 +67,7 @@ class _CowBreedingTile extends StatelessWidget {
         milestoneText = milestone.label;
       } else {
         milestoneText =
-            '${milestone.label}: ${_fmt.format(due)} • ${dueLabel(days)}';
+            '${milestone.label}: ${shortDate(due)} • ${dueLabel(days)}';
         if (days < 0) {
           milestoneColor = Colors.redAccent;
         } else if (days <= 7) {

@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/breeding/calf_dialogs.dart';
 import 'package:cow/breeding/calf_register.dart';
@@ -189,9 +190,6 @@ class _CalfTile extends StatelessWidget {
 
   const _CalfTile({required this.calf, this.onTap});
 
-  static final _date = DateFormat('EEE d MMM yyyy');
-  static final _dmy = DateFormat('d/M/y');
-  static final _money = NumberFormat('#,##0');
   static final _kg = NumberFormat('#,##0.#');
 
   static String titleOf(CalfEntry c) =>
@@ -203,7 +201,7 @@ class _CalfTile extends StatelessWidget {
     CalfOutcome.sold => (
       calf.cycle!.saleAmount == null
           ? 'Sold'
-          : 'Sold · ${_money.format(calf.cycle!.saleAmount)}',
+          : 'Sold · ${ksh(calf.cycle!.saleAmount!)}',
       Colors.lightBlueAccent,
       Icons.sell_outlined,
     ),
@@ -232,13 +230,13 @@ class _CalfTile extends StatelessWidget {
     final sub = [
       [
         if (calf.calfName != null) 'Dam: ${calf.damName}',
-        'Born ${_date.format(calf.bornOn)} (${calf.ageOn(DateTime.now())})',
+        'Born ${shortDate(calf.bornOn)} (${calf.ageOn(DateTime.now())})',
         sex,
       ].join(' · '),
       if (weight != null || weaned != null)
         [
           if (weight != null) '${_kg.format(weight)} kg at birth',
-          if (weaned != null) 'Weaned on ${_dmy.format(weaned)}',
+          if (weaned != null) 'Weaned on ${shortDate(weaned)}',
         ].join(' · '),
     ].join('\n');
 

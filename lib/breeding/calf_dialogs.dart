@@ -1,11 +1,9 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/calf_register.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-final _dmy = DateFormat('d/M/y');
 
 /// Parses an optional weight; null when empty, NaN when not a number.
 double? _weight(String text) {
@@ -86,7 +84,7 @@ class _AddCalfDialogState extends State<AddCalfDialog> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Born: ${_dmy.format(_born)}',
+                  'Born: ${shortDate(_born)}',
                   style: const TextStyle(color: Colors.white70),
                 ),
                 trailing: const Icon(
@@ -253,7 +251,7 @@ class _CalfDetailsDialogState extends State<CalfDetailsDialog> {
                 title: Text(
                   _weaned == null
                       ? 'Not weaned'
-                      : 'Weaned on ${_dmy.format(_weaned!)}',
+                      : 'Weaned on ${shortDate(_weaned!)}',
                   style: const TextStyle(color: Colors.white70),
                 ),
                 trailing: _weaned == null

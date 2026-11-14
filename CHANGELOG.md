@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- One format everywhere (`lib/utils/format.dart`): money as `KSh 5,500` (statement lines with cents), litres as `6.5 L`, dates as `14 Nov 2026` (`Sat 14 Nov` for things due soon, `14 Nov 2026, 07:30` for milk entries). PDFs use the same dates and grouped amounts; PDF file names keep `2026-11-01`
 - Log milk: a big button on the dashboard (and in the drawer) opens a whole-herd sheet. Pick today, yesterday or another day and the session once (suggested from the time of day), type each cow's litres and save once. Each cow shows her usual yield for that session, any figure already saved, and a milk-hold warning; figures far above usual (or over 40 L) ask "Save anyway?"
 - Drawer: grouped into Herd, Daily care and Money; removed Home, Search, Dashboard and Settings (they did nothing); added Breeding and Financial Statement; the drawer now closes before a screen opens, so Back returns Home
 - Monthly Report: export the month as a PDF (totals with last month, cost per litre, spending by category, earnings per buyer)

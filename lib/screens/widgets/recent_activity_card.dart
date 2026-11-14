@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:drift/drift.dart' show TypedResult;
@@ -77,7 +78,7 @@ class RecentActivityCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${entry.entryDate.day}/${entry.entryDate.month}',
+                          dayMonth(entry.entryDate),
                           style: const TextStyle(
                             color: Colors.white38,
                             fontSize: 12,

@@ -1,8 +1,8 @@
+import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/health/reminders.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// Dashboard card listing health follow-ups that are overdue, due today or
 /// coming up soon. Shows nothing when there are none.
@@ -112,8 +112,6 @@ class _ReminderRow extends StatelessWidget {
 
   const _ReminderRow({required this.reminder, required this.cowName});
 
-  static final _fmt = DateFormat('EEE d MMM');
-
   (String, Color) get _label {
     final d = reminder.daysUntil;
     if (d < 0) {
@@ -153,7 +151,7 @@ class _ReminderRow extends StatelessWidget {
                 style: TextStyle(color: color, fontWeight: FontWeight.bold),
               ),
               Text(
-                _fmt.format(reminder.dueOn),
+                weekdayDate(reminder.dueOn),
                 style: const TextStyle(color: Colors.white54, fontSize: 12),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:cow/utils/format.dart';
 import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
@@ -34,7 +35,10 @@ Future<Uint8List> buildFarmPdf({
         children: [
           pw.Text(farmName, style: _bold.copyWith(fontSize: 18)),
           pw.Text(title),
-          pw.Text('Amounts in KES. Generated ${pdfDate(made)}.', style: _small),
+          pw.Text(
+            'Amounts in KES. Generated ${shortDate(made)}.',
+            style: _small,
+          ),
           pw.Divider(),
         ],
       ),
