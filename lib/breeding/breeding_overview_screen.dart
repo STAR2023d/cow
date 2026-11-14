@@ -1,6 +1,7 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
-import 'package:cow/breeding/breeding_labels.dart';
 import 'package:cow/breeding/breeding_rows.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/database/app_database.dart';
@@ -17,7 +18,7 @@ class BreedingOverviewScreen extends StatelessWidget {
     final db = Provider.of<AppDatabase>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Herd Breeding')),
+      appBar: AppBar(title: Text(context.l10n.herdBreeding)),
       body: StreamBuilder<List<CowData>>(
         stream: db.watchAllCow(),
         builder: (context, cowSnap) {
@@ -31,7 +32,7 @@ class BreedingOverviewScreen extends StatelessWidget {
               if (rows.isEmpty) {
                 return Center(
                   child: Text(
-                    'No cows yet',
+                    context.l10n.noCowsYet,
                     style: TextStyle(color: context.farm.muted),
                   ),
                 );
@@ -60,15 +61,18 @@ class _CowBreedingTile extends StatelessWidget {
     final due = milestone?.date;
     final days = row.daysUntilDue(DateTime.now());
 
-    String? milestoneText;
+    String? msText;
     var milestoneColor = context.farm.muted;
 
     if (milestone != null) {
       if (due == null || days == null) {
-        milestoneText = milestone.label;
+        msText = milestoneText(context.l10n, milestone);
       } else {
-        milestoneText =
-            '${milestone.label}: ${shortDate(due)} • ${dueLabel(days)}';
+        msText = context.l10n.milestoneDue(
+          milestoneText(context.l10n, milestone),
+          shortDate(due),
+          dueText(context.l10n, days),
+        );
         if (days < 0) {
           milestoneColor = context.farm.danger;
         } else if (days <= 7) {
@@ -84,9 +88,13 @@ class _CowBreedingTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(row.stage?.label ?? 'No active breeding cycle'),
-            if (milestoneText != null)
-              Text(milestoneText, style: TextStyle(color: milestoneColor)),
+            Text(
+              row.stage == null
+                  ? context.l10n.noActiveCycle
+                  : stageText(context.l10n, row.stage!),
+            ),
+            if (msText != null)
+              Text(msText, style: TextStyle(color: milestoneColor)),
           ],
         ),
         trailing: const Icon(Icons.chevron_right),

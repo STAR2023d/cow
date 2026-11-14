@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
@@ -56,7 +57,7 @@ class _MilkDataState extends State<MilkData> {
   Widget build(BuildContext context) {
     final database = context.read<AppDatabase>();
     return Scaffold(
-      appBar: AppBar(title: Text('Milk Entry ${widget.cowName}')),
+      appBar: AppBar(title: Text(context.l10n.milkEntryFor(widget.cowName))),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -74,8 +75,8 @@ class _MilkDataState extends State<MilkData> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          'Milking Session',
+                        Text(
+                          context.l10n.milkingSession,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -86,20 +87,20 @@ class _MilkDataState extends State<MilkData> {
 
                         const SizedBox(height: 8), // Small targeted micro-gap
                         SegmentedButton<MilkingSession>(
-                          segments: const <ButtonSegment<MilkingSession>>[
+                          segments: <ButtonSegment<MilkingSession>>[
                             ButtonSegment<MilkingSession>(
                               value: MilkingSession.morning,
-                              label: Text('Morning'),
+                              label: Text(context.l10n.sessionMorning),
                               icon: Icon(Icons.wb_sunny_outlined),
                             ),
                             ButtonSegment<MilkingSession>(
                               value: MilkingSession.afternoon,
-                              label: Text('Afternoon'),
+                              label: Text(context.l10n.sessionAfternoon),
                               icon: Icon(Icons.wb_sunny),
                             ),
                             ButtonSegment<MilkingSession>(
                               value: MilkingSession.evening,
-                              label: Text('Evening'),
+                              label: Text(context.l10n.sessionEvening),
                               icon: Icon(Icons.dark_mode_outlined),
                             ),
                           ],
@@ -121,7 +122,7 @@ class _MilkDataState extends State<MilkData> {
                         decimal: true,
                       ),
                       decoration: InputDecoration(
-                        labelText: 'Milk Quantity',
+                        labelText: context.l10n.milkQuantity,
                         hintText: '0.00',
                         suffixText: 'litres',
                         prefixIcon: const Icon(Icons.opacity),
@@ -156,14 +157,14 @@ class _MilkDataState extends State<MilkData> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter the amount';
+                          return context.l10n.enterAmount;
                         }
                         final amount = double.tryParse(value);
                         if (amount == null) {
-                          return 'Please enter a valid number';
+                          return context.l10n.enterValidNumber;
                         }
                         if (amount <= 0) {
-                          return 'Quantity must be greater than zero';
+                          return context.l10n.quantityAboveZero;
                         }
                         return null;
                       },
@@ -176,8 +177,8 @@ class _MilkDataState extends State<MilkData> {
                       textCapitalization: TextCapitalization.words,
                       maxLength: 100,
                       decoration: InputDecoration(
-                        labelText: 'Buyer (optional)',
-                        hintText: 'e.g. dairy co-op, hotel, neighbour',
+                        labelText: context.l10n.buyerOptional,
+                        hintText: context.l10n.buyerHint,
                         prefixIcon: const Icon(Icons.storefront_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -214,7 +215,9 @@ class _MilkDataState extends State<MilkData> {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Saved ${litres(inputAmount)}'),
+                                content: Text(
+                                  context.l10n.savedAmount(litres(inputAmount)),
+                                ),
                               ),
                             );
 
@@ -223,8 +226,8 @@ class _MilkDataState extends State<MilkData> {
                           }
                         }
                       },
-                      child: const Text(
-                        'Submit Data',
+                      child: Text(
+                        context.l10n.save,
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -244,7 +247,7 @@ class _MilkDataState extends State<MilkData> {
                 Icon(Icons.history, color: context.farm.muted),
                 SizedBox(width: 8),
                 Text(
-                  'Production History Log',
+                  context.l10n.historyLog,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -269,7 +272,7 @@ class _MilkDataState extends State<MilkData> {
                 if (history.isEmpty) {
                   return Center(
                     child: Text(
-                      'No milk entries logged yet for this cow.',
+                      context.l10n.noMilkEntriesForCow,
                       style: TextStyle(color: context.farm.muted),
                     ),
                   );
@@ -307,7 +310,10 @@ class _MilkDataState extends State<MilkData> {
                           children: [
                             Chip(
                               label: Text(
-                                entry.session.toUpperCase(),
+                                sessionLabel(
+                                  context.l10n,
+                                  entry.session,
+                                ).toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -315,20 +321,20 @@ class _MilkDataState extends State<MilkData> {
                               ),
                             ),
                             IconButton(
-                              tooltip: 'Edit entry',
+                              tooltip: context.l10n.editEntry,
                               icon: const Icon(Icons.edit_outlined),
                               onPressed: () =>
                                   _editEntry(database, entry, formattedDate),
                             ),
                             IconButton(
-                              tooltip: 'Delete entry',
+                              tooltip: context.l10n.deleteEntry,
                               icon: Icon(
                                 Icons.delete_outline,
                                 color: context.farm.danger,
                               ),
                               onPressed: () => deleteWithUndo(
                                 context,
-                                what: 'Milk entry',
+                                what: context.l10n.milkEntryWhat,
                                 delete: () =>
                                     database.deleteMilkEntry(entry.id),
                                 restore: () => database.restoreMilkEntry(entry),
@@ -358,7 +364,8 @@ class _MilkDataState extends State<MilkData> {
       builder: (_) => EditMilkEntryDialog(
         amount: entry.amount,
         buyer: entry.buyer,
-        label: '${entry.session.toUpperCase()} • $when',
+        label:
+            '${sessionLabel(context.l10n, entry.session).toUpperCase()} • $when',
       ),
     );
     if (edit == null) return;
@@ -370,6 +377,6 @@ class _MilkDataState extends State<MilkData> {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Milk entry updated')));
+    ).showSnackBar(SnackBar(content: Text(context.l10n.milkEntryUpdated)));
   }
 }

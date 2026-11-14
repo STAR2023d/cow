@@ -1,5 +1,6 @@
 //  Stateful Engine managing Verification Steps & Progress Feedback
 
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
   void _beginExecution() async {
     setState(() {
       _currentStep = 3;
-      _progressMessage = 'Preparing secure deletion routine...';
+      _progressMessage = context.l10n.deleting;
     });
 
     // Step A Timeline update
@@ -40,7 +41,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
     if (!mounted) return;
     setState(() {
       _progressValue = 0.4;
-      _progressMessage = 'Unlinking database references...';
+      _progressMessage = context.l10n.deleting;
     });
 
     // Step B Timeline update
@@ -48,7 +49,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
     if (!mounted) return;
     setState(() {
       _progressValue = 0.75;
-      _progressMessage = 'Expunging physical records from SQLite...';
+      _progressMessage = context.l10n.deleting;
     });
 
     // Execute actual background database deletion
@@ -59,7 +60,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
     if (!mounted) return;
     setState(() {
       _progressValue = 1.0;
-      _progressMessage = 'Record completely permanently removed.';
+      _progressMessage = context.l10n.deletionComplete;
       _isSuccess = true;
     });
 
@@ -95,13 +96,13 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
               size: 54,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Remove Cow Profile',
+            Text(
+              context.l10n.removeCowTitle,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Text(
-              'Are you sure you want to delete ${widget.cow.name} from the herd listing?',
+              context.l10n.removeCowQuestion(widget.cow.name),
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14),
             ),
@@ -112,7 +113,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Cancel',
+                    context.l10n.cancel,
                     style: TextStyle(color: context.farm.muted),
                   ),
                 ),
@@ -123,7 +124,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                     backgroundColor: context.farm.warning,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Continue'),
+                  child: Text(context.l10n.continueLabel),
                 ),
               ],
             ),
@@ -142,7 +143,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Irreversible Deletion!',
+              context.l10n.cannotBeUndoneTitle,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -155,14 +156,8 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
               text: TextSpan(
                 style: const TextStyle(fontSize: 14),
                 children: [
-                  const TextSpan(
-                    text: 'This action is permanent and cannot be undone. ',
-                  ),
-                  TextSpan(text: 'All records associated with '),
-                  //  CORRECT (Linter satisfied)
                   TextSpan(
-                    text: widget.cow.name.toString(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    text: context.l10n.deleteCowWarning(widget.cow.name),
                   ),
                 ],
               ),
@@ -174,7 +169,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Cancel',
+                    context.l10n.cancel,
                     style: TextStyle(color: context.farm.muted),
                   ),
                 ),
@@ -185,7 +180,7 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                     backgroundColor: context.farm.danger,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Delete Permanently'),
+                  child: Text(context.l10n.deletePermanently),
                 ),
               ],
             ),
@@ -213,8 +208,8 @@ class _TwoStepDeleteWorkflowState extends State<TwoStepDeleteWorkflow> {
                 size: 56,
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Deletion complete',
+              Text(
+                context.l10n.deletionComplete,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],

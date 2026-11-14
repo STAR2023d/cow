@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'dart:io';
 import 'package:cow/abstract/image_source.dart'; // abstracted file path
 import 'package:cow/database/app_database.dart';
@@ -36,7 +37,10 @@ class _CowAddState extends State<CowAdd> {
         });
       }
     } catch (e) {
-      Text("couldn't pick image");
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.couldNotPickImage)));
     }
   }
 
@@ -70,16 +74,14 @@ class _CowAddState extends State<CowAdd> {
       final db = Provider.of<AppDatabase>(context, listen: false);
       //ADD NEW COW
       try {
-        final insertedId = await db.insertCow(newCow);
+        await db.insertCow(newCow);
 
         // Guard clause to ensure the widget is still in the UI tree
         if (!mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              '${_nameController.text} saved successfully (ID: $insertedId)!',
-            ),
+            content: Text(context.l10n.cowSaved(_nameController.text)),
             backgroundColor: context.farm.good,
           ),
         );
@@ -92,7 +94,7 @@ class _CowAddState extends State<CowAdd> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save data: $error'),
+            content: Text(context.l10n.failedToSave('$error')),
             backgroundColor: context.farm.danger,
           ),
         );
@@ -103,7 +105,7 @@ class _CowAddState extends State<CowAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Cow'), centerTitle: true),
+      appBar: AppBar(title: Text(context.l10n.qaAddCow), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -128,13 +130,10 @@ class _CowAddState extends State<CowAdd> {
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 40,
-                              ),
+                            Icon(Icons.camera_alt, size: 40),
                             const SizedBox(height: 8),
                             Text(
-                              'Tap to Upload Cow Image',
+                              context.l10n.tapToUploadPhoto,
                               style: TextStyle(),
                             ),
                           ],
@@ -145,8 +144,8 @@ class _CowAddState extends State<CowAdd> {
 
               // Tag Input Field
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Tag Number',
+                decoration: InputDecoration(
+                  labelText: context.l10n.tagNumber,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.tag),
                 ),
@@ -158,26 +157,26 @@ class _CowAddState extends State<CowAdd> {
               // Name Input Field
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Cow Name',
+                decoration: InputDecoration(
+                  labelText: context.l10n.cowName,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.pets),
                 ),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter a name' : null,
+                    value!.isEmpty ? context.l10n.enterName : null,
               ),
               const SizedBox(height: 16),
 
               // Breed Input Field
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Breed',
+                decoration: InputDecoration(
+                  labelText: context.l10n.breed,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.layers),
                 ),
                 // Displays the current selected breed value (initialize _breed as a String? variable)
                 initialValue: _breed,
-                hint: const Text('Select cow breed'),
+                hint: Text(context.l10n.selectBreed),
                 isExpanded: true,
                 icon: const Icon(Icons.arrow_drop_down_rounded, size: 28),
                 borderRadius: BorderRadius.circular(12),
@@ -197,8 +196,8 @@ class _CowAddState extends State<CowAdd> {
               // Age Input Field
               TextFormField(
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Age (Years)',
+                decoration: InputDecoration(
+                  labelText: context.l10n.ageInYears,
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
@@ -206,7 +205,7 @@ class _CowAddState extends State<CowAdd> {
                   if (value != null &&
                       value.isNotEmpty &&
                       num.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                    return context.l10n.enterValidNumber;
                   }
                   return null;
                 },
@@ -223,8 +222,8 @@ class _CowAddState extends State<CowAdd> {
                   foregroundColor: context.cardColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text(
-                  'Save Cow',
+                child: Text(
+                  context.l10n.saveCow,
                   style: TextStyle(fontSize: 16),
                 ),
               ),

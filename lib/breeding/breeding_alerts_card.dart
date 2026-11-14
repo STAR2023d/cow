@@ -1,3 +1,4 @@
+import 'package:cow/l10n/labels.dart';
 import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/breeding/breeding_rows.dart';
@@ -121,8 +122,10 @@ class _AlertRow extends StatelessWidget {
     final days = row.daysUntilDue(now);
 
     var text = row.cow.name;
-    if (milestone != null) text += ' — ${milestone.label}';
-    if (days != null) text += ' (${dueLabel(days)})';
+    if (milestone != null) {
+      text += ' — ${milestoneText(context.l10n, milestone)}';
+    }
+    if (days != null) text += ' (${dueText(context.l10n, days)})';
 
     final color = (days != null && days < 0)
         ? context.farm.danger

@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,7 @@ class _EditMilkEntryDialogState extends State<EditMilkEntryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit milk entry'),
+      title: Text(context.l10n.editMilkEntry),
       content: Form(
         key: _formKey,
         child: Column(
@@ -67,11 +68,11 @@ class _EditMilkEntryDialogState extends State<EditMilkEntryDialog> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: const InputDecoration(labelText: 'Litres'),
+              decoration: InputDecoration(labelText: context.l10n.litresLabel),
               validator: (value) {
                 final amount = double.tryParse(value?.trim() ?? '');
-                if (amount == null) return 'Please enter a valid number';
-                if (amount <= 0) return 'Quantity must be greater than zero';
+                if (amount == null) return context.l10n.enterValidNumber;
+                if (amount <= 0) return context.l10n.quantityAboveZero;
                 return null;
               },
               onFieldSubmitted: (_) => _save(),
@@ -79,9 +80,9 @@ class _EditMilkEntryDialogState extends State<EditMilkEntryDialog> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _buyer,
-              decoration: const InputDecoration(
-                labelText: 'Buyer (optional)',
-                helperText: 'Leave empty to remove the buyer',
+              decoration: InputDecoration(
+                labelText: context.l10n.buyerOptional,
+                helperText: context.l10n.leaveEmptyRemoveBuyer,
               ),
               onFieldSubmitted: (_) => _save(),
             ),
@@ -91,9 +92,9 @@ class _EditMilkEntryDialogState extends State<EditMilkEntryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.cancel),
         ),
-        FilledButton(onPressed: _save, child: const Text('Save')),
+        FilledButton(onPressed: _save, child: Text(context.l10n.save)),
       ],
     );
   }

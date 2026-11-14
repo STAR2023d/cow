@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
@@ -49,7 +50,7 @@ class _MilkHoldBannerState extends State<MilkHoldBanner> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Milk on hold: do not sell until $safeFrom',
+                  context.l10n.milkOnHoldBanner(safeFrom),
                   style: TextStyle(
                     color: context.farm.warning,
                     fontWeight: FontWeight.bold,

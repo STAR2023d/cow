@@ -62,7 +62,7 @@ class RecentActivityCard extends StatelessWidget {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            '${cowData.name} • ${entry.session} • ${entry.amount.toStringAsFixed(1)} L',
+                            '${cowData.name} • ${sessionLabel(context.l10n, entry.session)} • ${litres(entry.amount)}',
                             style: const TextStyle(fontSize: 13),
                           ),
                         ),

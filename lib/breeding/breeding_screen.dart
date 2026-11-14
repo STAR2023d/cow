@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/breeding/breeding_schema.dart';
@@ -18,18 +19,15 @@ class BreedingScreen extends StatelessWidget {
     final db = Provider.of<AppDatabase>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: Text('$cowName • Breeding')),
+      appBar: AppBar(title: Text(context.l10n.cowBreeding(cowName))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           BreedingStatusCard(db: db, cowId: cowId),
           const SizedBox(height: 24),
-          const Text(
-            'History',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              ),
+          Text(
+            context.l10n.history,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           StreamBuilder<List<BreedingCycle>>(
@@ -40,7 +38,7 @@ class BreedingScreen extends StatelessWidget {
                   .toList();
               if (past.isEmpty) {
                 return Text(
-                  'No past cycles yet',
+                  context.l10n.noPastCycles,
                   style: TextStyle(color: context.farm.muted),
                 );
               }
@@ -60,32 +58,34 @@ class _HistoryTile extends StatelessWidget {
 
   const _HistoryTile({required this.cycle});
 
-  String get _outcome {
+  String _outcome(BuildContext context) {
     switch (cycle.stage) {
       case BreedingStage.failed:
-        return 'Returned to heat';
+        return context.l10n.outcomeReturnedToHeat;
       case BreedingStage.keptAsHeifer:
-        return 'Calved — heifer kept';
+        return context.l10n.outcomeHeiferKept;
       case BreedingStage.soldCalf:
-        return 'Calved — calf sold';
+        return context.l10n.outcomeCalfSold;
       default:
-        return 'Closed';
+        return context.l10n.outcomeClosed;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final lines = <String>[
-      'Heat: ${shortDate(cycle.heatDate)}',
-      if (cycle.serviceDate != null) 'Served: ${shortDate(cycle.serviceDate!)}',
+      context.l10n.heatOn(shortDate(cycle.heatDate)),
+      if (cycle.serviceDate != null)
+        context.l10n.servedOn(shortDate(cycle.serviceDate!)),
       if (cycle.actualCalvingDate != null)
-        'Calved: ${shortDate(cycle.actualCalvingDate!)}',
-      if (cycle.saleAmount != null) 'Calf sold for ${ksh(cycle.saleAmount!)}',
+        context.l10n.calvedOn(shortDate(cycle.actualCalvingDate!)),
+      if (cycle.saleAmount != null)
+        context.l10n.calfSoldFor(ksh(cycle.saleAmount!)),
     ];
 
     return Card(
       child: ListTile(
-        title: Text(_outcome),
+        title: Text(_outcome(context)),
         subtitle: Text(lines.join('\n')),
         isThreeLine: lines.length > 2,
       ),

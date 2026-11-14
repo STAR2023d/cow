@@ -1,3 +1,4 @@
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'dart:io';
 import 'package:cow/abstract/dialog_deletion.dart';
@@ -17,7 +18,7 @@ class HerdDashboard extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Herd Dashboard'),
+        title: Text(context.l10n.myHerd),
         centerTitle: true,
         elevation: 2,
       ),
@@ -29,7 +30,9 @@ class HerdDashboard extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Error loading data: ${snapshot.error}'));
+            return Center(
+              child: Text(context.l10n.errorLoading('${snapshot.error}')),
+            );
           }
 
           final cows = snapshot.data ?? [];
@@ -42,7 +45,7 @@ class HerdDashboard extends StatelessWidget {
                   Icon(Icons.pets, size: 64, color: context.farm.muted),
                   SizedBox(height: 16),
                   Text(
-                    'No cows in your herd yet!',
+                    context.l10n.noCowsInHerd,
                     style: TextStyle(fontSize: 18, color: context.farm.muted),
                   ),
                 ],
@@ -102,12 +105,11 @@ class HerdDashboard extends StatelessWidget {
                                     File(cow.imagePath!),
                                     fit: BoxFit.cover,
                                     errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Icon(
-                                              Icons.broken_image,
-                                              size: 40,
-                                              color: context.farm.muted,
-                                            ),
+                                        (context, error, stackTrace) => Icon(
+                                          Icons.broken_image,
+                                          size: 40,
+                                          color: context.farm.muted,
+                                        ),
                                   ),
                                 )
                               : Icon(
@@ -130,14 +132,21 @@ class HerdDashboard extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Tag: ${cow.tag ?? "No Tag"}',
+                                context.l10n.tagLine(
+                                  cow.tag ?? context.l10n.noTag,
+                                ),
                                 style: TextStyle(
                                   color: context.farm.muted,
                                   fontSize: 14,
                                 ),
                               ),
                               Text(
-                                'Breed: ${cow.breed ?? "Unknown"} • Age: ${cow.age ?? "N/A"} yrs',
+                                context.l10n.breedAgeLine(
+                                  cow.breed ?? context.l10n.unknownBreed,
+                                  cow.age == null
+                                      ? context.l10n.notAvailable
+                                      : context.l10n.ageYears(cow.age!),
+                                ),
                                 style: TextStyle(
                                   color: context.farm.muted,
                                   fontSize: 13,
@@ -147,7 +156,7 @@ class HerdDashboard extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'Breeding',
+                          tooltip: context.l10n.navBreeding,
                           icon: Icon(
                             Icons.favorite_border,
                             color: context.farm.danger,
@@ -188,8 +197,8 @@ class HerdDashboard extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const CowAdd()),
           );
         },
-        label: const Text(
-          'Add Cow',
+        label: Text(
+          context.l10n.qaAddCow,
           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
         icon: const Icon(Icons.add_rounded, size: 24),

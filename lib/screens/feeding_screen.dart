@@ -1,3 +1,5 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
@@ -34,7 +36,7 @@ class FeedingScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Log Feeding', style: TextStyle()),
+          title: Text(context.l10n.logFeeding, style: TextStyle()),
           content: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -47,13 +49,15 @@ class FeedingScreen extends StatelessWidget {
                         DropdownButtonFormField<String>(
                           initialValue: value,
                           style: const TextStyle(),
-                          decoration: const InputDecoration(
-                            labelText: 'Feed Type',
+                          decoration: InputDecoration(
+                            labelText: context.l10n.feedType,
                           ),
                           items: feedTypes
                               .map(
-                                (f) =>
-                                    DropdownMenuItem(value: f, child: Text(f)),
+                                (f) => DropdownMenuItem(
+                                  value: f,
+                                  child: Text(feedTypeLabel(context.l10n, f)),
+                                ),
                               )
                               .toList(),
                           onChanged: (v) => feedTypeController.value = v!,
@@ -66,14 +70,14 @@ class FeedingScreen extends StatelessWidget {
                         DropdownButtonFormField<int?>(
                           initialValue: value,
                           style: const TextStyle(),
-                          decoration: const InputDecoration(
-                            labelText: 'Cow (optional)',
-                            hintText: 'Whole herd',
+                          decoration: InputDecoration(
+                            labelText: context.l10n.cowOptional,
+                            hintText: context.l10n.wholeHerd,
                           ),
                           items: [
-                            const DropdownMenuItem<int?>(
+                            DropdownMenuItem<int?>(
                               value: null,
-                              child: Text('Whole herd'),
+                              child: Text(context.l10n.wholeHerd),
                             ),
                             ...cows.map(
                               (c) => DropdownMenuItem<int?>(
@@ -92,13 +96,15 @@ class FeedingScreen extends StatelessWidget {
                       decimal: true,
                     ),
                     style: const TextStyle(),
-                    decoration: const InputDecoration(
-                      labelText: 'Quantity (kg)',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.quantityKg,
                     ),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Enter a quantity';
+                      if (v == null || v.isEmpty) {
+                        return context.l10n.enterQuantity;
+                      }
                       if (double.tryParse(v) == null) {
-                        return 'Enter a valid number';
+                        return context.l10n.enterValidNumberShort;
                       }
                       return null;
                     },
@@ -107,8 +113,8 @@ class FeedingScreen extends StatelessWidget {
                   TextFormField(
                     controller: notesController,
                     style: const TextStyle(),
-                    decoration: const InputDecoration(
-                      labelText: 'Notes (optional)',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.notesOptional,
                     ),
                     maxLines: 2,
                   ),
@@ -119,7 +125,7 @@ class FeedingScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -139,7 +145,7 @@ class FeedingScreen extends StatelessWidget {
                 );
                 if (dialogContext.mounted) Navigator.pop(dialogContext);
               },
-              child: const Text('Save'),
+              child: Text(context.l10n.save),
             ),
           ],
         );
@@ -150,7 +156,7 @@ class FeedingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Feeding'), centerTitle: true),
+      appBar: AppBar(title: Text(context.l10n.navFeeding), centerTitle: true),
       body: StreamBuilder<List<FeedingLogData>>(
         stream: db.watchFeedingLogs(),
         builder: (context, snapshot) {
@@ -166,7 +172,7 @@ class FeedingScreen extends StatelessWidget {
                   Icon(Icons.grass, size: 64, color: context.farm.muted),
                   SizedBox(height: 16),
                   Text(
-                    'No feeding records yet',
+                    context.l10n.noFeedingRecords,
                     style: TextStyle(fontSize: 18, color: context.farm.muted),
                   ),
                 ],
@@ -190,8 +196,8 @@ class FeedingScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final log = logs[index];
                   final cowName = log.cowId != null
-                      ? (cowsById[log.cowId] ?? 'Unknown cow')
-                      : 'Whole herd';
+                      ? (cowsById[log.cowId] ?? context.l10n.unknownCow)
+                      : context.l10n.wholeHerd;
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(
@@ -203,7 +209,7 @@ class FeedingScreen extends StatelessWidget {
                         child: Icon(Icons.grass, color: context.farm.good),
                       ),
                       title: Text(
-                        '${log.feedType} • ${log.quantityKg.toStringAsFixed(1)} kg',
+                        '${feedTypeLabel(context.l10n, log.feedType)} • ${log.quantityKg.toStringAsFixed(1)} kg',
                         style: const TextStyle(),
                       ),
                       subtitle: Text(
@@ -217,10 +223,10 @@ class FeedingScreen extends StatelessWidget {
                           Icons.delete_outline,
                           color: context.farm.danger,
                         ),
-                        tooltip: 'Delete',
+                        tooltip: context.l10n.delete,
                         onPressed: () => deleteWithUndo(
                           context,
-                          what: 'Feeding record',
+                          what: context.l10n.feedingRecordWhat,
                           delete: () => db.deleteFeedingLog(log.id),
                           restore: () => db.restoreFeedingLog(log),
                         ),
@@ -235,7 +241,7 @@ class FeedingScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openAddDialog(context),
-        label: const Text('Log Feeding'),
+        label: Text(context.l10n.logFeeding),
         icon: const Icon(Icons.add),
       ),
     );

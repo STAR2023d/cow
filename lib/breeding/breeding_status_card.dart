@@ -1,7 +1,8 @@
+import 'package:cow/l10n/labels.dart';
+import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
-import 'breeding_labels.dart';
 import 'breeding_schema.dart';
 import 'breeding_logic.dart';
 
@@ -19,8 +20,8 @@ class BreedingStatusCard extends StatelessWidget {
       stream: db.watchActiveBreedingCycle(cowId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Card(
-            child: ListTile(title: Text('Loading breeding status...')),
+          return Card(
+            child: ListTile(title: Text(context.l10n.loadingBreeding)),
           );
         }
 
@@ -28,11 +29,11 @@ class BreedingStatusCard extends StatelessWidget {
         if (cycle == null) {
           return Card(
             child: ListTile(
-              title: const Text('No active breeding cycle'),
-              subtitle: const Text('Log heat signs to start one'),
+              title: Text(context.l10n.noActiveCycle),
+              subtitle: Text(context.l10n.logHeatToStart),
               trailing: FilledButton(
                 onPressed: () => _logHeat(context),
-                child: const Text('Log heat'),
+                child: Text(context.l10n.logHeat),
               ),
             ),
           );
@@ -55,13 +56,15 @@ class BreedingStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  displayStage.label,
+                  stageText(context.l10n, displayStage),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 if (cycle.expectedCalvingDate != null) ...[
                   const SizedBox(height: 4),
                   Text(
-                    'Expected calving: ${_formatDate(cycle.expectedCalvingDate!)}',
+                    context.l10n.expectedCalving(
+                      _formatDate(cycle.expectedCalvingDate!),
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -84,7 +87,7 @@ class BreedingStatusCard extends StatelessWidget {
       case BreedingStage.awaitingService:
         return FilledButton(
           onPressed: () => _logService(context, cycle),
-          child: const Text('Log service date'),
+          child: Text(context.l10n.logServiceDate),
         );
       case BreedingStage.awaitingCheck1:
         return _checkButtons(context, cycle, 1);
@@ -99,19 +102,19 @@ class BreedingStatusCard extends StatelessWidget {
       case BreedingStage.prep1Week:
         return FilledButton(
           onPressed: () => _logCalving(context, cycle),
-          child: const Text('Log calving'),
+          child: Text(context.l10n.logCalving),
         );
       case BreedingStage.calved:
         return Row(
           children: [
             FilledButton(
               onPressed: () => _promptFemale(context, cycle),
-              child: const Text('Female — keep'),
+              child: Text(context.l10n.femaleKeep),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: () => _promptSell(context, cycle),
-              child: const Text('Male — sell'),
+              child: Text(context.l10n.maleSell),
             ),
           ],
         );
@@ -125,12 +128,12 @@ class BreedingStatusCard extends StatelessWidget {
       children: [
         FilledButton(
           onPressed: () => _logCheck(context, cycle, n, passed: true),
-          child: Text('Check $n: success'),
+          child: Text(context.l10n.checkSuccess(n)),
         ),
         const SizedBox(width: 8),
         OutlinedButton(
           onPressed: () => _logCheck(context, cycle, n, passed: false),
-          child: const Text('Returned to heat'),
+          child: Text(context.l10n.outcomeReturnedToHeat),
         ),
       ],
     );
@@ -161,7 +164,7 @@ class BreedingStatusCard extends StatelessWidget {
   }
 
   Future<void> _logHeat(BuildContext context) async {
-    final date = await _pickDate(context, help: 'Date heat signs were seen');
+    final date = await _pickDate(context, help: context.l10n.dateHeatSeen);
     if (date == null) return;
     await db.startBreedingCycle(cowId: cowId, heatDate: date);
   }
@@ -169,7 +172,7 @@ class BreedingStatusCard extends StatelessWidget {
   Future<void> _logService(BuildContext context, BreedingCycle cycle) async {
     final date = await _pickDate(
       context,
-      help: 'Date of service',
+      help: context.l10n.dateOfService,
       earliest: cycle.heatDate,
     );
     if (date == null) return;
@@ -184,7 +187,7 @@ class BreedingStatusCard extends StatelessWidget {
   }) async {
     final date = await _pickDate(
       context,
-      help: 'Date of check $n',
+      help: context.l10n.dateOfCheck(n),
       earliest: cycle.serviceDate,
     );
     if (date == null) return;
@@ -199,7 +202,7 @@ class BreedingStatusCard extends StatelessWidget {
   Future<void> _logCalving(BuildContext context, BreedingCycle cycle) async {
     final date = await _pickDate(
       context,
-      help: 'Calving date',
+      help: context.l10n.calvingDate,
       earliest: cycle.serviceDate,
     );
     if (date == null) return;
@@ -211,16 +214,16 @@ class BreedingStatusCard extends StatelessWidget {
     final name = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Name the calf'),
+        title: Text(context.l10n.nameTheCalf),
         content: TextField(controller: controller),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: const Text('Add'),
+            child: Text(context.l10n.add),
           ),
         ],
       ),
@@ -239,7 +242,7 @@ class BreedingStatusCard extends StatelessWidget {
     final amountStr = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Sale amount'),
+        title: Text(context.l10n.saleAmount),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
@@ -247,11 +250,11 @@ class BreedingStatusCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: const Text('Sell'),
+            child: Text(context.l10n.sell),
           ),
         ],
       ),

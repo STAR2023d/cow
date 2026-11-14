@@ -380,4 +380,537 @@ class L10nEn extends L10n {
   String holdCardLine(String cow, String date, String left) {
     return '$cow: do not sell until $date ($left)';
   }
+
+  @override
+  String get myHerd => 'My Herd';
+
+  @override
+  String errorLoading(String error) {
+    return 'Error loading data: $error';
+  }
+
+  @override
+  String get noCowsInHerd => 'No cows in your herd yet!';
+
+  @override
+  String tagLine(String tag) {
+    return 'Tag: $tag';
+  }
+
+  @override
+  String get noTag => 'No tag';
+
+  @override
+  String breedAgeLine(String breed, String age) {
+    return 'Breed: $breed • Age: $age';
+  }
+
+  @override
+  String ageYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count yrs',
+      one: '1 yr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notAvailable => 'N/A';
+
+  @override
+  String get couldNotPickImage => 'Couldn\'t pick the image';
+
+  @override
+  String cowSaved(String name) {
+    return '$name saved';
+  }
+
+  @override
+  String failedToSave(String error) {
+    return 'Could not save: $error';
+  }
+
+  @override
+  String get tapToUploadPhoto => 'Tap to add a cow photo';
+
+  @override
+  String get tagNumber => 'Tag number';
+
+  @override
+  String get cowName => 'Cow name';
+
+  @override
+  String get enterName => 'Please enter a name';
+
+  @override
+  String get breed => 'Breed';
+
+  @override
+  String get selectBreed => 'Select cow breed';
+
+  @override
+  String get ageInYears => 'Age (years)';
+
+  @override
+  String get enterValidNumber => 'Please enter a valid number';
+
+  @override
+  String get saveCow => 'Save cow';
+
+  @override
+  String get choosePhoto => 'Choose cow photo';
+
+  @override
+  String get fromGallery => 'Upload from gallery';
+
+  @override
+  String get takePhoto => 'Take a new photo';
+
+  @override
+  String get removeCowTitle => 'Remove cow';
+
+  @override
+  String removeCowQuestion(String name) {
+    return 'Are you sure you want to remove $name from the herd?';
+  }
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get cannotBeUndoneTitle => 'This cannot be undone';
+
+  @override
+  String deleteCowWarning(String name) {
+    return 'All records for $name (milk, health, feeding and breeding) will be deleted for good.';
+  }
+
+  @override
+  String get deletePermanently => 'Delete for good';
+
+  @override
+  String get deleting => 'Deleting…';
+
+  @override
+  String get deletionComplete => 'Deleted';
+
+  @override
+  String milkEntryFor(String name) {
+    return 'Milk entry: $name';
+  }
+
+  @override
+  String get milkingSession => 'Milking session';
+
+  @override
+  String get milkQuantity => 'Milk quantity';
+
+  @override
+  String get enterAmount => 'Please enter the amount';
+
+  @override
+  String get quantityAboveZero => 'Quantity must be greater than zero';
+
+  @override
+  String get buyerOptional => 'Buyer (optional)';
+
+  @override
+  String get buyerHint => 'e.g. dairy co-op, hotel, neighbour';
+
+  @override
+  String savedAmount(String litres) {
+    return 'Saved $litres';
+  }
+
+  @override
+  String get historyLog => 'Milk history';
+
+  @override
+  String get noMilkEntriesForCow => 'No milk entries logged yet for this cow.';
+
+  @override
+  String get editEntry => 'Edit entry';
+
+  @override
+  String get deleteEntry => 'Delete entry';
+
+  @override
+  String get milkEntryWhat => 'Milk entry';
+
+  @override
+  String get milkEntryUpdated => 'Milk entry updated';
+
+  @override
+  String get editMilkEntry => 'Edit milk entry';
+
+  @override
+  String get litresLabel => 'Litres';
+
+  @override
+  String get leaveEmptyRemoveBuyer => 'Leave empty to remove the buyer';
+
+  @override
+  String milkOnHoldBanner(String date) {
+    return 'Milk on hold: do not sell until $date';
+  }
+
+  @override
+  String get logFeeding => 'Log feeding';
+
+  @override
+  String get feedType => 'Feed type';
+
+  @override
+  String get cowOptional => 'Cow (optional)';
+
+  @override
+  String get wholeHerd => 'Whole herd';
+
+  @override
+  String get quantityKg => 'Quantity (kg)';
+
+  @override
+  String get enterQuantity => 'Enter a quantity';
+
+  @override
+  String get enterValidNumberShort => 'Enter a valid number';
+
+  @override
+  String get notesOptional => 'Notes (optional)';
+
+  @override
+  String get noFeedingRecords => 'No feeding records yet';
+
+  @override
+  String get unknownCow => 'Unknown cow';
+
+  @override
+  String get feedingRecordWhat => 'Feeding record';
+
+  @override
+  String get feedHay => 'Hay';
+
+  @override
+  String get feedSilage => 'Silage';
+
+  @override
+  String get feedConcentrate => 'Concentrate';
+
+  @override
+  String get feedPasture => 'Pasture';
+
+  @override
+  String get feedMineral => 'Mineral Supplement';
+
+  @override
+  String get feedDairyMeal => 'Dairy Meal';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get addCowFirstHealth => 'Add a cow before logging a health record.';
+
+  @override
+  String get logHealthRecord => 'Log health record';
+
+  @override
+  String get presetsNote =>
+      'Presets only suggest a follow-up date. Change it as needed: your vet\'s advice comes first.';
+
+  @override
+  String get cow => 'Cow';
+
+  @override
+  String get recordType => 'Record type';
+
+  @override
+  String dateLine(String date) {
+    return 'Date: $date';
+  }
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get enterDescription => 'Enter a description';
+
+  @override
+  String get medicineOptional => 'Medicine (optional)';
+
+  @override
+  String get withdrawalDaysOptional => 'Milk withdrawal days (optional)';
+
+  @override
+  String get withdrawalHelper =>
+      'From the medicine label or your vet. The app only counts the days you enter.';
+
+  @override
+  String get enter1to60 => 'Enter 1 to 60 days';
+
+  @override
+  String get noFollowUp => 'No follow-up date';
+
+  @override
+  String followUpOn(String date) {
+    return 'Follow-up: $date';
+  }
+
+  @override
+  String get removeFollowUp => 'Remove follow-up';
+
+  @override
+  String get noHealthRecords => 'No health records yet';
+
+  @override
+  String medicineLine(String name) {
+    return 'Medicine: $name';
+  }
+
+  @override
+  String get healthRecordWhat => 'Health record';
+
+  @override
+  String get logRecord => 'Log record';
+
+  @override
+  String milkHoldEnded(String date) {
+    return 'Milk hold ended $date';
+  }
+
+  @override
+  String milkOnHoldSafeFrom(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Milk on hold: safe from $date ($count days left)',
+      one: 'Milk on hold: safe from $date (1 day left)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recVaccination => 'Vaccination';
+
+  @override
+  String get recIllness => 'Illness';
+
+  @override
+  String get recCheckup => 'Checkup';
+
+  @override
+  String get recTreatment => 'Treatment';
+
+  @override
+  String get recDeworming => 'Deworming';
+
+  @override
+  String get recTickControl => 'Tick control';
+
+  @override
+  String get recHoofCare => 'Hoof care';
+
+  @override
+  String get presetVetCheck => 'Vet check';
+
+  @override
+  String get presetDescVaccination => 'Vaccination as advised by the vet';
+
+  @override
+  String get presetDescTick => 'Tick control (spray or dip)';
+
+  @override
+  String get presetDescDeworming => 'Deworming';
+
+  @override
+  String get presetDescHoof => 'Hoof check and trimming';
+
+  @override
+  String get presetDescVetCheck => 'Routine vet check';
+
+  @override
+  String cowBreeding(String name) {
+    return '$name • Breeding';
+  }
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get noPastCycles => 'No past cycles yet';
+
+  @override
+  String get outcomeReturnedToHeat => 'Returned to heat';
+
+  @override
+  String get outcomeHeiferKept => 'Calved — heifer kept';
+
+  @override
+  String get outcomeCalfSold => 'Calved — calf sold';
+
+  @override
+  String get outcomeClosed => 'Closed';
+
+  @override
+  String heatOn(String date) {
+    return 'Heat: $date';
+  }
+
+  @override
+  String servedOn(String date) {
+    return 'Served: $date';
+  }
+
+  @override
+  String calvedOn(String date) {
+    return 'Calved: $date';
+  }
+
+  @override
+  String calfSoldFor(String amount) {
+    return 'Calf sold for $amount';
+  }
+
+  @override
+  String get herdBreeding => 'Herd breeding';
+
+  @override
+  String get noActiveCycle => 'No active breeding cycle';
+
+  @override
+  String milestoneDue(String milestone, String date, String due) {
+    return '$milestone: $date • $due';
+  }
+
+  @override
+  String get loadingBreeding => 'Loading breeding status…';
+
+  @override
+  String get logHeatToStart => 'Log heat signs to start one';
+
+  @override
+  String get logHeat => 'Log heat';
+
+  @override
+  String expectedCalving(String date) {
+    return 'Expected calving: $date';
+  }
+
+  @override
+  String get logServiceDate => 'Log service date';
+
+  @override
+  String get logCalving => 'Log calving';
+
+  @override
+  String get femaleKeep => 'Female — keep';
+
+  @override
+  String get maleSell => 'Male — sell';
+
+  @override
+  String checkSuccess(int n) {
+    return 'Check $n: success';
+  }
+
+  @override
+  String get dateHeatSeen => 'Date heat signs were seen';
+
+  @override
+  String get dateOfService => 'Date of service';
+
+  @override
+  String dateOfCheck(int n) {
+    return 'Date of check $n';
+  }
+
+  @override
+  String get calvingDate => 'Calving date';
+
+  @override
+  String get nameTheCalf => 'Name the calf';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get saleAmount => 'Sale amount';
+
+  @override
+  String get sell => 'Sell';
+
+  @override
+  String get stageAwaitingService => 'Heat detected — awaiting service';
+
+  @override
+  String stageAwaitingCheck(int days) {
+    return 'Awaiting $days-day pregnancy check';
+  }
+
+  @override
+  String get stageConfirmed => 'Pregnancy confirmed — counting down to calving';
+
+  @override
+  String get stageDryOff => 'Dry-off period (8 weeks to calving)';
+
+  @override
+  String stagePrepWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks to calving — preparation',
+      one: '1 week to calving — final preparation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get stageCalved => 'Calved — awaiting outcome';
+
+  @override
+  String get stageKeptHeifer => 'Calf kept as heifer';
+
+  @override
+  String get stageSoldCalf => 'Calf sold';
+
+  @override
+  String get stageFailed => 'Returned to heat — re-service needed';
+
+  @override
+  String get msWaitingService => 'Waiting for service';
+
+  @override
+  String get msRecordOutcome => 'Record the calf outcome';
+
+  @override
+  String msCheckDue(int n) {
+    return 'Check $n due';
+  }
+
+  @override
+  String get msCalvingExpected => 'Calving expected';
+
+  @override
+  String dueOverdue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days overdue',
+      one: '1 day overdue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dueToday => 'today';
+
+  @override
+  String get dueTomorrow => 'tomorrow';
+
+  @override
+  String dueInDays(int count) {
+    return 'in $count days';
+  }
 }

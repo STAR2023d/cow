@@ -346,5 +346,386 @@
         "type": "String"
       }
     }
+  },
+  "myHerd": "My Herd",
+  "errorLoading": "Error loading data: {error}",
+  "@errorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noCowsInHerd": "No cows in your herd yet!",
+  "tagLine": "Tag: {tag}",
+  "@tagLine": {
+    "description": "Ear tag number",
+    "placeholders": {
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "noTag": "No tag",
+  "breedAgeLine": "Breed: {breed} • Age: {age}",
+  "@breedAgeLine": {
+    "placeholders": {
+      "breed": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "ageYears": "{count, plural, =1{1 yr} other{{count} yrs}}",
+  "@ageYears": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notAvailable": "N/A",
+  "couldNotPickImage": "Couldn't pick the image",
+  "cowSaved": "{name} saved",
+  "@cowSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToSave": "Could not save: {error}",
+  "@failedToSave": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tapToUploadPhoto": "Tap to add a cow photo",
+  "tagNumber": "Tag number",
+  "cowName": "Cow name",
+  "enterName": "Please enter a name",
+  "breed": "Breed",
+  "selectBreed": "Select cow breed",
+  "ageInYears": "Age (years)",
+  "enterValidNumber": "Please enter a valid number",
+  "saveCow": "Save cow",
+  "choosePhoto": "Choose cow photo",
+  "fromGallery": "Upload from gallery",
+  "takePhoto": "Take a new photo",
+  "removeCowTitle": "Remove cow",
+  "removeCowQuestion": "Are you sure you want to remove {name} from the herd?",
+  "@removeCowQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLabel": "Continue",
+  "cannotBeUndoneTitle": "This cannot be undone",
+  "deleteCowWarning": "All records for {name} (milk, health, feeding and breeding) will be deleted for good.",
+  "@deleteCowWarning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deletePermanently": "Delete for good",
+  "deleting": "Deleting…",
+  "deletionComplete": "Deleted",
+  "milkEntryFor": "Milk entry: {name}",
+  "@milkEntryFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "milkingSession": "Milking session",
+  "milkQuantity": "Milk quantity",
+  "enterAmount": "Please enter the amount",
+  "quantityAboveZero": "Quantity must be greater than zero",
+  "buyerOptional": "Buyer (optional)",
+  "buyerHint": "e.g. dairy co-op, hotel, neighbour",
+  "savedAmount": "Saved {litres}",
+  "@savedAmount": {
+    "placeholders": {
+      "litres": {
+        "type": "String"
+      }
+    }
+  },
+  "historyLog": "Milk history",
+  "noMilkEntriesForCow": "No milk entries logged yet for this cow.",
+  "editEntry": "Edit entry",
+  "deleteEntry": "Delete entry",
+  "milkEntryWhat": "Milk entry",
+  "@milkEntryWhat": {
+    "description": "Used in '{what} deleted'"
+  },
+  "milkEntryUpdated": "Milk entry updated",
+  "editMilkEntry": "Edit milk entry",
+  "litresLabel": "Litres",
+  "leaveEmptyRemoveBuyer": "Leave empty to remove the buyer",
+  "milkOnHoldBanner": "Milk on hold: do not sell until {date}",
+  "@milkOnHoldBanner": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "logFeeding": "Log feeding",
+  "feedType": "Feed type",
+  "cowOptional": "Cow (optional)",
+  "wholeHerd": "Whole herd",
+  "quantityKg": "Quantity (kg)",
+  "enterQuantity": "Enter a quantity",
+  "enterValidNumberShort": "Enter a valid number",
+  "notesOptional": "Notes (optional)",
+  "noFeedingRecords": "No feeding records yet",
+  "unknownCow": "Unknown cow",
+  "feedingRecordWhat": "Feeding record",
+  "@feedingRecordWhat": {
+    "description": "Used in '{what} deleted'"
+  },
+  "feedHay": "Hay",
+  "feedSilage": "Silage",
+  "feedConcentrate": "Concentrate",
+  "feedPasture": "Pasture",
+  "feedMineral": "Mineral Supplement",
+  "feedDairyMeal": "Dairy Meal",
+  "other": "Other",
+  "addCowFirstHealth": "Add a cow before logging a health record.",
+  "logHealthRecord": "Log health record",
+  "presetsNote": "Presets only suggest a follow-up date. Change it as needed: your vet's advice comes first.",
+  "cow": "Cow",
+  "recordType": "Record type",
+  "dateLine": "Date: {date}",
+  "@dateLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "description": "Description",
+  "enterDescription": "Enter a description",
+  "medicineOptional": "Medicine (optional)",
+  "withdrawalDaysOptional": "Milk withdrawal days (optional)",
+  "withdrawalHelper": "From the medicine label or your vet. The app only counts the days you enter.",
+  "enter1to60": "Enter 1 to 60 days",
+  "noFollowUp": "No follow-up date",
+  "followUpOn": "Follow-up: {date}",
+  "@followUpOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "removeFollowUp": "Remove follow-up",
+  "noHealthRecords": "No health records yet",
+  "medicineLine": "Medicine: {name}",
+  "@medicineLine": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "healthRecordWhat": "Health record",
+  "@healthRecordWhat": {
+    "description": "Used in '{what} deleted'"
+  },
+  "logRecord": "Log record",
+  "milkHoldEnded": "Milk hold ended {date}",
+  "@milkHoldEnded": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "milkOnHoldSafeFrom": "{count, plural, =1{Milk on hold: safe from {date} (1 day left)} other{Milk on hold: safe from {date} ({count} days left)}}",
+  "@milkOnHoldSafeFrom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "recVaccination": "Vaccination",
+  "recIllness": "Illness",
+  "recCheckup": "Checkup",
+  "recTreatment": "Treatment",
+  "recDeworming": "Deworming",
+  "recTickControl": "Tick control",
+  "recHoofCare": "Hoof care",
+  "presetVetCheck": "Vet check",
+  "presetDescVaccination": "Vaccination as advised by the vet",
+  "presetDescTick": "Tick control (spray or dip)",
+  "presetDescDeworming": "Deworming",
+  "presetDescHoof": "Hoof check and trimming",
+  "presetDescVetCheck": "Routine vet check",
+  "cowBreeding": "{name} • Breeding",
+  "@cowBreeding": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "history": "History",
+  "noPastCycles": "No past cycles yet",
+  "outcomeReturnedToHeat": "Returned to heat",
+  "outcomeHeiferKept": "Calved — heifer kept",
+  "outcomeCalfSold": "Calved — calf sold",
+  "outcomeClosed": "Closed",
+  "heatOn": "Heat: {date}",
+  "@heatOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "servedOn": "Served: {date}",
+  "@servedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "calvedOn": "Calved: {date}",
+  "@calvedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "calfSoldFor": "Calf sold for {amount}",
+  "@calfSoldFor": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "herdBreeding": "Herd breeding",
+  "noActiveCycle": "No active breeding cycle",
+  "milestoneDue": "{milestone}: {date} • {due}",
+  "@milestoneDue": {
+    "placeholders": {
+      "milestone": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingBreeding": "Loading breeding status…",
+  "logHeatToStart": "Log heat signs to start one",
+  "logHeat": "Log heat",
+  "expectedCalving": "Expected calving: {date}",
+  "@expectedCalving": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "logServiceDate": "Log service date",
+  "logCalving": "Log calving",
+  "femaleKeep": "Female — keep",
+  "maleSell": "Male — sell",
+  "checkSuccess": "Check {n}: success",
+  "@checkSuccess": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dateHeatSeen": "Date heat signs were seen",
+  "dateOfService": "Date of service",
+  "dateOfCheck": "Date of check {n}",
+  "@dateOfCheck": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "calvingDate": "Calving date",
+  "nameTheCalf": "Name the calf",
+  "add": "Add",
+  "saleAmount": "Sale amount",
+  "sell": "Sell",
+  "stageAwaitingService": "Heat detected — awaiting service",
+  "stageAwaitingCheck": "Awaiting {days}-day pregnancy check",
+  "@stageAwaitingCheck": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "stageConfirmed": "Pregnancy confirmed — counting down to calving",
+  "stageDryOff": "Dry-off period (8 weeks to calving)",
+  "stagePrepWeeks": "{count, plural, =1{1 week to calving — final preparation} other{{count} weeks to calving — preparation}}",
+  "@stagePrepWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stageCalved": "Calved — awaiting outcome",
+  "stageKeptHeifer": "Calf kept as heifer",
+  "stageSoldCalf": "Calf sold",
+  "stageFailed": "Returned to heat — re-service needed",
+  "msWaitingService": "Waiting for service",
+  "msRecordOutcome": "Record the calf outcome",
+  "msCheckDue": "Check {n} due",
+  "@msCheckDue": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "msCalvingExpected": "Calving expected",
+  "dueOverdue": "{count, plural, =1{1 day overdue} other{{count} days overdue}}",
+  "@dueOverdue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dueToday": "today",
+  "dueTomorrow": "tomorrow",
+  "dueInDays": "in {count} days",
+  "@dueInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
