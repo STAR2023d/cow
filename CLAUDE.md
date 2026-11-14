@@ -26,6 +26,7 @@ Done: UX pass started: drawer grouped (Herd, Daily care, Money; no placeholders)
 Done: milk price setting (`milk_price_screen.dart`, `MilkPriceCard`, `setPricePerLitre` start-of-day + same-day replace; see docs/FINANCE.md). Later: price per buyer (schema v11).
 Gemini default model is `gemini-3.5-flash-lite` (`gemini-3.8-flash` hung for this key, 2026-11-14).
 Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in `lib/l10n/app_en.arb` + `app_sw.arb`, used as `context.l10n.x`; never hard-coded English.
-Next: Swahili stage 4 (AI language + Kiswahili danger phrases, needs vet review); check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
+Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
+Later (owner said not now, 2026-11-14): Swahili stage 4 (AI answers in app language + Kiswahili danger phrases; needs vet review). Until then AI answers stay English (vet has its own language choice) and the danger check only knows English words.
 Later: going public with paid AI (key-holding backend proxy, phone OTP accounts, metering and spending caps, M-Pesa credits, privacy policy + Kenya DPA, app-store billing check, closed beta).
