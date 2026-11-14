@@ -1,5 +1,6 @@
 import 'package:cow/database/app_database.dart';
 import 'package:cow/models/milk_entry_enum.dart';
+import 'package:cow/screens/widgets/edit_milk_entry_dialog.dart';
 import 'package:cow/screens/widgets/milk_hold_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -290,6 +291,7 @@ class _MilkDataState extends State<MilkData> {
                         vertical: 6.0,
                       ),
                       child: ListTile(
+                        onTap: () => _editEntry(database, entry, formattedDate),
                         leading: CircleAvatar(
                           backgroundColor: Colors.blue.withValues(),
                           child: const Icon(Icons.opacity, color: Colors.blue),
@@ -317,6 +319,12 @@ class _MilkDataState extends State<MilkData> {
                               backgroundColor: Colors.grey[200],
                             ),
                             IconButton(
+                              tooltip: 'Edit entry',
+                              icon: const Icon(Icons.edit_outlined),
+                              onPressed: () =>
+                                  _editEntry(database, entry, formattedDate),
+                            ),
+                            IconButton(
                               tooltip: 'Delete entry',
                               icon: const Icon(
                                 Icons.delete_outline,
@@ -340,6 +348,31 @@ class _MilkDataState extends State<MilkData> {
         ],
       ),
     );
+  }
+
+  Future<void> _editEntry(
+    AppDatabase database,
+    MilkTableData entry,
+    String when,
+  ) async {
+    final edit = await showDialog<MilkEntryEdit>(
+      context: context,
+      builder: (_) => EditMilkEntryDialog(
+        amount: entry.amount,
+        buyer: entry.buyer,
+        label: '${entry.session.toUpperCase()} • $when',
+      ),
+    );
+    if (edit == null) return;
+    await database.updateMilkEntry(
+      entry.id,
+      amount: edit.amount,
+      buyer: edit.buyer,
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Milk entry updated')));
   }
 
   /// Asks before deleting, since milk figures feed earnings and reports.

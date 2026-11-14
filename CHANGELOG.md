@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Milk Entry: edit the litres and buyer of an entry (tap the row or the pencil icon)
 - Milk Entry: delete a wrong entry from the history list (bin icon, asks first)
 - AI: opt-in live check (`test/live/ai_live_test.dart`) sends a short request and one vet case to each provider that has settings; skipped in a plain `flutter test`
 - AI: Gemini time limit raised from 45 s to 90 s (the vet case timed out at 45 s in the live check)

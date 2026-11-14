@@ -162,4 +162,26 @@ void main() {
     expect(left.length, 1);
     expect(left.first.amount, 6);
   });
+
+  test('editing a milk entry changes litres and can clear the buyer', () async {
+    final cowId = await db.insertCow(CowCompanion.insert(name: 'Daisy'));
+    await db.upsertMilkEntry(
+      cowId: cowId,
+      date: day,
+      session: MilkSession.morning,
+      amount: 50,
+      buyer: 'KCC',
+    );
+    final entry = (await db.watchAllEntries().first).single;
+
+    await db.updateMilkEntry(entry.id, amount: 5, buyer: '  Brookside ');
+    var saved = (await db.watchAllEntries().first).single;
+    expect(saved.amount, 5);
+    expect(saved.buyer, 'Brookside');
+    expect(saved.session, MilkSession.morning);
+
+    await db.updateMilkEntry(entry.id, amount: 5, buyer: ' ');
+    saved = (await db.watchAllEntries().first).single;
+    expect(saved.buyer, isNull);
+  });
 }

@@ -227,6 +227,22 @@ class AppDatabase extends _$AppDatabase {
   /// [buyer] is optional. When null or blank the stored buyer is left as
   /// it was (none for a new entry), so callers that don't know the buyer
   /// never wipe one recorded earlier.
+  /// Corrects the litres and buyer of one milk entry. A null or blank
+  /// [buyer] clears it (unlike [upsertMilkEntry], which keeps it).
+  Future<int> updateMilkEntry(
+    String id, {
+    required double amount,
+    String? buyer,
+  }) {
+    final trimmed = buyer?.trim();
+    return (update(milkTable)..where((t) => t.id.equals(id))).write(
+      MilkTableCompanion(
+        amount: Value(amount),
+        buyer: Value(trimmed == null || trimmed.isEmpty ? null : trimmed),
+      ),
+    );
+  }
+
   /// Removes one milk entry, e.g. a wrong figure. Returns rows deleted.
   Future<int> deleteMilkEntry(String id) =>
       (delete(milkTable)..where((t) => t.id.equals(id))).go();
