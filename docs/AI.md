@@ -25,7 +25,7 @@ flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json
 | --- | --- | --- |
 | `AI_PROVIDER` | `gemini` | `gemini`, `anthropic`, `openai` or `compatible` |
 | `GEMINI_API_KEY` | | |
-| `GEMINI_MODEL` | `gemini-3.8-flash` | |
+| `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Default since 2026-11-14: `gemini-3.8-flash` gave no answer within 90 s for our key, while flash-lite answered in a few seconds. Set `gemini-3.8-flash` here to try it again |
 | `GEMINI_FALLBACK_MODEL` | (none) | Second Gemini model, tried once when the main one stays busy |
 | `ANTHROPIC_API_KEY` | | |
 | `ANTHROPIC_MODEL` | `claude-opus-5-5` | Most capable; `claude-haiku-5-5` costs far less per request |
@@ -51,7 +51,7 @@ flutter test test/live --dart-define-from-file=$HOME/.config/cow/env.json
 
 Add `--name gemini` (or `anthropic`, `openai`, `compatible`) to check one provider, and `--dart-define=OPENAI_MODEL=...` to try a model without editing the file. It prints only the provider, model, result and the start of each reply, never keys.
 
-Results on 2026-11-14: Gemini short reply OK, vet case timed out at the old 45 s limit (raised to 90 s since); Groq `openai/gpt-oss-20b` passed both in about 4 s. Claude and OpenAI not checked yet (no keys).
+Results on 2026-11-14: Gemini `gemini-3.8-flash` short reply OK, vet case timed out at the old 45 s limit; later both requests got no answer within 90 s. `gemini-3.5-flash-lite` passed both in about 7 s and is now the default; Groq `openai/gpt-oss-20b` passed both in about 4 s. Claude and OpenAI not checked yet (no keys).
 
 ## Retries and fallback
 

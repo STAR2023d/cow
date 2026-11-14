@@ -36,7 +36,7 @@ void main() {
   test('defaults: Gemini, today\'s Gemini model, Claude Opus 5.5', () {
     const c = AiConfig();
     expect(c.provider, 'gemini');
-    expect(c.geminiModel, 'gemini-3.8-flash');
+    expect(c.geminiModel, 'gemini-3.5-flash-lite');
     expect(c.anthropicModel, 'claude-opus-5-5');
   });
 

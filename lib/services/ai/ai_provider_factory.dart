@@ -58,7 +58,7 @@ class AiConfig {
   const AiConfig({
     this.provider = 'gemini',
     this.geminiKey = '',
-    this.geminiModel = 'gemini-3.8-flash',
+    this.geminiModel = 'gemini-3.5-flash-lite',
     this.geminiFallbackModel = '',
     this.anthropicKey = '',
     this.anthropicModel = 'claude-opus-5-5',
@@ -77,7 +77,7 @@ class AiConfig {
       geminiKey = const String.fromEnvironment('GEMINI_API_KEY'),
       geminiModel = const String.fromEnvironment(
         'GEMINI_MODEL',
-        defaultValue: 'gemini-3.8-flash',
+        defaultValue: 'gemini-3.5-flash-lite',
       ),
       geminiFallbackModel = const String.fromEnvironment(
         'GEMINI_FALLBACK_MODEL',
