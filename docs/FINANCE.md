@@ -16,6 +16,15 @@ Statements cover half-month periods (1st to 15th, 16th to month end).
 
 Only ledger rows of type `income` are counted. Nothing writes ledger `expense` rows yet.
 
+### PDF export
+
+The PDF icon in the statement's top bar saves the period shown as an A4 PDF and opens it in the system viewer (`xdg-open` on Linux), ready to print or send.
+
+- Saved to `Documents/Mwauras Farm/statement-<start>-to-<end>.pdf`, e.g. `statement-2026-11-01-to-2026-11-15.pdf`. Exporting the same period again replaces the file.
+- Same figures and lists as the screen: summary, milk records (date, session, litres, cash), other income, expenses. Amounts in KES.
+- Code: `lib/services/statement_pdf.dart` (builds the PDF, `pdf` package) and `lib/services/pdf_export.dart` (saves and opens it; reusable for the Monthly Report).
+- The PDF uses the built-in Helvetica font, which covers English and Swahili letters but not emoji or other scripts.
+
 ## Monthly report
 
 `MonthlyReportCalculator` (`lib/models/monthly_report.dart`) totals one calendar month: litres, milk cash, other income, expenses (overall and per category), profit, and cost per litre (expenses ÷ litres, empty when no milk was logged). The Monthly Report screen shows it, and the AI finance advisor will use the same report.

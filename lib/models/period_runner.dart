@@ -134,3 +134,11 @@ class StatementCalculator {
     );
   }
 }
+
+/// Label for an income category, e.g. 'calf_sale' -> 'Calf sale'.
+String incomeLabel(String category) {
+  if (category == 'calf_sale') return 'Calf sale';
+  final words = category.replaceAll('_', ' ');
+  if (words.isEmpty) return 'Income';
+  return words[0].toUpperCase() + words.substring(1);
+}

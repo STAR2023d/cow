@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Financial Statement: export the period shown as a PDF (saved to Documents/Mwauras Farm and opened in the PDF viewer)
 - Milk Entry: edit the litres and buyer of an entry (tap the row or the pencil icon)
 - Milk Entry: delete a wrong entry from the history list (bin icon, asks first)
 - AI: opt-in live check (`test/live/ai_live_test.dart`) sends a short request and one vet case to each provider that has settings; skipped in a plain `flutter test`
