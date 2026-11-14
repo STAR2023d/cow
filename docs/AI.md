@@ -6,10 +6,12 @@ The app can use **Gemini**, **Claude (Anthropic)**, **OpenAI**, or any **OpenAI-
 
 | Provider | Endpoint | Notes |
 | --- | --- | --- |
-| `gemini` (default) | `generateContent` | Key sent in a header, not the URL. Temperature 0.3; JSON mode when asked. |
+| `gemini` (default) | `generateContent` | Key sent in a header, not the URL. Temperature 0.3; JSON mode when asked. Waits up to 90 s. |
 | `anthropic` | Messages API, version `2026-10-21` | No `temperature` (that API version rejects it). JSON asked for in the system prompt. Only `text` blocks are read (thinking blocks are skipped). A `refusal` is shown as "no answer". Server-side refusal fallback is on (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`), so Anthropic retries a refused request on another Claude model itself. |
 | `openai` | Chat Completions | Bearer key; `response_format: json_object` for JSON. |
 | `compatible` | `<OPENAI_BASE_URL>/chat/completions` | Same as `openai` at another address. Set `OPENAI_JSON_MODE=false` if the service rejects `response_format`. |
+
+Free testing with Groq: set `AI_PROVIDER` to `compatible`, `OPENAI_BASE_URL` to `https://api.groq.com/openai/v1`, `OPENAI_API_KEY` to the Groq key and `OPENAI_MODEL` to an exact model ID. Groq no longer offers Llama chat models (as of 2026-11-14); `openai/gpt-oss-20b` passed the live check, and `openai/gpt-oss-120b` and `qwen/qwen3.8-27b` are also available. Free tiers have low request limits, and some may keep what is sent, so use test data only.
 
 ## Settings
 
@@ -36,6 +38,20 @@ flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json
 Example file: `{"AI_PROVIDER": "gemini", "GEMINI_API_KEY": "...", "ANTHROPIC_API_KEY": "...", "AI_FALLBACK_PROVIDERS": "anthropic"}`.
 
 Settings that are incomplete (unknown provider, missing key or model, `compatible` without a valid base URL) make the AI report "not set up" without sending any request.
+
+A template with every setting empty is kept next to the private file, at `~/.config/cow/env.example.json`. Leave a setting empty until there is a real key; a placeholder word would be sent as the key.
+
+## Live check
+
+`test/live/ai_live_test.dart` sends real requests to every provider that has settings: one short reply and one vet case, which must parse and contain no doses. A plain `flutter test` passes no settings, so it is skipped and costs nothing. Run it with:
+
+```bash
+flutter test test/live --dart-define-from-file=$HOME/.config/cow/env.json
+```
+
+Add `--name gemini` (or `anthropic`, `openai`, `compatible`) to check one provider, and `--dart-define=OPENAI_MODEL=...` to try a model without editing the file. It prints only the provider, model, result and the start of each reply, never keys.
+
+Results on 2026-11-14: Gemini short reply OK, vet case timed out at the old 45 s limit (raised to 90 s since); Groq `openai/gpt-oss-20b` passed both in about 4 s. Claude and OpenAI not checked yet (no keys).
 
 ## Retries and fallback
 
@@ -67,7 +83,8 @@ Breed, age, current breeding stage (with expected calving date) and the last 7 d
 
 - API keys are compiled into the app, so they can be extracted from a distributed build. Fine for personal testing, not for publishing: a key-holding backend proxy is planned (see "Going public with paid AI" in `docs/ROADMAP.md`).
 - The provider is chosen at build time; there is no in-app settings screen.
-- Prompts were written and tested with Gemini. Claude and OpenAI replies go through the same parsers, but have not been checked against real farm questions yet.
+- Prompts were written and tested with Gemini. A real vet case also parsed correctly through Groq (`openai/gpt-oss-20b`). Claude and OpenAI replies have not been checked against real farm questions yet.
+- Gemini can be slow: a vet case has taken more than 45 s. Setting `AI_FALLBACK_PROVIDERS` (for example `compatible`) lets the app ask another provider when Gemini times out.
 
 ## Structure
 

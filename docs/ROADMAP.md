@@ -59,6 +59,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [x] Call Gemini, Anthropic, OpenAI and OpenAI-compatible services over plain HTTP, replacing `google_generative_ai`
 - [x] Provider factory: pick the provider and model from build settings (`--dart-define`), behind the existing `AiGenerator` interface
 - [ ] In-app settings screen to switch provider and model
+- [x] Live check against real providers (`test/live/`): Gemini and Groq (OpenAI-compatible) checked 2026-11-14; Claude and OpenAI not yet (no keys)
 - [x] Cross-provider fallback: when one provider is busy or down, try the next (`AI_FALLBACK_PROVIDERS`)
 
 ### Going public with paid AI
