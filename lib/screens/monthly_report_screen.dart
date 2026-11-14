@@ -2,6 +2,8 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/models/expense_category.dart';
 import 'package:cow/models/monthly_report.dart';
 import 'package:cow/screens/widgets/finance_advisor_card.dart';
+import 'package:cow/services/monthly_report_pdf.dart';
+import 'package:cow/services/pdf_export.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +33,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   late final MonthlyReportCalculator _calc;
   late DateTime _month;
   late Future<_MonthData> _future;
+  bool _exporting = false;
 
   @override
   void initState() {
@@ -68,10 +71,48 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
     });
   }
 
+  /// Saves the shown month as a PDF in Documents/Mwauras Farm and opens it.
+  Future<void> _exportPdf() async {
+    setState(() => _exporting = true);
+    String message;
+    try {
+      final data = await _future;
+      final file = await savePdf(
+        await buildMonthlyReportPdf(data.current, previous: data.previous),
+        monthlyReportFileName(data.current),
+      );
+      final opened = await openFile(file);
+      message = opened
+          ? 'Saved ${file.path}'
+          : 'Saved ${file.path} (could not open it)';
+    } catch (e) {
+      message = 'Could not save the PDF: $e';
+    }
+    if (!mounted) return;
+    setState(() => _exporting = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: const Duration(seconds: 6)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Monthly Report')),
+      appBar: AppBar(
+        title: const Text('Monthly Report'),
+        actions: [
+          IconButton(
+            tooltip: 'Export PDF',
+            icon: _exporting
+                ? const SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.picture_as_pdf_outlined),
+            onPressed: _exporting ? null : _exportPdf,
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

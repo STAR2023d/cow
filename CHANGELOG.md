@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Monthly Report: export the month as a PDF (totals with last month, cost per litre, spending by category, earnings per buyer)
 - Financial Statement: export the period shown as a PDF (saved to Documents/Mwauras Farm and opened in the PDF viewer)
 - Milk Entry: edit the litres and buyer of an entry (tap the row or the pencil icon)
 - Milk Entry: delete a wrong entry from the history list (bin icon, asks first)

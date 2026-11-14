@@ -22,7 +22,7 @@ The PDF icon in the statement's top bar saves the period shown as an A4 PDF and 
 
 - Saved to `Documents/Mwauras Farm/statement-<start>-to-<end>.pdf`, e.g. `statement-2026-11-01-to-2026-11-15.pdf`. Exporting the same period again replaces the file.
 - Same figures and lists as the screen: summary, milk records (date, session, litres, cash), other income, expenses. Amounts in KES.
-- Code: `lib/services/statement_pdf.dart` (builds the PDF, `pdf` package) and `lib/services/pdf_export.dart` (saves and opens it; reusable for the Monthly Report).
+- Code: `lib/services/statement_pdf.dart` (builds the PDF, `pdf` package), `lib/services/pdf_layout.dart` (shared heading, tables, page numbers) and `lib/services/pdf_export.dart` (saves and opens it).
 - The PDF uses the built-in Helvetica font, which covers English and Swahili letters but not emoji or other scripts.
 
 ## Monthly report
@@ -41,3 +41,12 @@ The Monthly Report has an **Earnings per buyer** panel built from the optional B
 - If no entry in the month names a buyer, the panel says so instead of showing bars.
 
 Logic: `earningsByBuyer` in `lib/models/buyer_earnings.dart`, stored on `MonthlyReport.earningsByBuyer`. The AI finance advisor does not use it yet.
+
+### Monthly Report PDF
+
+The PDF icon on the Monthly Report saves the month shown as `Documents/Mwauras Farm/monthly-report-<yyyy-mm>.pdf` and opens it.
+
+- Income, expenses and profit, with a "Last month" column when the month before has data (cut at the same day for a month in progress, like the screen).
+- Litres produced and cost per litre, spending by category with shares, and earnings per buyer when buyers were recorded.
+- A month in progress is labelled, e.g. "November 2026, 1 to 14 (month in progress)". Exporting it again later replaces the file.
+- Code: `lib/services/monthly_report_pdf.dart`.
