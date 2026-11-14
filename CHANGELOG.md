@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Drawer: the screen colours switch (Light / Dark / Phone, Mwanga / Giza / Simu) shows each icon above its word and fills the drawer width, so the words no longer wrap
 - Kiswahili UI, stage 3: expenses, financial statement, monthly report, calf register and dialogs, and milk analytics translated; PDFs are made in the app language. Milk Analytics no longer shows a made-up "+8% vs yesterday"
 - Kiswahili UI, stage 2: herd, add cow, single-cow milk entry, feeding, health and breeding screens translated (stored feed types, record types and sessions stay English in the database). Cow delete dialog reworded in plain language. A failed photo pick now shows a message (it showed nothing before)
 - Kiswahili UI, stage 1: language switch in the drawer (English / Kiswahili, remembered), Flutter localizations with ARB files (`lib/l10n/`), and the dashboard, drawer, Log milk sheet, milk price screens and undo messages translated. Kiswahili needs review by a native speaker (see `docs/SWAHILI.md`)

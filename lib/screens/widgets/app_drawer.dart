@@ -168,28 +168,55 @@ class _ThemeChoice extends StatelessWidget {
             style: TextStyle(color: context.farm.muted),
           ),
           const SizedBox(height: 8),
-          SegmentedButton<ThemeMode>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(
-                value: ThemeMode.light,
-                icon: Icon(Icons.light_mode),
-                label: Text(context.l10n.themeLight),
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<ThemeMode>(
+              showSelectedIcon: false,
+              style: const ButtonStyle(
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                ),
               ),
-              ButtonSegment(
-                value: ThemeMode.dark,
-                icon: Icon(Icons.dark_mode),
-                label: Text(context.l10n.themeDark),
-              ),
-              ButtonSegment(
-                value: ThemeMode.system,
-                icon: Icon(Icons.phone_android),
-                label: Text(context.l10n.themePhone),
-              ),
-            ],
-            selected: {controller.mode},
-            onSelectionChanged: (s) => controller.setMode(s.first),
+              segments: [
+                _themeSegment(
+                  ThemeMode.light,
+                  Icons.light_mode,
+                  context.l10n.themeLight,
+                ),
+                _themeSegment(
+                  ThemeMode.dark,
+                  Icons.dark_mode,
+                  context.l10n.themeDark,
+                ),
+                _themeSegment(
+                  ThemeMode.system,
+                  Icons.phone_android,
+                  context.l10n.themePhone,
+                ),
+              ],
+              selected: {controller.mode},
+              onSelectionChanged: (s) => controller.setMode(s.first),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  /// Icon above the word, so the three choices fit a narrow drawer.
+  ButtonSegment<ThemeMode> _themeSegment(
+    ThemeMode mode,
+    IconData icon,
+    String label,
+  ) {
+    return ButtonSegment(
+      value: mode,
+      label: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(height: 2),
+          Text(label, maxLines: 1, softWrap: false),
         ],
       ),
     );
