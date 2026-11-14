@@ -7,6 +7,7 @@ import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/feeding_screen.dart';
 import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
+import 'package:cow/screens/herd_milk_sheet.dart';
 import 'package:cow/screens/monthly_report_screen.dart';
 import 'package:cow/screens/vet_assistant_screen.dart';
 import 'package:cow/theme/app_theme.dart';
@@ -53,6 +54,7 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           const _Section('Herd'),
+          item(Icons.water_drop, 'Log Milk', (_) => HerdMilkSheet(db: db)),
           item(Icons.pets, 'Herd & Milk', (_) => HerdDashboard()),
           item(
             Icons.favorite,

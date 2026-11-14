@@ -1,5 +1,6 @@
 import 'package:cow/breeding/breeding_alerts_card.dart';
 import 'package:cow/database/app_database.dart';
+import 'package:cow/screens/herd_milk_sheet.dart';
 import 'package:cow/screens/widgets/app_drawer.dart';
 import 'package:cow/screens/widgets/farm_header_card.dart';
 import 'package:cow/screens/widgets/health_reminders_card.dart';
@@ -44,6 +45,26 @@ class MainDashboard extends StatelessWidget {
           children: [
             // 1. Header Hero Card
             const FarmHeaderCard(),
+            const SizedBox(height: 16.0),
+
+            // 1a. The daily job, one tap away.
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                ),
+                icon: const Icon(Icons.water_drop, size: 26),
+                label: const Text(
+                  'Log milk',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => HerdMilkSheet(db: db)),
+                ),
+              ),
+            ),
             const SizedBox(height: 16.0),
 
             // 1b. Breeding alerts (hidden when nothing needs attention)

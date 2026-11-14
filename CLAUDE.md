@@ -22,6 +22,7 @@ Done: step 12 AI provider switching on phase-4 (providers over HTTP, factory `ai
 Done: step 13 live check (`test/live/ai_live_test.dart`): Gemini and Groq (`compatible`, `openai/gpt-oss-20b`) work; Gemini timeout now 90 s.
 Done: milk entry edit (litres, buyer; `edit_milk_entry_dialog.dart`, `updateMilkEntry`) and delete (`deleteMilkEntry`).
 Done: PDF export for Financial Statement and Monthly Report (`lib/services/pdf_layout.dart`, `statement_pdf.dart`, `monthly_report_pdf.dart`, `pdf_export.dart`; saved to Documents/Mwauras Farm, opened with xdg-open).
+Done: UX pass started: drawer grouped (Herd, Daily care, Money; no placeholders); whole-herd milk sheet (`herd_milk_sheet.dart`, `lib/models/herd_milk.dart`; dashboard "Log milk" button). UX list left: one money/date formatter, theme cleanup + light theme, undo for deletes.
 Next: rerun the Gemini vet case at 90 s; check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, Swahili UI, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later: Swahili UI.

@@ -34,6 +34,7 @@ void main() {
       expect(find.text(section), findsOneWidget, reason: section);
     }
     for (final item in [
+      'Log Milk',
       'Herd & Milk',
       'Breeding',
       'Calf Register',

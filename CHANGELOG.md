@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Log milk: a big button on the dashboard (and in the drawer) opens a whole-herd sheet. Pick today, yesterday or another day and the session once (suggested from the time of day), type each cow's litres and save once. Each cow shows her usual yield for that session, any figure already saved, and a milk-hold warning; figures far above usual (or over 40 L) ask "Save anyway?"
 - Drawer: grouped into Herd, Daily care and Money; removed Home, Search, Dashboard and Settings (they did nothing); added Breeding and Financial Statement; the drawer now closes before a screen opens, so Back returns Home
 - Monthly Report: export the month as a PDF (totals with last month, cost per litre, spending by category, earnings per buyer)
 - Financial Statement: export the period shown as a PDF (saved to Documents/Mwauras Farm and opened in the PDF viewer)
