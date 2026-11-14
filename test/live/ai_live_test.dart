@@ -25,8 +25,16 @@ AiConfig only(String provider) => AiConfig(
 String? whySkip(String provider) => switch (provider) {
   'gemini' when env.geminiKey.isEmpty => 'no GEMINI_API_KEY',
   'anthropic' when env.anthropicKey.isEmpty => 'no ANTHROPIC_API_KEY',
-  'openai' when env.openAiKey.isEmpty || env.openAiModel.isEmpty =>
-    'no OPENAI_API_KEY or OPENAI_MODEL',
+  'openai'
+      when env.openAiKey.isEmpty ||
+          env.openAiModel.isEmpty ||
+          env.openAiBaseUrl.isNotEmpty =>
+    'no OPENAI_API_KEY or OPENAI_MODEL, or OPENAI_BASE_URL is set',
+  'compatible'
+      when env.openAiKey.isEmpty ||
+          env.openAiModel.isEmpty ||
+          env.openAiBaseUrl.isEmpty =>
+    'no OPENAI_API_KEY, OPENAI_MODEL or OPENAI_BASE_URL',
   _ => null,
 };
 
@@ -51,7 +59,7 @@ const _case = VetCase(
 );
 
 void main() {
-  for (final provider in ['gemini', 'anthropic', 'openai']) {
+  for (final provider in ['gemini', 'anthropic', 'openai', 'compatible']) {
     group('$provider (${model(provider)})', () {
       final skip = whySkip(provider);
 
@@ -59,8 +67,10 @@ void main() {
         final ai = buildAiGenerator(only(provider));
         final r = await ai.generate(prompt: 'Reply with the single word OK');
         // ignore: avoid_print
-        print('$provider plain: ${r.failure ?? head(r.value ?? '')} '
-            '${r.detail ?? ''}');
+        print(
+          '$provider plain: ${r.failure ?? head(r.value ?? '')} '
+          '${r.detail ?? ''}',
+        );
         expect(r.failure, isNull);
         expect(r.value!.trim(), isNotEmpty);
       }, timeout: const Timeout(Duration(minutes: 2)));
@@ -70,13 +80,20 @@ void main() {
         final r = await VetService(ai).assess(_case);
         final a = r.value;
         // ignore: avoid_print
-        print('$provider vet: ${r.failure ?? '${a!.urgency.name}: '
-            '${head(a.summary)}'} ${r.detail ?? ''}');
+        print(
+          '$provider vet: ${r.failure ?? '${a!.urgency.name}: '
+                  '${head(a.summary)}'} ${r.detail ?? ''}',
+        );
         expect(r.failure, isNull);
         expect(a!.summary.trim(), isNotEmpty);
         expect(a.whatToDoNow, isNotEmpty);
-        final all = [a.summary, ...a.whatToDoNow, ...a.possibleCauses,
-            ...a.callVetIf, a.milkAdvice].join('\n');
+        final all = [
+          a.summary,
+          ...a.whatToDoNow,
+          ...a.possibleCauses,
+          ...a.callVetIf,
+          a.milkAdvice,
+        ].join('\n');
         expect(_dose.hasMatch(all), isFalse, reason: 'dose found: $all');
       }, timeout: const Timeout(Duration(minutes: 2)));
     });
