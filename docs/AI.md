@@ -81,7 +81,7 @@ Breed, age, current breeding stage (with expected calving date) and the last 7 d
 
 ## Known limits
 
-- API keys are compiled into the app, so they can be extracted from a distributed build. Fine for personal testing, not for publishing: a key-holding backend proxy is planned (see "Going public with paid AI" in `docs/ROADMAP.md`).
+- API keys are compiled into the app, so they can be extracted from a distributed build. Fine for the family Android APK (see README), not for publishing: a key-holding backend proxy is planned (see "Going public with paid AI" in `docs/ROADMAP.md`). Until then: keep the APK on family phones only, set a spending cap or budget alert in the Gemini and Groq consoles, and change the keys if a phone is lost.
 - The provider is chosen at build time; there is no in-app settings screen.
 - Prompts were written and tested with Gemini. A real vet case also parsed correctly through Groq (`openai/gpt-oss-20b`). Claude and OpenAI replies have not been checked against real farm questions yet.
 - Gemini can be slow: a vet case has taken more than 45 s. Setting `AI_FALLBACK_PROVIDERS` (for example `compatible`) lets the app ask another provider when Gemini times out.

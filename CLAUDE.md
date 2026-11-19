@@ -27,6 +27,7 @@ Done: milk price setting (`milk_price_screen.dart`, `MilkPriceCard`, `setPricePe
 Done: milking list (schema v11, `Cow.inMilk`, `setInMilk`; Log milk sheet shows only cows on the list, "Milking list" button edits it).
 Gemini default model is `gemini-3.5-flash-lite` (`gemini-3.8-flash` hung for this key, 2026-11-14).
 Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in `lib/l10n/app_en.arb` + `app_sw.arb`, used as `context.l10n.x`; never hard-coded English.
+Android (family use, owner chose 2026-11-19): keys stay built into the APK until the app is sold; backend proxy stays in Later. Main manifest has INTERNET. Still to do: try the APK on a phone; PDF open on Android (`openFile` in `pdf_export.dart` is desktop only).
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later (owner said not now, 2026-11-14): Swahili stage 4 (AI answers in app language + Kiswahili danger phrases; needs vet review). Until then AI answers stay English (vet has its own language choice) and the danger check only knows English words.

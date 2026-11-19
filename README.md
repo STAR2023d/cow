@@ -36,6 +36,15 @@ flutter run --dart-define=GEMINI_API_KEY=your_key_here
 The app runs without a key, but AI features say the AI is not set up.
 Never commit your API key. To use another provider or a fallback, see `docs/AI.md` (settings go in a private `--dart-define-from-file` JSON file).
 
+### Android phone (family use)
+
+```bash
+flutter build apk --release --dart-define-from-file=$HOME/.config/cow/env.json
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+```
+
+Or copy the APK to the phone and open it. The AI keys are inside this APK, so only give it to family phones and never upload it anywhere. If a phone is lost or the APK leaks, change the keys and build again.
+
 ## Project structure
 
 ```
