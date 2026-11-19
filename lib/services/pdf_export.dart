@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Saves [bytes] as [fileName] in `Documents/Mwauras Farm/` and returns
@@ -13,9 +14,18 @@ Future<File> savePdf(Uint8List bytes, String fileName) async {
   return File('${dir.path}$sep$fileName').writeAsBytes(bytes, flush: true);
 }
 
-/// Opens [file] in the system's PDF viewer on desktop. Returns false when
-/// it could not be opened (the file is still saved).
+/// Opens [file] in the system's PDF viewer (desktop command, or the phone's
+/// own viewer on Android/iOS). Returns false when it could not be opened
+/// (the file is still saved).
 Future<bool> openFile(File file) async {
+  if (Platform.isAndroid || Platform.isIOS) {
+    try {
+      final result = await OpenFilex.open(file.path, type: 'application/pdf');
+      return result.type == ResultType.done;
+    } catch (_) {
+      return false;
+    }
+  }
   final command = Platform.isLinux
       ? 'xdg-open'
       : Platform.isMacOS
