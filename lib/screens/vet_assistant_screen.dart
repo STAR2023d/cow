@@ -118,7 +118,7 @@ class _VetAssistantScreenState extends State<VetAssistantScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           StreamBuilder<List<CowData>>(
-            stream: db.watchAllCow(),
+            stream: db.watchHerd(),
             builder: (context, snapshot) {
               final cows = snapshot.data ?? [];
               return DropdownButtonFormField<int>(

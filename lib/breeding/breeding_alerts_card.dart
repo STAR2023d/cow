@@ -20,7 +20,7 @@ class BreedingAlertsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<CowData>>(
-      stream: db.watchAllCow(),
+      stream: db.watchHerd(),
       builder: (context, cowSnap) {
         return StreamBuilder<List<BreedingCycle>>(
           stream: db.watchAllActiveBreedingCycles(),

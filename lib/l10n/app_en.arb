@@ -422,7 +422,7 @@
   "fromGallery": "Upload from gallery",
   "takePhoto": "Take a new photo",
   "removeCowTitle": "Remove cow",
-  "removeCowQuestion": "Are you sure you want to remove {name} from the herd?",
+  "removeCowQuestion": "Did {name} leave the farm, or was she added by mistake?",
   "@removeCowQuestion": {
     "placeholders": {
       "name": {
@@ -432,11 +432,14 @@
   },
   "continueLabel": "Continue",
   "cannotBeUndoneTitle": "This cannot be undone",
-  "deleteCowWarning": "All records for {name} (milk, health, feeding and breeding) will be deleted for good.",
+  "deleteCowWarning": "{name} and {count, plural, =1{1 record} other{{count} records}} (milk, health, feeding, breeding and calves) will be deleted for good. Use this only for a cow added by mistake.",
   "@deleteCowWarning": {
     "placeholders": {
       "name": {
         "type": "String"
+      },
+      "count": {
+        "type": "int"
       }
     }
   },
@@ -1093,5 +1096,47 @@
       }
     }
   },
-  "enterKgRange": "Enter kg between 0 and 200"
+  "enterKgRange": "Enter kg between 0 and 200",
+  "leftFarmButton": "She left the farm",
+  "addedByMistakeButton": "Added by mistake: delete",
+  "leftReasonQuestion": "Why did {name} leave?",
+  "@leftReasonQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leftReasonSold": "Sold",
+  "leftReasonDied": "Died",
+  "leftReasonCulled": "Culled",
+  "leftReasonGivenAway": "Given away",
+  "leftOnDate": "Date: {date}",
+  "@leftOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leftKeepsRecords": "Her milk, health and money records stay in your reports.",
+  "leftTheHerd": "Left the herd",
+  "noCowsLeft": "No cows have left the herd.",
+  "returnToHerd": "Return to herd",
+  "cowMovedToLeft": "{name} moved to Left the herd",
+  "@cowMovedToLeft": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cowReturned": "{name} is back in the herd",
+  "@cowReturned": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

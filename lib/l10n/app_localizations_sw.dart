@@ -490,7 +490,7 @@ class L10nSw extends L10n {
 
   @override
   String removeCowQuestion(String name) {
-    return 'Una uhakika unataka kumwondoa $name kwenye mifugo?';
+    return 'Je, $name ameondoka shambani, au aliongezwa kwa makosa?';
   }
 
   @override
@@ -500,8 +500,14 @@ class L10nSw extends L10n {
   String get cannotBeUndoneTitle => 'Hili haliwezi kutenduliwa';
 
   @override
-  String deleteCowWarning(String name) {
-    return 'Kumbukumbu zote za $name (maziwa, afya, ulishaji na uzazi) zitafutwa kabisa.';
+  String deleteCowWarning(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'kumbukumbu $count',
+      one: 'kumbukumbu 1',
+    );
+    return '$name na $_temp0 (maziwa, afya, ulishaji, uzazi na ndama) zitafutwa kabisa. Tumia hii tu kwa ng\'ombe aliyeongezwa kwa makosa.';
   }
 
   @override
@@ -1362,4 +1368,55 @@ class L10nSw extends L10n {
 
   @override
   String get enterKgRange => 'Weka kg kati ya 0 na 200';
+
+  @override
+  String get leftFarmButton => 'Ameondoka shambani';
+
+  @override
+  String get addedByMistakeButton => 'Aliongezwa kwa makosa: futa';
+
+  @override
+  String leftReasonQuestion(String name) {
+    return 'Kwa nini $name aliondoka?';
+  }
+
+  @override
+  String get leftReasonSold => 'Aliuzwa';
+
+  @override
+  String get leftReasonDied => 'Alikufa';
+
+  @override
+  String get leftReasonCulled => 'Aliondolewa kundini';
+
+  @override
+  String get leftReasonGivenAway => 'Alitolewa zawadi';
+
+  @override
+  String leftOnDate(String date) {
+    return 'Tarehe: $date';
+  }
+
+  @override
+  String get leftKeepsRecords =>
+      'Kumbukumbu zake za maziwa, afya na pesa zitabaki kwenye ripoti zako.';
+
+  @override
+  String get leftTheHerd => 'Walioondoka kundini';
+
+  @override
+  String get noCowsLeft => 'Hakuna ng\'ombe aliyeondoka kundini.';
+
+  @override
+  String get returnToHerd => 'Rudisha kundini';
+
+  @override
+  String cowMovedToLeft(String name) {
+    return '$name amehamishwa kwa Walioondoka kundini';
+  }
+
+  @override
+  String cowReturned(String name) {
+    return '$name amerudi kundini';
+  }
 }

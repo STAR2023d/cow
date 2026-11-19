@@ -13,7 +13,7 @@ class _SheetData {
   /// already have milk saved for this day and session.
   final List<CowData> cows;
 
-  /// Every cow in the herd, for editing the milking list.
+  /// Every cow still in the herd, for editing the milking list.
   final List<CowData> herd;
 
   /// Litres already saved for this day and session, by cow.
@@ -89,7 +89,11 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
   Future<_SheetData> _load({Map<int, String> keep = const {}}) async {
     final db = widget.db;
     final dayEnd = _day.add(const Duration(days: 1, seconds: -1));
-    final herd = await db.allCows();
+    final all = await db.allCows();
+    final herd = [
+      for (final c in all)
+        if (c.leftOn == null) c,
+    ];
     final today = await db.milkEntriesInRange(_day, dayEnd);
     final before = await db.milkEntriesInRange(
       _day.subtract(const Duration(days: 7)),
@@ -103,8 +107,9 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
         if (e.session == _session) e.cowId: e.amount,
     };
     final cows = [
-      for (final cow in herd)
-        if (cow.inMilk || saved.containsKey(cow.id)) cow,
+      for (final cow in all)
+        if ((cow.inMilk && cow.leftOn == null) || saved.containsKey(cow.id))
+          cow,
     ];
     for (final c in _boxes.values) {
       c.dispose();

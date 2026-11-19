@@ -850,7 +850,7 @@ abstract class L10n {
   /// No description provided for @removeCowQuestion.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to remove {name} from the herd?'**
+  /// **'Did {name} leave the farm, or was she added by mistake?'**
   String removeCowQuestion(String name);
 
   /// No description provided for @continueLabel.
@@ -868,8 +868,8 @@ abstract class L10n {
   /// No description provided for @deleteCowWarning.
   ///
   /// In en, this message translates to:
-  /// **'All records for {name} (milk, health, feeding and breeding) will be deleted for good.'**
-  String deleteCowWarning(String name);
+  /// **'{name} and {count, plural, =1{1 record} other{{count} records}} (milk, health, feeding, breeding and calves) will be deleted for good. Use this only for a cow added by mistake.'**
+  String deleteCowWarning(String name, int count);
 
   /// No description provided for @deletePermanently.
   ///
@@ -2256,6 +2256,90 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Enter kg between 0 and 200'**
   String get enterKgRange;
+
+  /// No description provided for @leftFarmButton.
+  ///
+  /// In en, this message translates to:
+  /// **'She left the farm'**
+  String get leftFarmButton;
+
+  /// No description provided for @addedByMistakeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by mistake: delete'**
+  String get addedByMistakeButton;
+
+  /// No description provided for @leftReasonQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Why did {name} leave?'**
+  String leftReasonQuestion(String name);
+
+  /// No description provided for @leftReasonSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get leftReasonSold;
+
+  /// No description provided for @leftReasonDied.
+  ///
+  /// In en, this message translates to:
+  /// **'Died'**
+  String get leftReasonDied;
+
+  /// No description provided for @leftReasonCulled.
+  ///
+  /// In en, this message translates to:
+  /// **'Culled'**
+  String get leftReasonCulled;
+
+  /// No description provided for @leftReasonGivenAway.
+  ///
+  /// In en, this message translates to:
+  /// **'Given away'**
+  String get leftReasonGivenAway;
+
+  /// No description provided for @leftOnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date: {date}'**
+  String leftOnDate(String date);
+
+  /// No description provided for @leftKeepsRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Her milk, health and money records stay in your reports.'**
+  String get leftKeepsRecords;
+
+  /// No description provided for @leftTheHerd.
+  ///
+  /// In en, this message translates to:
+  /// **'Left the herd'**
+  String get leftTheHerd;
+
+  /// No description provided for @noCowsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'No cows have left the herd.'**
+  String get noCowsLeft;
+
+  /// No description provided for @returnToHerd.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to herd'**
+  String get returnToHerd;
+
+  /// No description provided for @cowMovedToLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved to Left the herd'**
+  String cowMovedToLeft(String name);
+
+  /// No description provided for @cowReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is back in the herd'**
+  String cowReturned(String name);
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

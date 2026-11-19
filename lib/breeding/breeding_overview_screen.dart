@@ -20,7 +20,7 @@ class BreedingOverviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.herdBreeding)),
       body: StreamBuilder<List<CowData>>(
-        stream: db.watchAllCow(),
+        stream: db.watchHerd(),
         builder: (context, cowSnap) {
           return StreamBuilder<List<BreedingCycle>>(
             stream: db.watchAllActiveBreedingCycles(),

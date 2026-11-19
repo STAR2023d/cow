@@ -2,6 +2,7 @@ import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'dart:io';
 import 'package:cow/abstract/dialog_deletion.dart';
+import 'package:cow/screens/left_herd_screen.dart';
 import 'package:cow/breeding/breeding_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,19 @@ class HerdDashboard extends StatelessWidget {
         title: Text(context.l10n.myHerd),
         centerTitle: true,
         elevation: 2,
+        actions: [
+          IconButton(
+            tooltip: context.l10n.leftTheHerd,
+            icon: const Icon(Icons.history_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => LeftHerdScreen(db: db)),
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder<List<CowData>>(
-        stream: db.watchAllCow(),
+        stream: db.watchHerd(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -213,17 +224,27 @@ class HerdDashboard extends StatelessWidget {
     AppDatabase db,
     CowData cow,
   ) {
-    showDialog(
+    final messenger = ScaffoldMessenger.of(context);
+    final movedMsg = context.l10n.cowMovedToLeft(cow.name);
+    var left = false;
+    showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
-        return TwoStepDeleteWorkflow(
+        return CowRemoveDialog(
           cow: cow,
-          onConfirmedDelete: () async {
-            await db.deleteCow(cow.id);
+          recordCount: () => db.cowRecordCount(cow.id),
+          onLeft: (reason, on) async {
+            await db.removeFromHerd(cow.id, reason, on);
+            left = true;
           },
+          onDelete: () => db.deleteCow(cow.id),
         );
       },
-    );
+    ).then((done) {
+      if (done == true && left) {
+        messenger.showSnackBar(SnackBar(content: Text(movedMsg)));
+      }
+    });
   }
 }

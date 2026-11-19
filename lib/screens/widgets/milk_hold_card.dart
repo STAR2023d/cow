@@ -21,7 +21,7 @@ class MilkHoldCard extends StatefulWidget {
 }
 
 class _MilkHoldCardState extends State<MilkHoldCard> {
-  late final _cows = widget.cows ?? widget.db!.watchAllCow();
+  late final _cows = widget.cows ?? widget.db!.watchHerd();
   late final _records = widget.records ?? widget.db!.watchWithdrawalRecords();
 
   @override
@@ -36,10 +36,14 @@ class _MilkHoldCardState extends State<MilkHoldCard> {
               return const SizedBox.shrink();
             }
             final now = DateTime.now();
-            final holds = activeHolds(recSnap.data!, now);
+            final names = {for (final c in cowSnap.data!) c.id: c.name};
+            // Cows that left the herd are not shown.
+            final holds = activeHolds(
+              recSnap.data!,
+              now,
+            ).where((h) => names.containsKey(h.cowId)).toList();
             if (holds.isEmpty) return const SizedBox.shrink();
 
-            final names = {for (final c in cowSnap.data!) c.id: c.name};
             final fmt = DateFormat('EEE d MMM');
 
             return Column(

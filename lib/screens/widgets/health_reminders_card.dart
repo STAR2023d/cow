@@ -23,7 +23,7 @@ class HealthRemindersCard extends StatefulWidget {
 class _HealthRemindersCardState extends State<HealthRemindersCard> {
   static const _maxShown = 5;
 
-  late final _cows = widget.cows ?? widget.db!.watchAllCow();
+  late final _cows = widget.cows ?? widget.db!.watchHerd();
   late final _records = widget.records ?? widget.db!.watchFollowUpRecords();
 
   @override
@@ -37,10 +37,14 @@ class _HealthRemindersCardState extends State<HealthRemindersCard> {
             if (!cowSnap.hasData || !recSnap.hasData) {
               return const SizedBox.shrink();
             }
-            final reminders = dueReminders(recSnap.data!, DateTime.now());
+            final names = {for (final c in cowSnap.data!) c.id: c.name};
+            // Cows that left the herd are not shown.
+            final reminders = dueReminders(
+              recSnap.data!,
+              DateTime.now(),
+            ).where((r) => names.containsKey(r.record.cowId)).toList();
             if (reminders.isEmpty) return const SizedBox.shrink();
 
-            final names = {for (final c in cowSnap.data!) c.id: c.name};
             final shown = reminders.take(_maxShown);
 
             return Column(

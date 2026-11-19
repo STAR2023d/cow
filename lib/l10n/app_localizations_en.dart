@@ -490,7 +490,7 @@ class L10nEn extends L10n {
 
   @override
   String removeCowQuestion(String name) {
-    return 'Are you sure you want to remove $name from the herd?';
+    return 'Did $name leave the farm, or was she added by mistake?';
   }
 
   @override
@@ -500,8 +500,14 @@ class L10nEn extends L10n {
   String get cannotBeUndoneTitle => 'This cannot be undone';
 
   @override
-  String deleteCowWarning(String name) {
-    return 'All records for $name (milk, health, feeding and breeding) will be deleted for good.';
+  String deleteCowWarning(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return '$name and $_temp0 (milk, health, feeding, breeding and calves) will be deleted for good. Use this only for a cow added by mistake.';
   }
 
   @override
@@ -1363,4 +1369,55 @@ class L10nEn extends L10n {
 
   @override
   String get enterKgRange => 'Enter kg between 0 and 200';
+
+  @override
+  String get leftFarmButton => 'She left the farm';
+
+  @override
+  String get addedByMistakeButton => 'Added by mistake: delete';
+
+  @override
+  String leftReasonQuestion(String name) {
+    return 'Why did $name leave?';
+  }
+
+  @override
+  String get leftReasonSold => 'Sold';
+
+  @override
+  String get leftReasonDied => 'Died';
+
+  @override
+  String get leftReasonCulled => 'Culled';
+
+  @override
+  String get leftReasonGivenAway => 'Given away';
+
+  @override
+  String leftOnDate(String date) {
+    return 'Date: $date';
+  }
+
+  @override
+  String get leftKeepsRecords =>
+      'Her milk, health and money records stay in your reports.';
+
+  @override
+  String get leftTheHerd => 'Left the herd';
+
+  @override
+  String get noCowsLeft => 'No cows have left the herd.';
+
+  @override
+  String get returnToHerd => 'Return to herd';
+
+  @override
+  String cowMovedToLeft(String name) {
+    return '$name moved to Left the herd';
+  }
+
+  @override
+  String cowReturned(String name) {
+    return '$name is back in the herd';
+  }
 }

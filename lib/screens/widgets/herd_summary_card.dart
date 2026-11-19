@@ -3,7 +3,7 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-/// Live herd size + breed breakdown, sourced from watchAllCow().
+/// Live herd size + breed breakdown, sourced from watchHerd() (cows still on the farm).
 class HerdSummaryCard extends StatelessWidget {
   final AppDatabase db;
 
@@ -18,7 +18,7 @@ class HerdSummaryCard extends StatelessWidget {
         border: Border.all(color: context.farm.faint),
       ),
       child: StreamBuilder<List<CowData>>(
-        stream: db.watchAllCow(),
+        stream: db.watchHerd(),
         builder: (context, snapshot) {
           final cows = snapshot.data ?? [];
           final byBreed = <String, int>{};
