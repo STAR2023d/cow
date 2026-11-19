@@ -21,10 +21,7 @@ Future<void> deleteWithUndo(
         duration: const Duration(seconds: 6),
         // A snack bar with a button stays until tapped unless told not to.
         persist: false,
-        action: SnackBarAction(
-          label: l10n.undo,
-          onPressed: () => restore(),
-        ),
+        action: SnackBarAction(label: l10n.undo, onPressed: () => restore()),
       ),
     );
 }

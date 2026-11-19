@@ -1,6 +1,6 @@
 # Mwaura's Farm (Flutter dairy app for small Kenyan farmers)
 
-- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v10, Provider.
+- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v11, Provider.
 - After table changes: `dart run build_runner build --delete-conflicting-outputs`
 - Check every change with `flutter analyze` and `flutter test`.
 - Run: `flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json`
@@ -23,7 +23,8 @@ Done: step 13 live check (`test/live/ai_live_test.dart`): Gemini and Groq (`comp
 Done: milk entry edit (litres, buyer; `edit_milk_entry_dialog.dart`, `updateMilkEntry`) and delete (`deleteMilkEntry`).
 Done: PDF export for Financial Statement and Monthly Report (`lib/services/pdf_layout.dart`, `statement_pdf.dart`, `monthly_report_pdf.dart`, `pdf_export.dart`; saved to Documents/Mwauras Farm, opened with xdg-open).
 Done: UX pass started: drawer grouped (Herd, Daily care, Money; no placeholders); whole-herd milk sheet (`herd_milk_sheet.dart`, `lib/models/herd_milk.dart`; dashboard "Log milk" button). Shared formats in `lib/utils/format.dart` (KSh 5,500, 6.5 L, 14 Nov 2026). Light/dark theme: colours via `context.farm.*` (`lib/theme/app_theme.dart`), never fixed `Colors.*` in screens; `ThemeController` (shared_preferences), switch in drawer. Deletes use `deleteWithUndo` (`lib/screens/widgets/undo_delete.dart`) + `restore*` in the DB; cow delete still confirms. UX list done.
-Done: milk price setting (`milk_price_screen.dart`, `MilkPriceCard`, `setPricePerLitre` start-of-day + same-day replace; see docs/FINANCE.md). Later: price per buyer (schema v11).
+Done: milk price setting (`milk_price_screen.dart`, `MilkPriceCard`, `setPricePerLitre` start-of-day + same-day replace; see docs/FINANCE.md). Later: price per buyer (next schema).
+Done: milking list (schema v11, `Cow.inMilk`, `setInMilk`; Log milk sheet shows only cows on the list, "Milking list" button edits it).
 Gemini default model is `gemini-3.5-flash-lite` (`gemini-3.8-flash` hung for this key, 2026-11-14).
 Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in `lib/l10n/app_en.arb` + `app_sw.arb`, used as `context.l10n.x`; never hard-coded English.
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).

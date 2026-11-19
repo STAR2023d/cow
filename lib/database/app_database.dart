@@ -26,6 +26,9 @@ class Cow extends Table {
   // Set when this cow was kept as a heifer calf from a logged breeding
   // cycle -- links her back to her mother.
   IntColumn get parentCowId => integer().nullable().references(Cow, #id)();
+  // True when she is being milked, so she shows on the milk log sheet.
+  // The farmer adds and removes cows from that list (added in v11).
+  BoolColumn get inMilk => boolean().withDefault(const Constant(true))();
 }
 
 // --- TABLE 2: MILK ENTRIES ---
@@ -121,7 +124,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration {
@@ -183,6 +186,9 @@ class AppDatabase extends _$AppDatabase {
           // the buyer column already in it, so they skip this.
           await m.addColumn(milkTable, milkTable.buyer);
         }
+        if (from < 11) {
+          await m.addColumn(cow, cow.inMilk);
+        }
       },
     );
   }
@@ -193,8 +199,14 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertCow(CowCompanion cowCompanion) =>
       into(cow).insert(cowCompanion);
   Stream<List<CowData>> watchAllCow() => select(cow).watch();
+  Future<List<CowData>> allCows() => select(cow).get();
   Future<bool> updateCowInfo(CowCompanion cowCompanion) =>
       update(cow).replace(cowCompanion);
+
+  /// Puts a cow on or takes her off the milk log sheet.
+  Future<void> setInMilk(int id, bool inMilk) => (update(
+    cow,
+  )..where((t) => t.id.equals(id))).write(CowCompanion(inMilk: Value(inMilk)));
   Future<int> deleteCow(int id) =>
       (delete(cow)..where((tbl) => tbl.id.equals(id))).go();
 

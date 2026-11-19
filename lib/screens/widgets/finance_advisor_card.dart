@@ -85,10 +85,7 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
               SizedBox(width: 8),
               Text(
                 'AI Finance Advisor',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -100,10 +97,7 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   advice.headline,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    height: 1.4,
-                  ),
+                  style: const TextStyle(fontSize: 16, height: 1.4),
                 ),
               ),
             _Bullets('What I notice', advice.insights),
@@ -122,10 +116,7 @@ class _FinanceAdvisorCardState extends State<FinanceAdvisorCard> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      advice.answer,
-                      style: const TextStyle(),
-                    ),
+                    Text(advice.answer, style: const TextStyle()),
                   ],
                 ),
               ),
@@ -194,12 +185,7 @@ class _Bullets extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           ...items.map(
             (item) => Padding(

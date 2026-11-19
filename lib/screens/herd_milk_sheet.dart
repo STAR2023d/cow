@@ -9,7 +9,12 @@ import 'package:intl/intl.dart';
 
 /// Everything the sheet needs for one day and session.
 class _SheetData {
+  /// Cows shown on the sheet: those on the milking list, plus any that
+  /// already have milk saved for this day and session.
   final List<CowData> cows;
+
+  /// Every cow in the herd, for editing the milking list.
+  final List<CowData> herd;
 
   /// Litres already saved for this day and session, by cow.
   final Map<int, double> saved;
@@ -23,7 +28,14 @@ class _SheetData {
   /// Milk price per litre on this day, from the price setting.
   final double price;
 
-  const _SheetData(this.cows, this.saved, this.usual, this.holds, this.price);
+  const _SheetData(
+    this.cows,
+    this.herd,
+    this.saved,
+    this.usual,
+    this.holds,
+    this.price,
+  );
 }
 
 /// Log one milking for the whole herd on one screen: pick the day and
@@ -72,10 +84,12 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     super.dispose();
   }
 
-  Future<_SheetData> _load() async {
+  /// Loads the sheet. [keep] holds litres already typed, by cow, so
+  /// editing the milking list does not wipe them.
+  Future<_SheetData> _load({Map<int, String> keep = const {}}) async {
     final db = widget.db;
     final dayEnd = _day.add(const Duration(days: 1, seconds: -1));
-    final cows = await db.watchAllCow().first;
+    final herd = await db.allCows();
     final today = await db.milkEntriesInRange(_day, dayEnd);
     final before = await db.milkEntriesInRange(
       _day.subtract(const Duration(days: 7)),
@@ -88,6 +102,10 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       for (final e in today)
         if (e.session == _session) e.cowId: e.amount,
     };
+    final cows = [
+      for (final cow in herd)
+        if (cow.inMilk || saved.containsKey(cow.id)) cow,
+    ];
     for (final c in _boxes.values) {
       c.dispose();
     }
@@ -96,7 +114,9 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       ..addAll({
         for (final cow in cows)
           cow.id: TextEditingController(
-            text: saved[cow.id] == null ? '' : _litresFmt.format(saved[cow.id]),
+            text:
+                keep[cow.id] ??
+                (saved[cow.id] == null ? '' : _litresFmt.format(saved[cow.id])),
           ),
       });
     _errors.clear();
@@ -105,7 +125,7 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       entryTimeFor(_day, _session, widget.clock()),
     );
 
-    return _SheetData(cows, saved, usualYields(before, _session), {
+    return _SheetData(cows, herd, saved, usualYields(before, _session), {
       for (final h in activeHolds(records, noon))
         h.cowId: h.withdrawal.safeFrom,
     }, price);
@@ -118,6 +138,90 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
       _future = _load();
     });
   }
+
+  /// Litres typed so far, by cow.
+  Map<int, String> get _typedText => {
+    for (final e in _boxes.entries)
+      if (e.value.text.trim().isNotEmpty) e.key: e.value.text,
+  };
+
+  Future<void> _setInMilk(int cowId, bool inMilk) async {
+    final keep = _typedText..remove(cowId);
+    await widget.db.setInMilk(cowId, inMilk);
+    if (!mounted) return;
+    setState(() {
+      _future = _load(keep: keep);
+    });
+  }
+
+  /// Lets the farmer tick which cows are being milked.
+  Future<void> _editMilkingList(List<CowData> herd) async {
+    final picked = {
+      for (final cow in herd)
+        if (cow.inMilk) cow.id,
+    };
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialog) => AlertDialog(
+          title: Text(context.l10n.milkingList),
+          content: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(context.l10n.milkingListHelp),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (final cow in herd)
+                        CheckboxListTile(
+                          key: ValueKey('in-milk-${cow.id}'),
+                          title: Text(_cowLabel(cow)),
+                          value: picked.contains(cow.id),
+                          onChanged: (v) => setDialog(
+                            () => v == true
+                                ? picked.add(cow.id)
+                                : picked.remove(cow.id),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (ok != true) return;
+    final keep = _typedText;
+    for (final cow in herd) {
+      final want = picked.contains(cow.id);
+      if (want != cow.inMilk) await widget.db.setInMilk(cow.id, want);
+    }
+    if (!mounted) return;
+    setState(() {
+      _future = _load(keep: keep);
+    });
+  }
+
+  static String _cowLabel(CowData cow) => cow.tag == null || cow.tag!.isEmpty
+      ? cow.name
+      : '${cow.name} (${cow.tag})';
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
@@ -229,134 +333,158 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<_SheetData>(
+      future: _future,
+      builder: (context, snapshot) {
+        final data = snapshot.connectionState == ConnectionState.done
+            ? snapshot.data
+            : null;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(context.l10n.logMilk),
+            actions: [
+              if (data != null && data.herd.isNotEmpty)
+                TextButton.icon(
+                  onPressed: () => _editMilkingList(data.herd),
+                  icon: const Icon(Icons.playlist_add_check),
+                  label: Text(context.l10n.milkingList),
+                ),
+            ],
+          ),
+          body: _body(snapshot),
+        );
+      },
+    );
+  }
+
+  Widget _message(String text, {Widget? action}) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(text, textAlign: TextAlign.center),
+          if (action != null) ...[const SizedBox(height: 16), action],
+        ],
+      ),
+    ),
+  );
+
+  Widget _body(AsyncSnapshot<_SheetData> snapshot) {
     final yesterday = _today.subtract(const Duration(days: 1));
     final otherDay = _day != _today && _day != yesterday;
+    if (snapshot.hasError) {
+      return Center(child: Text(context.l10n.couldNotLoadHerd));
+    }
+    if (snapshot.connectionState != ConnectionState.done) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final data = snapshot.data!;
+    if (data.herd.isEmpty) return _message(context.l10n.noCowsAddFirst);
+    if (data.cows.isEmpty) {
+      return _message(
+        context.l10n.noCowsInMilk,
+        action: FilledButton.icon(
+          onPressed: () => _editMilkingList(data.herd),
+          icon: const Icon(Icons.playlist_add),
+          label: Text(context.l10n.addCowsToMilkingList),
+        ),
+      );
+    }
+    final (count, total) = _typed;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.logMilk)),
-      body: FutureBuilder<_SheetData>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text(context.l10n.couldNotLoadHerd));
-          }
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final data = snapshot.data!;
-          if (data.cows.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  context.l10n.noCowsAddFirst,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-          final (count, total) = _typed;
-
-          return Column(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    ChoiceChip(
-                      label: Text(context.l10n.today),
-                      selected: _day == _today,
-                      onSelected: (_) => _reload(day: _today),
-                    ),
-                    ChoiceChip(
-                      label: Text(context.l10n.yesterday),
-                      selected: _day == yesterday,
-                      onSelected: (_) => _reload(day: yesterday),
-                    ),
-                    ChoiceChip(
-                      avatar: const Icon(Icons.calendar_today, size: 18),
-                      label: Text(
-                        otherDay ? shortDate(_day) : context.l10n.otherDay,
-                      ),
-                      selected: otherDay,
-                      onSelected: (_) => _pickDate(),
-                    ),
-                  ],
-                ),
+              ChoiceChip(
+                label: Text(context.l10n.today),
+                selected: _day == _today,
+                onSelected: (_) => _reload(day: _today),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: SegmentedButton<String>(
-                    segments: [
-                      for (final s in MilkSession.all)
-                        ButtonSegment(
-                          value: s,
-                          label: Text(sessionLabel(context.l10n, s)),
-                        ),
-                    ],
-                    selected: {_session},
-                    onSelectionChanged: (s) => _reload(session: s.first),
-                  ),
-                ),
+              ChoiceChip(
+                label: Text(context.l10n.yesterday),
+                selected: _day == yesterday,
+                onSelected: (_) => _reload(day: yesterday),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                child: TextField(
-                  controller: _buyer,
-                  decoration: InputDecoration(
-                    labelText: context.l10n.buyerForAll,
-                    isDense: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  itemCount: data.cows.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, i) => _cowRow(
-                    data,
-                    data.cows[i],
-                    last: i == data.cows.length - 1,
-                  ),
-                ),
-              ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      icon: const Icon(Icons.save),
-                      label: Text(
-                        count == 0
-                            ? context.l10n.save
-                            : context.l10n.saveCowsLitres(
-                                count,
-                                litres(total),
-                                ksh(total * data.price),
-                              ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      onPressed: _saving ? null : () => _save(data),
-                    ),
-                  ),
-                ),
+              ChoiceChip(
+                avatar: const Icon(Icons.calendar_today, size: 18),
+                label: Text(otherDay ? shortDate(_day) : context.l10n.otherDay),
+                selected: otherDay,
+                onSelected: (_) => _pickDate(),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<String>(
+              segments: [
+                for (final s in MilkSession.all)
+                  ButtonSegment(
+                    value: s,
+                    label: Text(sessionLabel(context.l10n, s)),
+                  ),
+              ],
+              selected: {_session},
+              onSelectionChanged: (s) => _reload(session: s.first),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: TextField(
+            controller: _buyer,
+            decoration: InputDecoration(
+              labelText: context.l10n.buyerForAll,
+              isDense: true,
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.only(bottom: 16),
+            itemCount: data.cows.length,
+            separatorBuilder: (_, _) => const Divider(height: 1),
+            itemBuilder: (context, i) =>
+                _cowRow(data, data.cows[i], last: i == data.cows.length - 1),
+          ),
+        ),
+        SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                icon: const Icon(Icons.save),
+                label: Text(
+                  count == 0
+                      ? context.l10n.save
+                      : context.l10n.saveCowsLitres(
+                          count,
+                          litres(total),
+                          ksh(total * data.price),
+                        ),
+                  style: const TextStyle(fontSize: 16),
+                ),
+                onPressed: _saving ? null : () => _save(data),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -374,10 +502,17 @@ class _HerdMilkSheetState extends State<HerdMilkSheet> {
     ];
 
     return ListTile(
+      contentPadding: const EdgeInsetsDirectional.only(start: 4, end: 16),
+      leading: cow.inMilk
+          ? IconButton(
+              key: ValueKey('remove-${cow.id}'),
+              tooltip: context.l10n.removeFromMilkingList,
+              icon: const Icon(Icons.remove_circle_outline),
+              onPressed: () => _setInMilk(cow.id, false),
+            )
+          : const SizedBox(width: 48),
       title: Text(
-        cow.tag == null || cow.tag!.isEmpty
-            ? cow.name
-            : '${cow.name} (${cow.tag})',
+        _cowLabel(cow),
         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
       ),
       subtitle: Column(

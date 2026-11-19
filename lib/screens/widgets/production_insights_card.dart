@@ -88,10 +88,7 @@ class _ProductionInsightsCardState extends State<ProductionInsightsCard> {
                 SizedBox(width: 8),
                 Text(
                   'AI Production Insights',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -100,10 +97,7 @@ class _ProductionInsightsCardState extends State<ProductionInsightsCard> {
               if (insights.headline.isNotEmpty)
                 Text(
                   insights.headline,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    height: 1.4,
-                  ),
+                  style: const TextStyle(fontSize: 16, height: 1.4),
                 ),
               _Section('Top cows', insights.topCows),
               _Section('Milking sessions', insights.sessionNotes),
@@ -176,12 +170,7 @@ class _Section extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           ...items.map(
             (item) => Padding(

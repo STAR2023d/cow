@@ -457,6 +457,36 @@ abstract class L10n {
   /// **'No cows yet. Add a cow from the dashboard first.'**
   String get noCowsAddFirst;
 
+  /// No description provided for @milkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Milking list'**
+  String get milkingList;
+
+  /// No description provided for @milkingListHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the cows you are milking. Only these show on the milk log.'**
+  String get milkingListHelp;
+
+  /// No description provided for @noCowsInMilk.
+  ///
+  /// In en, this message translates to:
+  /// **'No cows on the milking list yet. Add the cows you milk.'**
+  String get noCowsInMilk;
+
+  /// No description provided for @addCowsToMilkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Add cows to the list'**
+  String get addCowsToMilkingList;
+
+  /// No description provided for @removeFromMilkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from milking list'**
+  String get removeFromMilkingList;
+
   /// No description provided for @saveCowsLitres.
   ///
   /// In en, this message translates to:

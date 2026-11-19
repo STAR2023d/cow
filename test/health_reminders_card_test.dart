@@ -23,7 +23,9 @@ Future<void> _show(WidgetTester tester, List<HealthRecordData> records) async {
       home: Scaffold(
         body: SingleChildScrollView(
           child: HealthRemindersCard(
-            cows: Stream.value(const [CowData(id: 1, name: 'Daisy')]),
+            cows: Stream.value(const [
+              CowData(id: 1, name: 'Daisy', inMilk: true),
+            ]),
             records: Stream.value(records),
           ),
         ),

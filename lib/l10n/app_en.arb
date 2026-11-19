@@ -165,6 +165,11 @@
   "buyerForAll": "Buyer for all (optional)",
   "couldNotLoadHerd": "Couldn't load the herd.",
   "noCowsAddFirst": "No cows yet. Add a cow from the dashboard first.",
+  "milkingList": "Milking list",
+  "milkingListHelp": "Tick the cows you are milking. Only these show on the milk log.",
+  "noCowsInMilk": "No cows on the milking list yet. Add the cows you milk.",
+  "addCowsToMilkingList": "Add cows to the list",
+  "removeFromMilkingList": "Remove from milking list",
   "saveCowsLitres": "{count, plural, =1{Save 1 cow: {litres} ≈ {money}} other{Save {count} cows: {litres} ≈ {money}}}",
   "@saveCowsLitres": {
     "placeholders": {

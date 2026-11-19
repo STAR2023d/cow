@@ -43,9 +43,7 @@ class MilkWithdrawal {
           lastWithheldDay.year,
           lastWithheldDay.month,
           lastWithheldDay.day,
-        )
-            .difference(DateTime.utc(today.year, today.month, today.day))
-            .inDays +
+        ).difference(DateTime.utc(today.year, today.month, today.day)).inDays +
         1;
   }
 }
@@ -61,6 +59,7 @@ MilkWithdrawal? milkWithdrawalOf(HealthRecordData record) {
     medicine: record.medicine,
   );
 }
+
 /// A cow whose milk is on hold today.
 class MilkHold {
   final int cowId;

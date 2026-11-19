@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Milking list (schema v11, `Cow.inMilk`): the Log milk sheet shows only cows on the milking list, not the whole herd. "Milking list" at the top of the sheet ticks cows on or off; the minus button on a row takes a cow off. Cows that already have milk saved for the chosen day and session still show. Existing cows start on the list. Litres already typed are kept when the list changes
+- Add cow: the Save button is a filled button in the theme colour with an icon (its text was the card colour and hard to see)
 - Drawer: the screen colours switch (Light / Dark / Phone, Mwanga / Giza / Simu) shows each icon above its word and fills the drawer width, so the words no longer wrap
 - Kiswahili UI, stage 3: expenses, financial statement, monthly report, calf register and dialogs, and milk analytics translated; PDFs are made in the app language. Milk Analytics no longer shows a made-up "+8% vs yesterday"
 - Kiswahili UI, stage 2: herd, add cow, single-cow milk entry, feeding, health and breeding screens translated (stored feed types, record types and sessions stay English in the database). Cow delete dialog reworded in plain language. A failed photo pick now shows a message (it showed nothing before)

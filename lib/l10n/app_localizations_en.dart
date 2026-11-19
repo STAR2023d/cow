@@ -226,6 +226,23 @@ class L10nEn extends L10n {
       'No cows yet. Add a cow from the dashboard first.';
 
   @override
+  String get milkingList => 'Milking list';
+
+  @override
+  String get milkingListHelp =>
+      'Tick the cows you are milking. Only these show on the milk log.';
+
+  @override
+  String get noCowsInMilk =>
+      'No cows on the milking list yet. Add the cows you milk.';
+
+  @override
+  String get addCowsToMilkingList => 'Add cows to the list';
+
+  @override
+  String get removeFromMilkingList => 'Remove from milking list';
+
+  @override
   String saveCowsLitres(int count, String litres, String money) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

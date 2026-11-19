@@ -250,23 +250,24 @@ class _AssessmentCard extends StatelessWidget {
 
   const _AssessmentCard({required this.assessment});
 
-  (Color, IconData, String) _style(BuildContext context) => switch (assessment.urgency) {
-    VetUrgency.emergency => (
-      context.farm.danger,
-      Icons.warning_amber_rounded,
-      'Call a vet now',
-    ),
-    VetUrgency.seeVetSoon => (
-      context.farm.warning,
-      Icons.local_hospital,
-      'A vet should see her soon',
-    ),
-    VetUrgency.monitorAtHome => (
-      context.farm.good,
-      Icons.visibility,
-      'Monitor her at home',
-    ),
-  };
+  (Color, IconData, String) _style(BuildContext context) =>
+      switch (assessment.urgency) {
+        VetUrgency.emergency => (
+          context.farm.danger,
+          Icons.warning_amber_rounded,
+          'Call a vet now',
+        ),
+        VetUrgency.seeVetSoon => (
+          context.farm.warning,
+          Icons.local_hospital,
+          'A vet should see her soon',
+        ),
+        VetUrgency.monitorAtHome => (
+          context.farm.good,
+          Icons.visibility,
+          'Monitor her at home',
+        ),
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -299,10 +300,7 @@ class _AssessmentCard extends StatelessWidget {
           ),
           if (assessment.summary.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(
-              assessment.summary,
-              style: const TextStyle(),
-            ),
+            Text(assessment.summary, style: const TextStyle()),
           ],
           if (assessment.redFlags.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -342,12 +340,7 @@ class _Section extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           ...items.map(
             (item) => Padding(

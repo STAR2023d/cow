@@ -29,7 +29,10 @@ BreedingCycle _cycle(
   createdAt: DateTime(2025, 1, 1),
 );
 
-const _cows = [CowData(id: 1, name: 'Daisy'), CowData(id: 5, name: 'Lulu')];
+const _cows = [
+  CowData(id: 1, name: 'Daisy', inMilk: true),
+  CowData(id: 5, name: 'Lulu', inMilk: true),
+];
 
 final _cycles = [
   _cycle(

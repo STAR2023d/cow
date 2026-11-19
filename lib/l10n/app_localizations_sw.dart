@@ -226,6 +226,23 @@ class L10nSw extends L10n {
       'Bado hakuna ng\'ombe. Ongeza ng\'ombe kwanza kutoka dashibodi.';
 
   @override
+  String get milkingList => 'Orodha ya kukamua';
+
+  @override
+  String get milkingListHelp =>
+      'Weka alama kwa ng\'ombe unaowakamua. Hawa tu ndio wataonekana kwenye kumbukumbu ya maziwa.';
+
+  @override
+  String get noCowsInMilk =>
+      'Bado hakuna ng\'ombe kwenye orodha ya kukamua. Ongeza ng\'ombe unaowakamua.';
+
+  @override
+  String get addCowsToMilkingList => 'Ongeza ng\'ombe kwenye orodha';
+
+  @override
+  String get removeFromMilkingList => 'Ondoa kwenye orodha ya kukamua';
+
+  @override
   String saveCowsLitres(int count, String litres, String money) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

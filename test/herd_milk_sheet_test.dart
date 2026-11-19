@@ -168,4 +168,44 @@ void main() {
     expect(find.text('Enter a number above 0'), findsOneWidget);
     expect((await saved(tester, 14)).length, 1); // only Bella's earlier entry
   });
+
+  testWidgets('only cows on the milking list show; the farmer edits the list', (
+    tester,
+  ) async {
+    await tester.runAsync(() => db.setInMilk(bella, false));
+    await openSheet(tester);
+    expect(box(daisy), findsOneWidget);
+    expect(box(bella), findsNothing);
+
+    // Typed litres survive editing the list.
+    await tester.enterText(box(daisy), '5');
+    await tester.tap(find.text('Milking list'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(ValueKey('in-milk-$bella')));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await settle(tester);
+    expect(box(bella), findsOneWidget);
+    expect(tester.widget<TextField>(box(daisy)).controller!.text, '5');
+
+    // The remove button takes a cow off the sheet and the list.
+    await tester.tap(find.byKey(ValueKey('remove-$daisy')));
+    await settle(tester);
+    expect(box(daisy), findsNothing);
+    final cows = await tester.runAsync(db.allCows);
+    expect(cows!.firstWhere((c) => c.id == daisy).inMilk, isFalse);
+  });
+
+  testWidgets('an empty milking list offers to add cows', (tester) async {
+    await tester.runAsync(() => db.setInMilk(daisy, false));
+    await tester.runAsync(() => db.setInMilk(bella, false));
+    await openSheet(tester);
+    expect(
+      find.text('No cows on the milking list yet. Add the cows you milk.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Add cows to the list'));
+    await tester.pumpAndSettle();
+    expect(find.byType(CheckboxListTile), findsNWidgets(2));
+  });
 }

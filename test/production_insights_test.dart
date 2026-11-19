@@ -157,9 +157,7 @@ void main() {
       final fake = CountingGenerator(const AiResult.ok(_replyJson));
       final service = ProductionInsightsService(fake);
 
-      final result = await service.analyse(
-        const ProductionSnapshot(logs: []),
-      );
+      final result = await service.analyse(const ProductionSnapshot(logs: []));
 
       expect(result.isOk, isFalse);
       expect(fake.calls, 0);

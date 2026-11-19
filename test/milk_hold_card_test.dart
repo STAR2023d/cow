@@ -22,8 +22,8 @@ Future<void> _show(WidgetTester tester, List<HealthRecordData> records) async {
       home: Scaffold(
         body: MilkHoldCard(
           cows: Stream.value(const [
-            CowData(id: 1, name: 'Daisy'),
-            CowData(id: 2, name: 'Bella'),
+            CowData(id: 1, name: 'Daisy', inMilk: true),
+            CowData(id: 2, name: 'Bella', inMilk: true),
           ]),
           records: Stream.value(records),
         ),

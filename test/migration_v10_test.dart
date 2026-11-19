@@ -23,6 +23,7 @@ void main() {
     final db = AppDatabase(NativeDatabase(file));
     await db.customStatement('DROP TABLE calves');
     await db.customStatement('ALTER TABLE milk_table DROP COLUMN buyer');
+    await db.customStatement('ALTER TABLE cow DROP COLUMN in_milk');
     await db.customStatement("INSERT INTO cow (id, name) VALUES (1, 'Daisy')");
     await db.customStatement(
       'INSERT INTO milk_table (id, entry_date, session, amount, cow_id) '
@@ -46,7 +47,10 @@ void main() {
     expect(await columns(db, 'milk_table'), contains('buyer'));
     expect(await columns(db, 'calves'), containsAll(['sex', 'bought_in']));
     final version = await db.customSelect('PRAGMA user_version').getSingle();
-    expect(version.read<int>('user_version'), 10);
+    expect(version.read<int>('user_version'), db.schemaVersion);
+
+    // Cows from before v11 stay on the milking list.
+    expect((await db.watchAllCow().first).single.inMilk, isTrue);
 
     // Old rows survive, with no buyer.
     final old = await db.select(db.milkTable).getSingle();
