@@ -1,6 +1,6 @@
 # Mwaura's Farm (Flutter dairy app for small Kenyan farmers)
 
-- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v11, Provider.
+- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v12, Provider.
 - After table changes: `dart run build_runner build --delete-conflicting-outputs`
 - Check every change with `flutter analyze` and `flutter test`.
 - Run: `flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json`
@@ -28,6 +28,7 @@ Done: milking list (schema v11, `Cow.inMilk`, `setInMilk`; Log milk sheet shows 
 Gemini default model is `gemini-3.5-flash-lite` (`gemini-3.8-flash` hung for this key, 2026-11-14).
 Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in `lib/l10n/app_en.arb` + `app_sw.arb`, used as `context.l10n.x`; never hard-coded English.
 Android (family use, owner chose 2026-11-19): keys stay built into the APK until the app is sold; backend proxy stays in Later. Main manifest has INTERNET. PDFs open on phones via `open_filex` (`openFile` in `pdf_export.dart`). Still to do: try the APK on a real phone.
+In progress: cows leaving the herd (owner chose 2026-11-19: keep records, hide the cow). Step 1 done: schema v12 `leftOn`/`leftReason`, `removeFromHerd`, `returnToHerd`, `watchHerd`/`herdCows` (daily lists), `watchLeftCows`; `deleteCow` now deletes all her records (mistakes only), `cowRecordCount`. Step 2 next: screens use `watchHerd`, delete dialog offers Remove from herd (reason + date) vs Delete (shows record count), a "Left the herd" list with return.
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later (owner said not now, 2026-11-14): Swahili stage 4 (AI answers in app language + Kiswahili danger phrases; needs vet review). Until then AI answers stay English (vet has its own language choice) and the danger check only knows English words.

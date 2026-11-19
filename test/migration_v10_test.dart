@@ -24,6 +24,8 @@ void main() {
     await db.customStatement('DROP TABLE calves');
     await db.customStatement('ALTER TABLE milk_table DROP COLUMN buyer');
     await db.customStatement('ALTER TABLE cow DROP COLUMN in_milk');
+    await db.customStatement('ALTER TABLE cow DROP COLUMN left_on');
+    await db.customStatement('ALTER TABLE cow DROP COLUMN left_reason');
     await db.customStatement("INSERT INTO cow (id, name) VALUES (1, 'Daisy')");
     await db.customStatement(
       'INSERT INTO milk_table (id, entry_date, session, amount, cow_id) '

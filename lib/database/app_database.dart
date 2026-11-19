@@ -29,7 +29,14 @@ class Cow extends Table {
   // True when she is being milked, so she shows on the milk log sheet.
   // The farmer adds and removes cows from that list (added in v11).
   BoolColumn get inMilk => boolean().withDefault(const Constant(true))();
+  // Set when she left the herd (added in v12). Her records stay; she is
+  // hidden from daily lists. Reason is one of [cowLeftReasons].
+  DateTimeColumn get leftOn => dateTime().nullable()();
+  TextColumn get leftReason => text().nullable()();
 }
+
+/// Why a cow left the herd. Stored in English; shown translated.
+const cowLeftReasons = ['sold', 'died', 'culled', 'given_away'];
 
 // --- TABLE 2: MILK ENTRIES ---
 class MilkTable extends Table {
@@ -124,7 +131,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -189,6 +196,10 @@ class AppDatabase extends _$AppDatabase {
         if (from < 11) {
           await m.addColumn(cow, cow.inMilk);
         }
+        if (from < 12) {
+          await m.addColumn(cow, cow.leftOn);
+          await m.addColumn(cow, cow.leftReason);
+        }
       },
     );
   }
@@ -207,8 +218,93 @@ class AppDatabase extends _$AppDatabase {
   Future<void> setInMilk(int id, bool inMilk) => (update(
     cow,
   )..where((t) => t.id.equals(id))).write(CowCompanion(inMilk: Value(inMilk)));
-  Future<int> deleteCow(int id) =>
-      (delete(cow)..where((tbl) => tbl.id.equals(id))).go();
+
+  /// Cows still on the farm (not sold, died, culled or given away).
+  /// Use this for daily lists; use [watchAllCow] to look up names on old
+  /// records.
+  Stream<List<CowData>> watchHerd() =>
+      (select(cow)..where((t) => t.leftOn.isNull())).watch();
+  Future<List<CowData>> herdCows() =>
+      (select(cow)..where((t) => t.leftOn.isNull())).get();
+
+  /// Cows that left the herd, most recent first.
+  Stream<List<CowData>> watchLeftCows() =>
+      (select(cow)
+            ..where((t) => t.leftOn.isNotNull())
+            ..orderBy([(t) => OrderingTerm.desc(t.leftOn)]))
+          .watch();
+
+  /// Marks a cow as gone ([reason] from [cowLeftReasons]). Her records
+  /// stay. She also comes off the milking list.
+  Future<void> removeFromHerd(int id, String reason, DateTime on) {
+    assert(cowLeftReasons.contains(reason));
+    return (update(cow)..where((t) => t.id.equals(id))).write(
+      CowCompanion(
+        leftOn: Value(DateTime(on.year, on.month, on.day)),
+        leftReason: Value(reason),
+        inMilk: const Value(false),
+      ),
+    );
+  }
+
+  /// Undoes [removeFromHerd]. She is not put back on the milking list.
+  Future<void> returnToHerd(int id) =>
+      (update(cow)..where((t) => t.id.equals(id))).write(
+        const CowCompanion(leftOn: Value(null), leftReason: Value(null)),
+      );
+
+  /// How many records a full [deleteCow] would also delete.
+  Future<int> cowRecordCount(int id) async {
+    Future<int> count(String table, String column) async {
+      final row = await customSelect(
+        'SELECT COUNT(*) AS n FROM $table WHERE $column = ?',
+        variables: [Variable.withInt(id)],
+      ).getSingle();
+      return row.read<int>('n');
+    }
+
+    var total = 0;
+    for (final (table, column) in _cowLinks) {
+      total += await count(table, column);
+    }
+    return total;
+  }
+
+  /// Deletes a cow and every record that belongs to her. Only for a cow
+  /// added by mistake: a cow that left the farm uses [removeFromHerd] so
+  /// past reports and income stay right. Daughters keep their own records
+  /// and just lose the link to her.
+  Future<void> deleteCow(int id) => transaction(() async {
+    // Calves from her breeding cycles go too, even if no dam was set.
+    await customStatement(
+      'DELETE FROM calves WHERE breeding_cycle_id IN '
+      '(SELECT id FROM breeding_cycles WHERE cow_id = ?)',
+      [id],
+    );
+    await customStatement(
+      'DELETE FROM ledger_entries WHERE breeding_cycle_id IN '
+      '(SELECT id FROM breeding_cycles WHERE cow_id = ?)',
+      [id],
+    );
+    for (final (table, column) in _cowLinks) {
+      await customStatement('DELETE FROM $table WHERE $column = ?', [id]);
+    }
+    await customStatement(
+      'UPDATE cow SET parent_cow_id = NULL WHERE parent_cow_id = ?',
+      [id],
+    );
+    await (delete(cow)..where((t) => t.id.equals(id))).go();
+  });
+
+  /// Tables with a column pointing at one cow, in safe delete order.
+  static const _cowLinks = [
+    ('milk_table', 'cow_id'),
+    ('health_record', 'cow_id'),
+    ('feeding_log', 'cow_id'),
+    ('calves', 'dam_cow_id'),
+    ('ledger_entries', 'cow_id'),
+    ('breeding_cycles', 'cow_id'),
+  ];
 
   // ============================================================
   // === MILK ENTRY OPERATIONS ===

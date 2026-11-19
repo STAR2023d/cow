@@ -99,6 +99,26 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _leftOnMeta = const VerificationMeta('leftOn');
+  @override
+  late final GeneratedColumn<DateTime> leftOn = GeneratedColumn<DateTime>(
+    'left_on',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _leftReasonMeta = const VerificationMeta(
+    'leftReason',
+  );
+  @override
+  late final GeneratedColumn<String> leftReason = GeneratedColumn<String>(
+    'left_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -109,6 +129,8 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
     imagePath,
     parentCowId,
     inMilk,
+    leftOn,
+    leftReason,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -172,6 +194,18 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
         inMilk.isAcceptableOrUnknown(data['in_milk']!, _inMilkMeta),
       );
     }
+    if (data.containsKey('left_on')) {
+      context.handle(
+        _leftOnMeta,
+        leftOn.isAcceptableOrUnknown(data['left_on']!, _leftOnMeta),
+      );
+    }
+    if (data.containsKey('left_reason')) {
+      context.handle(
+        _leftReasonMeta,
+        leftReason.isAcceptableOrUnknown(data['left_reason']!, _leftReasonMeta),
+      );
+    }
     return context;
   }
 
@@ -213,6 +247,14 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
         DriftSqlType.bool,
         data['${effectivePrefix}in_milk'],
       )!,
+      leftOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}left_on'],
+      ),
+      leftReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}left_reason'],
+      ),
     );
   }
 
@@ -231,6 +273,8 @@ class CowData extends DataClass implements Insertable<CowData> {
   final String? imagePath;
   final int? parentCowId;
   final bool inMilk;
+  final DateTime? leftOn;
+  final String? leftReason;
   const CowData({
     required this.id,
     required this.name,
@@ -240,6 +284,8 @@ class CowData extends DataClass implements Insertable<CowData> {
     this.imagePath,
     this.parentCowId,
     required this.inMilk,
+    this.leftOn,
+    this.leftReason,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -262,6 +308,12 @@ class CowData extends DataClass implements Insertable<CowData> {
       map['parent_cow_id'] = Variable<int>(parentCowId);
     }
     map['in_milk'] = Variable<bool>(inMilk);
+    if (!nullToAbsent || leftOn != null) {
+      map['left_on'] = Variable<DateTime>(leftOn);
+    }
+    if (!nullToAbsent || leftReason != null) {
+      map['left_reason'] = Variable<String>(leftReason);
+    }
     return map;
   }
 
@@ -281,6 +333,12 @@ class CowData extends DataClass implements Insertable<CowData> {
           ? const Value.absent()
           : Value(parentCowId),
       inMilk: Value(inMilk),
+      leftOn: leftOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(leftOn),
+      leftReason: leftReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(leftReason),
     );
   }
 
@@ -298,6 +356,8 @@ class CowData extends DataClass implements Insertable<CowData> {
       imagePath: serializer.fromJson<String?>(json['imagePath']),
       parentCowId: serializer.fromJson<int?>(json['parentCowId']),
       inMilk: serializer.fromJson<bool>(json['inMilk']),
+      leftOn: serializer.fromJson<DateTime?>(json['leftOn']),
+      leftReason: serializer.fromJson<String?>(json['leftReason']),
     );
   }
   @override
@@ -312,6 +372,8 @@ class CowData extends DataClass implements Insertable<CowData> {
       'imagePath': serializer.toJson<String?>(imagePath),
       'parentCowId': serializer.toJson<int?>(parentCowId),
       'inMilk': serializer.toJson<bool>(inMilk),
+      'leftOn': serializer.toJson<DateTime?>(leftOn),
+      'leftReason': serializer.toJson<String?>(leftReason),
     };
   }
 
@@ -324,6 +386,8 @@ class CowData extends DataClass implements Insertable<CowData> {
     Value<String?> imagePath = const Value.absent(),
     Value<int?> parentCowId = const Value.absent(),
     bool? inMilk,
+    Value<DateTime?> leftOn = const Value.absent(),
+    Value<String?> leftReason = const Value.absent(),
   }) => CowData(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -333,6 +397,8 @@ class CowData extends DataClass implements Insertable<CowData> {
     imagePath: imagePath.present ? imagePath.value : this.imagePath,
     parentCowId: parentCowId.present ? parentCowId.value : this.parentCowId,
     inMilk: inMilk ?? this.inMilk,
+    leftOn: leftOn.present ? leftOn.value : this.leftOn,
+    leftReason: leftReason.present ? leftReason.value : this.leftReason,
   );
   CowData copyWithCompanion(CowCompanion data) {
     return CowData(
@@ -346,6 +412,10 @@ class CowData extends DataClass implements Insertable<CowData> {
           ? data.parentCowId.value
           : this.parentCowId,
       inMilk: data.inMilk.present ? data.inMilk.value : this.inMilk,
+      leftOn: data.leftOn.present ? data.leftOn.value : this.leftOn,
+      leftReason: data.leftReason.present
+          ? data.leftReason.value
+          : this.leftReason,
     );
   }
 
@@ -359,14 +429,26 @@ class CowData extends DataClass implements Insertable<CowData> {
           ..write('age: $age, ')
           ..write('imagePath: $imagePath, ')
           ..write('parentCowId: $parentCowId, ')
-          ..write('inMilk: $inMilk')
+          ..write('inMilk: $inMilk, ')
+          ..write('leftOn: $leftOn, ')
+          ..write('leftReason: $leftReason')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, tag, breed, age, imagePath, parentCowId, inMilk);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    tag,
+    breed,
+    age,
+    imagePath,
+    parentCowId,
+    inMilk,
+    leftOn,
+    leftReason,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -378,7 +460,9 @@ class CowData extends DataClass implements Insertable<CowData> {
           other.age == this.age &&
           other.imagePath == this.imagePath &&
           other.parentCowId == this.parentCowId &&
-          other.inMilk == this.inMilk);
+          other.inMilk == this.inMilk &&
+          other.leftOn == this.leftOn &&
+          other.leftReason == this.leftReason);
 }
 
 class CowCompanion extends UpdateCompanion<CowData> {
@@ -390,6 +474,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
   final Value<String?> imagePath;
   final Value<int?> parentCowId;
   final Value<bool> inMilk;
+  final Value<DateTime?> leftOn;
+  final Value<String?> leftReason;
   const CowCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -399,6 +485,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
     this.imagePath = const Value.absent(),
     this.parentCowId = const Value.absent(),
     this.inMilk = const Value.absent(),
+    this.leftOn = const Value.absent(),
+    this.leftReason = const Value.absent(),
   });
   CowCompanion.insert({
     this.id = const Value.absent(),
@@ -409,6 +497,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
     this.imagePath = const Value.absent(),
     this.parentCowId = const Value.absent(),
     this.inMilk = const Value.absent(),
+    this.leftOn = const Value.absent(),
+    this.leftReason = const Value.absent(),
   }) : name = Value(name);
   static Insertable<CowData> custom({
     Expression<int>? id,
@@ -419,6 +509,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
     Expression<String>? imagePath,
     Expression<int>? parentCowId,
     Expression<bool>? inMilk,
+    Expression<DateTime>? leftOn,
+    Expression<String>? leftReason,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -429,6 +521,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
       if (imagePath != null) 'image_path': imagePath,
       if (parentCowId != null) 'parent_cow_id': parentCowId,
       if (inMilk != null) 'in_milk': inMilk,
+      if (leftOn != null) 'left_on': leftOn,
+      if (leftReason != null) 'left_reason': leftReason,
     });
   }
 
@@ -441,6 +535,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
     Value<String?>? imagePath,
     Value<int?>? parentCowId,
     Value<bool>? inMilk,
+    Value<DateTime?>? leftOn,
+    Value<String?>? leftReason,
   }) {
     return CowCompanion(
       id: id ?? this.id,
@@ -451,6 +547,8 @@ class CowCompanion extends UpdateCompanion<CowData> {
       imagePath: imagePath ?? this.imagePath,
       parentCowId: parentCowId ?? this.parentCowId,
       inMilk: inMilk ?? this.inMilk,
+      leftOn: leftOn ?? this.leftOn,
+      leftReason: leftReason ?? this.leftReason,
     );
   }
 
@@ -481,6 +579,12 @@ class CowCompanion extends UpdateCompanion<CowData> {
     if (inMilk.present) {
       map['in_milk'] = Variable<bool>(inMilk.value);
     }
+    if (leftOn.present) {
+      map['left_on'] = Variable<DateTime>(leftOn.value);
+    }
+    if (leftReason.present) {
+      map['left_reason'] = Variable<String>(leftReason.value);
+    }
     return map;
   }
 
@@ -494,7 +598,9 @@ class CowCompanion extends UpdateCompanion<CowData> {
           ..write('age: $age, ')
           ..write('imagePath: $imagePath, ')
           ..write('parentCowId: $parentCowId, ')
-          ..write('inMilk: $inMilk')
+          ..write('inMilk: $inMilk, ')
+          ..write('leftOn: $leftOn, ')
+          ..write('leftReason: $leftReason')
           ..write(')'))
         .toString();
   }
@@ -4842,6 +4948,8 @@ typedef $$CowTableCreateCompanionBuilder =
       Value<String?> imagePath,
       Value<int?> parentCowId,
       Value<bool> inMilk,
+      Value<DateTime?> leftOn,
+      Value<String?> leftReason,
     });
 typedef $$CowTableUpdateCompanionBuilder =
     CowCompanion Function({
@@ -4853,6 +4961,8 @@ typedef $$CowTableUpdateCompanionBuilder =
       Value<String?> imagePath,
       Value<int?> parentCowId,
       Value<bool> inMilk,
+      Value<DateTime?> leftOn,
+      Value<String?> leftReason,
     });
 
 final class $$CowTableReferences
@@ -5008,6 +5118,16 @@ class $$CowTableFilterComposer extends Composer<_$AppDatabase, $CowTable> {
 
   ColumnFilters<bool> get inMilk => $composableBuilder(
     column: $table.inMilk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get leftOn => $composableBuilder(
+    column: $table.leftOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get leftReason => $composableBuilder(
+    column: $table.leftReason,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5203,6 +5323,16 @@ class $$CowTableOrderingComposer extends Composer<_$AppDatabase, $CowTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get leftOn => $composableBuilder(
+    column: $table.leftOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get leftReason => $composableBuilder(
+    column: $table.leftReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$CowTableOrderingComposer get parentCowId {
     final $$CowTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5255,6 +5385,14 @@ class $$CowTableAnnotationComposer extends Composer<_$AppDatabase, $CowTable> {
 
   GeneratedColumn<bool> get inMilk =>
       $composableBuilder(column: $table.inMilk, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get leftOn =>
+      $composableBuilder(column: $table.leftOn, builder: (column) => column);
+
+  GeneratedColumn<String> get leftReason => $composableBuilder(
+    column: $table.leftReason,
+    builder: (column) => column,
+  );
 
   $$CowTableAnnotationComposer get parentCowId {
     final $$CowTableAnnotationComposer composer = $composerBuilder(
@@ -5448,6 +5586,8 @@ class $$CowTableTableManager
                 Value<String?> imagePath = const Value.absent(),
                 Value<int?> parentCowId = const Value.absent(),
                 Value<bool> inMilk = const Value.absent(),
+                Value<DateTime?> leftOn = const Value.absent(),
+                Value<String?> leftReason = const Value.absent(),
               }) => CowCompanion(
                 id: id,
                 name: name,
@@ -5457,6 +5597,8 @@ class $$CowTableTableManager
                 imagePath: imagePath,
                 parentCowId: parentCowId,
                 inMilk: inMilk,
+                leftOn: leftOn,
+                leftReason: leftReason,
               ),
           createCompanionCallback:
               ({
@@ -5468,6 +5610,8 @@ class $$CowTableTableManager
                 Value<String?> imagePath = const Value.absent(),
                 Value<int?> parentCowId = const Value.absent(),
                 Value<bool> inMilk = const Value.absent(),
+                Value<DateTime?> leftOn = const Value.absent(),
+                Value<String?> leftReason = const Value.absent(),
               }) => CowCompanion.insert(
                 id: id,
                 name: name,
@@ -5477,6 +5621,8 @@ class $$CowTableTableManager
                 imagePath: imagePath,
                 parentCowId: parentCowId,
                 inMilk: inMilk,
+                leftOn: leftOn,
+                leftReason: leftReason,
               ),
           withReferenceMapper: (p0) => p0
               .map(

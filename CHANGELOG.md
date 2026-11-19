@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Cows leaving the herd, step 1 (schema v12, `Cow.leftOn`, `leftReason`): the database can mark a cow sold, died, culled or given away and keep all her records (`removeFromHerd`, `returnToHerd`, `watchHerd`). Deleting a cow now also deletes her milk, health, feeding, breeding, calf and ledger records, so no nameless records are left behind; daughters keep their records. Screens come in step 2
 - Android: release builds can reach the internet, so the AI works on a phone. The app is named "Mwaura's Farm" on the phone. README shows how to build the family APK
 - Android: an exported PDF (Financial Statement, Monthly Report) opens in the phone's PDF viewer (`open_filex`); before, it was saved but not opened
 - Milking list (schema v11, `Cow.inMilk`): the Log milk sheet shows only cows on the milking list, not the whole herd. "Milking list" at the top of the sheet ticks cows on or off; the minus button on a row takes a cow off. Cows that already have milk saved for the chosen day and session still show. Existing cows start on the list. Litres already typed are kept when the list changes
