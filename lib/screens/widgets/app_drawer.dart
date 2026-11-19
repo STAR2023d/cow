@@ -5,7 +5,6 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/analytics_dashboard.dart';
 import 'package:cow/screens/cow_dashboard.dart';
 import 'package:cow/screens/expenses_screen.dart';
-import 'package:cow/screens/feeding_screen.dart';
 import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
 import 'package:cow/screens/milk_price_screen.dart';
@@ -68,11 +67,6 @@ class AppDrawer extends StatelessWidget {
             (_) => CalfRegisterScreen(db: db),
           ),
           _Section(context.l10n.sectionDailyCare),
-          item(
-            Icons.grass,
-            context.l10n.navFeeding,
-            (_) => FeedingScreen(db: db),
-          ),
           item(
             Icons.health_and_safety,
             context.l10n.navHealth,

@@ -62,6 +62,12 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 - [x] Live check against real providers (`test/live/`): Gemini and Groq (OpenAI-compatible) checked 2026-11-14; Claude and OpenAI not yet (no keys)
 - [x] Cross-provider fallback: when one provider is busy or down, try the next (`AI_FALLBACK_PROVIDERS`)
 
+### Feeding log (hidden 2026-11-19)
+
+Feed money is logged in Expenses (Feed category). The feeding log holds only kg, nothing used it, so it is off the menu; its table and data are kept.
+
+- [ ] Make it useful, then show it again: feed kg per litre of milk, feed stock running out, a cow eating less than usual, the AI vet sees her recent feed
+
 ### Going public with paid AI
 
 - [ ] Backend proxy that holds the API keys (no keys in the app)

@@ -2,7 +2,7 @@ import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/breeding/breeding_overview_screen.dart';
 import 'package:cow/database/app_database.dart';
 import 'package:cow/screens/cow_add.dart';
-import 'package:cow/screens/feeding_screen.dart';
+import 'package:cow/screens/expenses_screen.dart';
 import 'package:cow/screens/financial_statement_screen.dart';
 import 'package:cow/screens/health_screen.dart';
 import 'package:cow/screens/widgets/hover_action_button.dart';
@@ -65,12 +65,12 @@ class QuickActionsHub extends StatelessWidget {
               ),
               Expanded(
                 child: _QuickAction(
-                  icon: Icons.grass,
-                  label: context.l10n.navFeeding,
+                  icon: Icons.receipt_long,
+                  label: context.l10n.navExpenses,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FeedingScreen(db: db),
+                      builder: (context) => ExpenseEntryScreen(db: db),
                     ),
                   ),
                 ),

@@ -29,6 +29,7 @@ Gemini default model is `gemini-3.5-flash-lite` (`gemini-3.8-flash` hung for thi
 Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in `lib/l10n/app_en.arb` + `app_sw.arb`, used as `context.l10n.x`; never hard-coded English.
 Android (family use, owner chose 2026-11-19): keys stay built into the APK until the app is sold; backend proxy stays in Later. Main manifest has INTERNET. PDFs open on phones via `open_filex` (`openFile` in `pdf_export.dart`). Still to do: try the APK on a real phone.
 Done: cows leaving the herd (schema v12, owner chose 2026-11-19: keep records, hide the cow). `removeFromHerd`/`returnToHerd`; daily lists use `watchHerd`/`herdCows`, name lookups on old records keep `watchAllCow`; `deleteCow` deletes all her records (mistakes only, `cowRecordCount` shown). The v12 upgrade runs `deleteOrphanRecords` once. UI: `CowRemoveDialog` (`lib/abstract/dialog_deletion.dart`), `left_herd_screen.dart`.
+Feeding hidden (owner, 2026-11-19): off drawer and quick actions; `feeding_screen.dart`, `FeedingLog` table and data kept. Feed money = Expenses, Feed category. Making it useful is in ROADMAP Later.
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).
 Later (owner said not now, 2026-11-14): Swahili stage 4 (AI answers in app language + Kiswahili danger phrases; needs vet review). Until then AI answers stay English (vet has its own language choice) and the danger check only knows English words.

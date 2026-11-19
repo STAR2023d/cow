@@ -47,7 +47,6 @@ void main() {
       'Herd & Milk',
       'Breeding',
       'Calf Register',
-      'Feeding',
       'Health',
       'Vet Assistant',
       'Milk Price',
@@ -58,6 +57,8 @@ void main() {
     ]) {
       expect(find.text(item), findsOneWidget, reason: item);
     }
+    // Feeding is hidden until it is useful (see docs/ROADMAP.md, Later).
+    expect(find.text('Feeding'), findsNothing);
     expect(find.text('Light'), findsOneWidget);
     expect(find.text('Dark'), findsOneWidget);
     for (final gone in ['Home', 'Search', 'Dashboard', 'Settings']) {
