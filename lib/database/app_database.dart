@@ -199,6 +199,9 @@ class AppDatabase extends _$AppDatabase {
         if (from < 12) {
           await m.addColumn(cow, cow.leftOn);
           await m.addColumn(cow, cow.leftReason);
+          // One-time clean-up: before v12, deleting a cow left her records
+          // behind with no cow.
+          await deleteOrphanRecords();
         }
       },
     );
@@ -294,6 +297,29 @@ class AppDatabase extends _$AppDatabase {
       [id],
     );
     await (delete(cow)..where((t) => t.id.equals(id))).go();
+  });
+
+  /// Deletes records whose cow no longer exists (left by deletes before
+  /// v12, when [deleteCow] removed only the cow), the same way [deleteCow]
+  /// would have. Daughters of a missing cow just lose the link.
+  Future<void> deleteOrphanRecords() => transaction(() async {
+    const missing = 'NOT IN (SELECT id FROM cow)';
+    const orphanCycles =
+        'IN (SELECT id FROM breeding_cycles WHERE cow_id $missing)';
+    await customStatement(
+      'DELETE FROM calves WHERE breeding_cycle_id $orphanCycles',
+    );
+    await customStatement(
+      'DELETE FROM ledger_entries WHERE breeding_cycle_id $orphanCycles',
+    );
+    for (final (table, column) in _cowLinks) {
+      await customStatement(
+        'DELETE FROM $table WHERE $column IS NOT NULL AND $column $missing',
+      );
+    }
+    await customStatement(
+      'UPDATE cow SET parent_cow_id = NULL WHERE parent_cow_id $missing',
+    );
   });
 
   /// Tables with a column pointing at one cow, in safe delete order.

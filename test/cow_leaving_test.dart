@@ -105,4 +105,28 @@ void main() {
     expect(left.map((c) => c.id), unorderedEquals([bella, daughter]));
     expect(left.firstWhere((c) => c.id == daughter).parentCowId, isNull);
   });
+
+  test('clean-up removes records left by an old-style delete', () async {
+    await addRecords(daisy);
+    await addRecords(bella);
+    final daughter = await db.insertCow(
+      CowCompanion.insert(name: 'Daisy Jr', parentCowId: Value(daisy)),
+    );
+    // Before v12 a delete removed only the cow row.
+    await db.customStatement('DELETE FROM cow WHERE id = ?', [daisy]);
+
+    await db.deleteOrphanRecords();
+
+    for (final t in [
+      'milk_table',
+      'health_record',
+      'breeding_cycles',
+      'calves',
+    ]) {
+      expect(await rows(t), 1, reason: t); // Only Bella's are left.
+    }
+    expect(await db.cowRecordCount(bella), 4);
+    final jr = (await db.allCows()).firstWhere((c) => c.id == daughter);
+    expect(jr.parentCowId, isNull);
+  });
 }
