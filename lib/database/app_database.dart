@@ -230,6 +230,31 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  /// Copies the whole database to [path] while it is open (a backup).
+  Future<void> backupTo(String path) =>
+      customStatement('VACUUM INTO ?', [path]);
+
+  /// Empties every table: all cows and their records, money and prices.
+  /// Used by "Erase all data"; make a [backupTo] first.
+  Future<void> eraseAllData() => transaction(() async {
+    // Records that point at other rows go first, cows last.
+    for (final TableInfo t in [
+      milkTable,
+      healthRecord,
+      feedingLog,
+      ledgerEntries,
+      calves,
+      breedingCycles,
+      expenses,
+      priceSettings,
+      cow,
+    ]) {
+      await delete(t).go();
+    }
+    // New cows start again at number 1.
+    await customStatement('DELETE FROM sqlite_sequence');
+  });
+
   // ============================================================
   // === COW OPERATIONS ===
   // ============================================================

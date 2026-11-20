@@ -23,6 +23,13 @@ class MilkPriceFlag {
     }
   }
 
+  /// Forgets the price was set (after "Erase all data").
+  static Future<void> clear() async {
+    try {
+      await (await SharedPreferences.getInstance()).remove(_key);
+    } catch (_) {}
+  }
+
   static Future<void> markSet() async {
     try {
       await (await SharedPreferences.getInstance()).setBool(_key, true);

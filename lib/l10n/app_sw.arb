@@ -397,5 +397,12 @@
   "useDateOfBirth": "Chagua tarehe ya kuzaliwa badala yake",
   "ageEstimateNote": "Programu itaendelea kuhesabu umri wake kuanzia hapa.",
   "removePhoto": "Ondoa picha",
-  "cowUpdated": "{name} amebadilishwa"
+  "cowUpdated": "{name} amebadilishwa",
+  "eraseAllData": "Futa data yote",
+  "eraseWhatGoes": "Hii inafuta kila ng'ombe na rekodi zote za maziwa, afya, uzazi, ndama, matumizi na bei, pamoja na picha za ng'ombe.",
+  "eraseWhatStays": "Vinabaki: rangi za skrini na lugha. Nakala ya rekodi inahifadhiwa kwenye kifaa hiki kwanza.",
+  "eraseConfirmWord": "FUTA",
+  "eraseTypeToConfirm": "Andika {word} kuthibitisha",
+  "eraseButton": "Futa kila kitu",
+  "eraseDone": "Data yote imefutwa. Nakala imehifadhiwa."
 }

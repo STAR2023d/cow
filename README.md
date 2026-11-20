@@ -45,6 +45,12 @@ adb install -r build/app/outputs/flutter-apk/app-release.apk
 
 Or copy the APK to the phone and open it. The AI keys are inside this APK, so only give it to family phones and never upload it anywhere. If a phone is lost or the APK leaks, change the keys and build again.
 
+## Your data
+
+Everything is kept on the device in one SQLite file. On Linux that is `~/.local/share/com.example.cow/my_database.sqlite`; cow photos are in `cow_photos/` next to it.
+
+To start fresh, open the drawer and choose **Erase all data** (type ERASE, or FUTA in Kiswahili, to confirm). A backup `my_database.before-erase-<date>.sqlite` is saved next to the database first; to get the old records back, close the app and rename that file to `my_database.sqlite`. Screen colours and language are kept.
+
 ## Project structure
 
 ```

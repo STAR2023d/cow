@@ -2478,6 +2478,48 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'{name} updated'**
   String cowUpdated(String name);
+
+  /// No description provided for @eraseAllData.
+  ///
+  /// In en, this message translates to:
+  /// **'Erase all data'**
+  String get eraseAllData;
+
+  /// No description provided for @eraseWhatGoes.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes every cow and all milk, health, breeding, calf, expense and price records, and the cow photos.'**
+  String get eraseWhatGoes;
+
+  /// No description provided for @eraseWhatStays.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept: screen colours and language. A backup copy of the records is saved on this device first.'**
+  String get eraseWhatStays;
+
+  /// No description provided for @eraseConfirmWord.
+  ///
+  /// In en, this message translates to:
+  /// **'ERASE'**
+  String get eraseConfirmWord;
+
+  /// No description provided for @eraseTypeToConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {word} to confirm'**
+  String eraseTypeToConfirm(String word);
+
+  /// No description provided for @eraseButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Erase everything'**
+  String get eraseButton;
+
+  /// No description provided for @eraseDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All data erased. A backup was saved.'**
+  String get eraseDone;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

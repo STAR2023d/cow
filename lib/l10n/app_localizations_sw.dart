@@ -1524,4 +1524,29 @@ class L10nSw extends L10n {
   String cowUpdated(String name) {
     return '$name amebadilishwa';
   }
+
+  @override
+  String get eraseAllData => 'Futa data yote';
+
+  @override
+  String get eraseWhatGoes =>
+      'Hii inafuta kila ng\'ombe na rekodi zote za maziwa, afya, uzazi, ndama, matumizi na bei, pamoja na picha za ng\'ombe.';
+
+  @override
+  String get eraseWhatStays =>
+      'Vinabaki: rangi za skrini na lugha. Nakala ya rekodi inahifadhiwa kwenye kifaa hiki kwanza.';
+
+  @override
+  String get eraseConfirmWord => 'FUTA';
+
+  @override
+  String eraseTypeToConfirm(String word) {
+    return 'Andika $word kuthibitisha';
+  }
+
+  @override
+  String get eraseButton => 'Futa kila kitu';
+
+  @override
+  String get eraseDone => 'Data yote imefutwa. Nakala imehifadhiwa.';
 }

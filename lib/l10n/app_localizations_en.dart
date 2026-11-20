@@ -1523,4 +1523,29 @@ class L10nEn extends L10n {
   String cowUpdated(String name) {
     return '$name updated';
   }
+
+  @override
+  String get eraseAllData => 'Erase all data';
+
+  @override
+  String get eraseWhatGoes =>
+      'This deletes every cow and all milk, health, breeding, calf, expense and price records, and the cow photos.';
+
+  @override
+  String get eraseWhatStays =>
+      'Kept: screen colours and language. A backup copy of the records is saved on this device first.';
+
+  @override
+  String get eraseConfirmWord => 'ERASE';
+
+  @override
+  String eraseTypeToConfirm(String word) {
+    return 'Type $word to confirm';
+  }
+
+  @override
+  String get eraseButton => 'Erase everything';
+
+  @override
+  String get eraseDone => 'All data erased. A backup was saved.';
 }

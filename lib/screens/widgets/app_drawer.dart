@@ -11,6 +11,7 @@ import 'package:cow/screens/milk_price_screen.dart';
 import 'package:cow/screens/herd_milk_sheet.dart';
 import 'package:cow/screens/monthly_report_screen.dart';
 import 'package:cow/screens/vet_assistant_screen.dart';
+import 'package:cow/screens/widgets/erase_data_dialog.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -106,6 +107,15 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           const _LanguageChoice(),
           const _ThemeChoice(),
+          const Divider(),
+          ListTile(
+            leading: Icon(Icons.delete_forever, color: context.farm.danger),
+            title: Text(
+              context.l10n.eraseAllData,
+              style: TextStyle(color: context.farm.danger),
+            ),
+            onTap: () => showEraseDataDialog(context, db),
+          ),
         ],
       ),
     );

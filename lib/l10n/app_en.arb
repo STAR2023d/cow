@@ -1168,5 +1168,13 @@
   "ageEstimateNote": "The app will count her age on from here.",
   "removePhoto": "Remove photo",
   "cowUpdated": "{name} updated",
-  "@cowUpdated": {"placeholders": {"name": {"type": "String"}}}
+  "@cowUpdated": {"placeholders": {"name": {"type": "String"}}},
+  "eraseAllData": "Erase all data",
+  "eraseWhatGoes": "This deletes every cow and all milk, health, breeding, calf, expense and price records, and the cow photos.",
+  "eraseWhatStays": "Kept: screen colours and language. A backup copy of the records is saved on this device first.",
+  "eraseConfirmWord": "ERASE",
+  "eraseTypeToConfirm": "Type {word} to confirm",
+  "@eraseTypeToConfirm": {"placeholders": {"word": {"type": "String"}}},
+  "eraseButton": "Erase everything",
+  "eraseDone": "All data erased. A backup was saved."
 }
