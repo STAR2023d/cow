@@ -411,6 +411,26 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  /// Buyers named on milk entries, most recently used first, for quick
+  /// picking on the milk form. Case-insensitive duplicates are dropped.
+  Future<List<String>> recentBuyers({int limit = 6}) async {
+    final rows =
+        await (select(milkTable)
+              ..where((t) => t.buyer.isNotNull())
+              ..orderBy([(t) => OrderingTerm.desc(t.entryDate)])
+              ..limit(500))
+            .get();
+    final seen = <String>{};
+    final out = <String>[];
+    for (final r in rows) {
+      final b = r.buyer!.trim();
+      if (b.isEmpty || !seen.add(b.toLowerCase())) continue;
+      out.add(b);
+      if (out.length == limit) break;
+    }
+    return out;
+  }
+
   Stream<List<MilkTableData>> watchAllEntries() => select(milkTable).watch();
 
   Stream<List<MilkTableData>> watchTodayEntries() {

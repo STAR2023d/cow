@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- One milk form everywhere (`MilkLogForm`): the cow's own milk screen now has the same form as Log milk (Today / Yesterday / other day, session picked from the time, usual figure, unusual-figure check, KSh on Save); before it always saved today and started on Morning. New on both: session icons, tap "Usually about 6 L" to fill the box, past buyers as chips, errors and "much more than usual" shown while typing, a comma works as the decimal point. Milking list: "Not on the milking list (n)" under the cows with an Add button, Undo after removing a cow, and an "On the milking list" switch on the cow's milk screen. English and Kiswahili
 - Expenses: pick a category when logging (Feed first). Saved expenses are listed under the form; tap one to change it, delete with Undo. Totals in the statement and report follow. English and Kiswahili
 - Feeding is off the drawer and the dashboard for now (it held only kg and nothing used it); its records are kept. Log feed you buy in Expenses (Feed category). The dashboard quick action is now Expenses
 - One-time clean-up when the database upgrades to v12: records left behind by cows deleted before (milk, health, feeding, breeding, calves, ledger) are removed (`deleteOrphanRecords`)

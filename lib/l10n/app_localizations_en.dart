@@ -1441,4 +1441,26 @@ class L10nEn extends L10n {
 
   @override
   String get tapExpenseToEdit => 'Tap an expense to change it.';
+
+  @override
+  String notOnMilkingList(int count) {
+    return 'Not on the milking list ($count)';
+  }
+
+  @override
+  String get onMilkingList => 'On the milking list';
+
+  @override
+  String get onMilkingListHelp => 'Shows on the Log milk sheet';
+
+  @override
+  String removedFromMilkingList(String name) {
+    return '$name taken off the milking list';
+  }
+
+  @override
+  String get checkFigureHint => 'Much more than usual. Check it.';
+
+  @override
+  String get recentBuyers => 'Recent buyers';
 }

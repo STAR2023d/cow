@@ -208,4 +208,65 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CheckboxListTile), findsNWidgets(2));
   });
+  testWidgets('adds a cow back from "Not on the milking list"', (tester) async {
+    await tester.runAsync(() => db.setInMilk(bella, false));
+    await openSheet(tester);
+    expect(box(bella), findsNothing);
+    await tester.enterText(box(daisy), '5');
+    await tester.tap(find.text('Not on the milking list (1)'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(ValueKey('add-$bella')));
+    await settle(tester);
+    expect(box(bella), findsOneWidget);
+    expect(tester.widget<TextField>(box(daisy)).controller!.text, '5');
+    final cows = await tester.runAsync(db.allCows);
+    expect(cows!.firstWhere((c) => c.id == bella).inMilk, isTrue);
+  });
+
+  testWidgets('removing a cow can be undone', (tester) async {
+    await openSheet(tester);
+    await tester.tap(find.byKey(ValueKey('remove-$bella')));
+    await settle(tester);
+    expect(box(bella), findsNothing);
+    await tester.tap(find.text('Undo'));
+    await settle(tester);
+    expect(box(bella), findsOneWidget);
+  });
+
+  testWidgets('usual chip fills the box; buyer chips and live checks', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => db.upsertMilkEntry(
+        cowId: bella,
+        date: DateTime(2026, 11, 12, 7),
+        session: MilkSession.evening,
+        amount: 4,
+        buyer: 'Brookside',
+      ),
+    );
+    await openSheet(tester);
+    await tester.tap(find.byKey(ValueKey('usual-$daisy')));
+    await tester.pump();
+    expect(tester.widget<TextField>(box(daisy)).controller!.text, '6');
+
+    // Live checks while typing.
+    await tester.enterText(box(bella), 'x');
+    await tester.pump();
+    expect(find.text('Enter a number above 0'), findsOneWidget);
+    await tester.enterText(box(bella), '');
+    await tester.enterText(box(daisy), '30');
+    await tester.pump();
+    expect(find.text('Much more than usual. Check it.'), findsOneWidget);
+    await tester.enterText(box(daisy), '6,5'); // comma works
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Brookside'));
+    await tester.pump();
+    await tester.tap(find.textContaining('Save 1 cow'));
+    await settle(tester);
+    final e = (await saved(tester, 14)).single;
+    expect(e.amount, 6.5);
+    expect(e.buyer, 'Brookside');
+  });
 }

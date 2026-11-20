@@ -380,5 +380,11 @@
   "editingExpense": "Unabadilisha matumizi",
   "saveChanges": "Hifadhi mabadiliko",
   "expenseUpdated": "Matumizi yamebadilishwa",
-  "tapExpenseToEdit": "Gusa matumizi ili kuyabadilisha."
+  "tapExpenseToEdit": "Gusa matumizi ili kuyabadilisha.",
+  "notOnMilkingList": "Hawako kwenye orodha ya kukamua ({count})",
+  "onMilkingList": "Yuko kwenye orodha ya kukamua",
+  "onMilkingListHelp": "Anaonekana kwenye karatasi ya kuandika maziwa",
+  "removedFromMilkingList": "{name} ametolewa kwenye orodha ya kukamua",
+  "checkFigureHint": "Ni zaidi sana ya kawaida. Hakikisha.",
+  "recentBuyers": "Wanunuzi wa karibuni"
 }

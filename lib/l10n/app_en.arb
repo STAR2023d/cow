@@ -1145,5 +1145,13 @@
   "editingExpense": "Editing expense",
   "saveChanges": "Save changes",
   "expenseUpdated": "Expense updated",
-  "tapExpenseToEdit": "Tap an expense to change it."
+  "tapExpenseToEdit": "Tap an expense to change it.",
+  "notOnMilkingList": "Not on the milking list ({count})",
+  "@notOnMilkingList": {"placeholders": {"count": {"type": "int"}}},
+  "onMilkingList": "On the milking list",
+  "onMilkingListHelp": "Shows on the Log milk sheet",
+  "removedFromMilkingList": "{name} taken off the milking list",
+  "@removedFromMilkingList": {"placeholders": {"name": {"type": "String"}}},
+  "checkFigureHint": "Much more than usual. Check it.",
+  "recentBuyers": "Recent buyers"
 }

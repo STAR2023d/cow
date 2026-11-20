@@ -1440,4 +1440,27 @@ class L10nSw extends L10n {
 
   @override
   String get tapExpenseToEdit => 'Gusa matumizi ili kuyabadilisha.';
+
+  @override
+  String notOnMilkingList(int count) {
+    return 'Hawako kwenye orodha ya kukamua ($count)';
+  }
+
+  @override
+  String get onMilkingList => 'Yuko kwenye orodha ya kukamua';
+
+  @override
+  String get onMilkingListHelp =>
+      'Anaonekana kwenye karatasi ya kuandika maziwa';
+
+  @override
+  String removedFromMilkingList(String name) {
+    return '$name ametolewa kwenye orodha ya kukamua';
+  }
+
+  @override
+  String get checkFigureHint => 'Ni zaidi sana ya kawaida. Hakikisha.';
+
+  @override
+  String get recentBuyers => 'Wanunuzi wa karibuni';
 }

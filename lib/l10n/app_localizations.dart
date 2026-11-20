@@ -2382,6 +2382,42 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Tap an expense to change it.'**
   String get tapExpenseToEdit;
+
+  /// No description provided for @notOnMilkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on the milking list ({count})'**
+  String notOnMilkingList(int count);
+
+  /// No description provided for @onMilkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'On the milking list'**
+  String get onMilkingList;
+
+  /// No description provided for @onMilkingListHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows on the Log milk sheet'**
+  String get onMilkingListHelp;
+
+  /// No description provided for @removedFromMilkingList.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} taken off the milking list'**
+  String removedFromMilkingList(String name);
+
+  /// No description provided for @checkFigureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Much more than usual. Check it.'**
+  String get checkFigureHint;
+
+  /// No description provided for @recentBuyers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent buyers'**
+  String get recentBuyers;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

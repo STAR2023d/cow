@@ -42,6 +42,7 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 ## Phase 4: UI
 
+- [x] One milk form for the herd sheet and the cow screen; easy adding to the milking list
 - [ ] Dashboard redesign and bottom navigation
 - [ ] Responsive layout
 - [ ] Swahili / English
