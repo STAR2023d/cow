@@ -59,9 +59,11 @@ void main() {
     }
     // Feeding is hidden until it is useful (see docs/ROADMAP.md, Later).
     expect(find.text('Feeding'), findsNothing);
-    expect(find.text('Light'), findsOneWidget);
-    expect(find.text('Dark'), findsOneWidget);
-    for (final gone in ['Home', 'Search', 'Dashboard', 'Settings']) {
+    // Language, colours and erasing moved to Settings.
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('Light'), findsNothing);
+    expect(find.text('Erase all data'), findsNothing);
+    for (final gone in ['Home', 'Search', 'Dashboard']) {
       expect(find.text(gone), findsNothing, reason: gone);
     }
   });

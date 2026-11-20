@@ -2,6 +2,7 @@ import 'package:cow/database/app_database.dart';
 import 'package:cow/l10n/app_localizations.dart';
 import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/screens/main_dashboard.dart';
+import 'package:cow/settings/farm_name.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final theme = await ThemeController.load();
   final language = await LanguageController.load();
+  final farmName = await FarmNameController.load();
   runApp(
     // ONE AppDatabase instance for the whole app lifetime. Every screen
     // reads it via Provider.of<AppDatabase>(context) instead of ever
@@ -25,6 +27,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<ThemeController>.value(value: theme),
         ChangeNotifierProvider<LanguageController>.value(value: language),
+        ChangeNotifierProvider<FarmNameController>.value(value: farmName),
       ],
       child: const CowApp(),
     ),
@@ -37,7 +40,7 @@ class CowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => context.l10n.appTitle,
+      onGenerateTitle: (context) => context.farmName,
       locale: context.watch<LanguageController>().locale,
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,

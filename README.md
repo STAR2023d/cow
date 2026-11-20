@@ -49,7 +49,7 @@ Or copy the APK to the phone and open it. The AI keys are inside this APK, so on
 
 Everything is kept on the device in one SQLite file. On Linux that is `~/.local/share/com.example.cow/my_database.sqlite`; cow photos are in `cow_photos/` next to it.
 
-To start fresh, open the drawer and choose **Erase all data** (type ERASE, or FUTA in Kiswahili, to confirm). A backup `my_database.before-erase-<date>.sqlite` is saved next to the database first; to get the old records back, close the app and rename that file to `my_database.sqlite`. Screen colours and language are kept.
+To start fresh, open **Settings** (drawer) and choose **Erase all data** (type ERASE, or FUTA in Kiswahili, to confirm). A backup `my_database.before-erase-<date>.sqlite` is saved next to the database first; to get the old records back, close the app and rename that file to `my_database.sqlite`. Screen colours and language are kept.
 
 ## Project structure
 

@@ -1176,5 +1176,12 @@
   "eraseTypeToConfirm": "Type {word} to confirm",
   "@eraseTypeToConfirm": {"placeholders": {"word": {"type": "String"}}},
   "eraseButton": "Erase everything",
-  "eraseDone": "All data erased. A backup was saved."
+  "eraseDone": "All data erased. A backup was saved.",
+  "settings": "Settings",
+  "farmName": "Farm name",
+  "farmNameHelp": "Shown at the top of the app and on PDF reports.",
+  "useDefaultName": "Use the default name",
+  "farmNameSaved": "Farm name saved",
+  "farmNameLength": "Use 2 to 60 letters",
+  "dangerZone": "Danger zone"
 }

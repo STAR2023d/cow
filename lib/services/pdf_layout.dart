@@ -29,9 +29,11 @@ Future<Uint8List> buildFarmPdf({
   DateTime? generatedAt,
   bool compress = true,
   L10n? l10n,
+  String? farmName,
 }) {
   final t = l10n ?? pdfEnglish;
-  final doc = pw.Document(compress: compress, title: title, author: t.appTitle);
+  final farm = farmName ?? t.appTitle;
+  final doc = pw.Document(compress: compress, title: title, author: farm);
   final made = generatedAt ?? DateTime.now();
   doc.addPage(
     pw.MultiPage(
@@ -40,7 +42,7 @@ Future<Uint8List> buildFarmPdf({
       header: (_) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Text(t.appTitle, style: _bold.copyWith(fontSize: 18)),
+          pw.Text(farm, style: _bold.copyWith(fontSize: 18)),
           pw.Text(title),
           pw.Text(t.pdfAmountsGenerated(shortDate(made)), style: _small),
           pw.Divider(),

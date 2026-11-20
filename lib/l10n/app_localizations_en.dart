@@ -1548,4 +1548,25 @@ class L10nEn extends L10n {
 
   @override
   String get eraseDone => 'All data erased. A backup was saved.';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get farmName => 'Farm name';
+
+  @override
+  String get farmNameHelp => 'Shown at the top of the app and on PDF reports.';
+
+  @override
+  String get useDefaultName => 'Use the default name';
+
+  @override
+  String get farmNameSaved => 'Farm name saved';
+
+  @override
+  String get farmNameLength => 'Use 2 to 60 letters';
+
+  @override
+  String get dangerZone => 'Danger zone';
 }

@@ -85,4 +85,13 @@ void main() {
       expect(text, contains(word), reason: word);
     }
   });
+
+  test('the PDF header uses the farm name from Settings', () async {
+    final s = await StatementCalculator(db).statementFor(DateTime(2026, 11, 7));
+    final text = latin1.decode(
+      await buildStatementPdf(s, compress: false, farmName: 'Kamau Dairies'),
+    );
+    expect(text, contains('Kamau'));
+    expect(text, contains('Dairies'));
+  });
 }

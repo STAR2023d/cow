@@ -36,6 +36,7 @@ Future<Uint8List> buildMonthlyReportPdf(
   DateTime? generatedAt,
   bool compress = true,
   L10n? l10n,
+  String? farmName,
 }) {
   final t = l10n ?? pdfEnglish;
   final p = previous;
@@ -51,6 +52,7 @@ Future<Uint8List> buildMonthlyReportPdf(
     generatedAt: generatedAt,
     compress: compress,
     l10n: t,
+    farmName: farmName,
     body: [
       if (r.isEmpty) pw.Text(t.nothingThisMonth),
       pdfTable(

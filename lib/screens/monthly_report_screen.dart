@@ -1,3 +1,4 @@
+import 'package:cow/settings/farm_name.dart';
 import 'package:cow/l10n/labels.dart';
 import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/utils/format.dart';
@@ -75,6 +76,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
   /// Saves the shown month as a PDF in Documents/Mwauras Farm and opens it.
   Future<void> _exportPdf() async {
     final l10n = context.l10n;
+    final farmName = context.farmNameNow;
     setState(() => _exporting = true);
     String message;
     try {
@@ -84,6 +86,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen> {
           data.current,
           previous: data.previous,
           l10n: l10n,
+          farmName: farmName,
         ),
         monthlyReportFileName(data.current),
       );

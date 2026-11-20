@@ -76,6 +76,6 @@ void main() {
 
     expect(find.text('Andika Maziwa'), findsOneWidget);
     expect(find.text('PESA'), findsOneWidget); // section "Money"
-    expect(find.text('Kiswahili'), findsOneWidget);
+    expect(find.text('Mipangilio'), findsOneWidget); // Settings
   });
 }

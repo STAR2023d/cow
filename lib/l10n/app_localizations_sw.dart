@@ -1549,4 +1549,26 @@ class L10nSw extends L10n {
 
   @override
   String get eraseDone => 'Data yote imefutwa. Nakala imehifadhiwa.';
+
+  @override
+  String get settings => 'Mipangilio';
+
+  @override
+  String get farmName => 'Jina la shamba';
+
+  @override
+  String get farmNameHelp =>
+      'Linaonekana juu ya programu na kwenye ripoti za PDF.';
+
+  @override
+  String get useDefaultName => 'Tumia jina la kawaida';
+
+  @override
+  String get farmNameSaved => 'Jina la shamba limehifadhiwa';
+
+  @override
+  String get farmNameLength => 'Tumia herufi 2 hadi 60';
+
+  @override
+  String get dangerZone => 'Eneo la hatari';
 }

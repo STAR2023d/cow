@@ -1,4 +1,5 @@
 import 'package:cow/l10n/language_controller.dart';
+import 'package:cow/settings/farm_name.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class FarmHeaderCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            context.l10n.appTitle.toUpperCase(),
+            context.farmName.toUpperCase(),
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w900,

@@ -404,5 +404,12 @@
   "eraseConfirmWord": "FUTA",
   "eraseTypeToConfirm": "Andika {word} kuthibitisha",
   "eraseButton": "Futa kila kitu",
-  "eraseDone": "Data yote imefutwa. Nakala imehifadhiwa."
+  "eraseDone": "Data yote imefutwa. Nakala imehifadhiwa.",
+  "settings": "Mipangilio",
+  "farmName": "Jina la shamba",
+  "farmNameHelp": "Linaonekana juu ya programu na kwenye ripoti za PDF.",
+  "useDefaultName": "Tumia jina la kawaida",
+  "farmNameSaved": "Jina la shamba limehifadhiwa",
+  "farmNameLength": "Tumia herufi 2 hadi 60",
+  "dangerZone": "Eneo la hatari"
 }

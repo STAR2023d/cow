@@ -2520,6 +2520,48 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'All data erased. A backup was saved.'**
   String get eraseDone;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @farmName.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm name'**
+  String get farmName;
+
+  /// No description provided for @farmNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown at the top of the app and on PDF reports.'**
+  String get farmNameHelp;
+
+  /// No description provided for @useDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the default name'**
+  String get useDefaultName;
+
+  /// No description provided for @farmNameSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm name saved'**
+  String get farmNameSaved;
+
+  /// No description provided for @farmNameLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 2 to 60 letters'**
+  String get farmNameLength;
+
+  /// No description provided for @dangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get dangerZone;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

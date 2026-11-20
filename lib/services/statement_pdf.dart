@@ -22,6 +22,7 @@ Future<Uint8List> buildStatementPdf(
   DateTime? generatedAt,
   bool compress = true,
   L10n? l10n,
+  String? farmName,
 }) {
   final t = l10n ?? pdfEnglish;
   return buildFarmPdf(
@@ -29,6 +30,7 @@ Future<Uint8List> buildStatementPdf(
     generatedAt: generatedAt,
     compress: compress,
     l10n: t,
+    farmName: farmName,
     body: [
       pdfSummaryRow(t.openingBalance, _money(s.openingBalance)),
       pdfSummaryRow(
