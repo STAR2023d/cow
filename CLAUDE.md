@@ -1,6 +1,6 @@
 # Mwaura's Farm (Flutter dairy app for small Kenyan farmers)
 
-- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v12, Provider.
+- Flutter/Dart, Linux desktop target. Drift (SQLite), schema v13, Provider.
 - After table changes: `dart run build_runner build --delete-conflicting-outputs`
 - Check every change with `flutter analyze` and `flutter test`.
 - Run: `flutter run -d linux --dart-define-from-file=$HOME/.config/cow/env.json`
@@ -30,6 +30,7 @@ Swahili UI: stages 1-3 of 4 done (see docs/SWAHILI.md). New screen text goes in 
 Android (family use, owner chose 2026-11-19): keys stay built into the APK until the app is sold; backend proxy stays in Later. Main manifest has INTERNET. PDFs open on phones via `open_filex` (`openFile` in `pdf_export.dart`). Still to do: try the APK on a real phone.
 Done: cows leaving the herd (schema v12, owner chose 2026-11-19: keep records, hide the cow). `removeFromHerd`/`returnToHerd`; daily lists use `watchHerd`/`herdCows`, name lookups on old records keep `watchAllCow`; `deleteCow` deletes all her records (mistakes only, `cowRecordCount` shown). The v12 upgrade runs `deleteOrphanRecords` once. UI: `CowRemoveDialog` (`lib/abstract/dialog_deletion.dart`), `left_herd_screen.dart`.
 Done: one milk form (`lib/screens/widgets/milk_log_form.dart`, `MilkLogForm`, `cowId` for one cow) used by `herd_milk_sheet.dart` and `milk_entry.dart`; off-list cows have Add, cow screen has a milking-list switch; `recentBuyers()` feeds buyer chips.
+Done: schema v13 `Cow.bornOn` (age from `lib/models/cow_age.dart`, `ageOn`/`ageLabel`; old `age` column unused). Cow edit: `CowAdd(cow: ...)`, `updateCowDetails` (writes only given fields), photos copied by `lib/services/cow_photos.dart`.
 Feeding hidden (owner, 2026-11-19): off drawer and quick actions; `feeding_screen.dart`, `FeedingLog` table and data kept. Feed money = Expenses, Feed category. Making it useful is in ROADMAP Later.
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
 Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13).

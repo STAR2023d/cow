@@ -237,8 +237,11 @@ class AppDatabase extends _$AppDatabase {
       into(cow).insert(cowCompanion);
   Stream<List<CowData>> watchAllCow() => select(cow).watch();
   Future<List<CowData>> allCows() => select(cow).get();
-  Future<bool> updateCowInfo(CowCompanion cowCompanion) =>
-      update(cow).replace(cowCompanion);
+
+  /// Changes only the fields set in [changes] (name, tag, breed, birth
+  /// date, photo); the milking list and herd status stay as they are.
+  Future<int> updateCowDetails(int id, CowCompanion changes) =>
+      (update(cow)..where((t) => t.id.equals(id))).write(changes);
 
   /// Puts a cow on or takes her off the milk log sheet.
   Future<void> setInMilk(int id, bool inMilk) => (update(

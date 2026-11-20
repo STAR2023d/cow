@@ -185,6 +185,17 @@ class HerdDashboard extends StatelessWidget {
                           ),
                         ),
                         IconButton(
+                          key: ValueKey('edit-cow-${cow.id}'),
+                          tooltip: context.l10n.editCow,
+                          icon: const Icon(Icons.edit_outlined),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CowAdd(cow: cow),
+                            ),
+                          ),
+                        ),
+                        IconButton(
                           icon: Icon(
                             Icons.delete_outline,
                             color: context.farm.danger,

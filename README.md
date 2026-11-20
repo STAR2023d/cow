@@ -5,7 +5,7 @@ It works offline-first: all data is stored on the device in SQLite.
 
 ## Features
 
-- **Cow register** with photos and tags, and mother-to-heifer links
+- **Cow register** with photos, tags, date of birth (age counts on by itself) and mother-to-heifer links; every detail can be edited later
 - **Milk recording** for the whole milking list on one sheet, or per cow, per session (Morning / Afternoon / Evening), with daily totals, usual figures and buyers
 - **Price history** with effective dates, and cash worked out from litres sold
 - **Expenses and financial statements** in 15-day half-periods
