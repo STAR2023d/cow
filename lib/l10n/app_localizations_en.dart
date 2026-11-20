@@ -1352,8 +1352,14 @@ class L10nEn extends L10n {
   }
 
   @override
-  String ageMonths(int count) {
-    return '$count months';
+  String ageMonths(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1463,4 +1469,58 @@ class L10nEn extends L10n {
 
   @override
   String get recentBuyers => 'Recent buyers';
+
+  @override
+  String ageYearsOnly(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years',
+      one: '1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ageYearsMonths(int years, int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years',
+      one: '1 year',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$_temp0 $_temp1';
+  }
+
+  @override
+  String get editCow => 'Edit cow';
+
+  @override
+  String get dateOfBirth => 'Date of birth';
+
+  @override
+  String get pickDateOfBirth => 'Pick date of birth';
+
+  @override
+  String get dontKnowDate => 'Don\'t know the date? Enter age in years';
+
+  @override
+  String get useDateOfBirth => 'Pick the date of birth instead';
+
+  @override
+  String get ageEstimateNote => 'The app will count her age on from here.';
+
+  @override
+  String get removePhoto => 'Remove photo';
+
+  @override
+  String cowUpdated(String name) {
+    return '$name updated';
+  }
 }

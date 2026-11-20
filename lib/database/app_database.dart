@@ -21,7 +21,11 @@ class Cow extends Table {
   TextColumn get name => text().withLength(min: 2, max: 100)();
   TextColumn get tag => text().nullable()();
   TextColumn get breed => text().nullable()();
+  // Whole years typed when the cow was added, before v13. Not used any
+  // more: v13 turned it into an estimated [bornOn].
   IntColumn get age => integer().nullable()();
+  // Day she was born (or an estimate), so her age keeps up (v13).
+  DateTimeColumn get bornOn => dateTime().nullable()();
   TextColumn get imagePath => text().nullable()();
   // Set when this cow was kept as a heifer calf from a logged breeding
   // cycle -- links her back to her mother.
@@ -131,7 +135,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration {
@@ -203,8 +207,27 @@ class AppDatabase extends _$AppDatabase {
           // behind with no cow.
           await deleteOrphanRecords();
         }
+        if (from < 13) {
+          await m.addColumn(cow, cow.bornOn);
+          await estimateBirthDates(DateTime.now());
+        }
       },
     );
+  }
+
+  /// One-time (v13): cows saved with a fixed age in years get an estimated
+  /// birth date, [now] minus that many years, so their age keeps growing.
+  Future<void> estimateBirthDates(DateTime now) async {
+    final rows = await (select(
+      cow,
+    )..where((t) => t.age.isNotNull() & t.bornOn.isNull())).get();
+    for (final c in rows) {
+      await (update(cow)..where((t) => t.id.equals(c.id))).write(
+        CowCompanion(
+          bornOn: Value(DateTime(now.year - c.age!, now.month, now.day)),
+        ),
+      );
+    }
   }
 
   // ============================================================
@@ -928,9 +951,16 @@ class AppDatabase extends _$AppDatabase {
     required int damCowId,
     required String calfName,
   }) async {
-    final calfId = await into(
-      cow,
-    ).insert(CowCompanion.insert(name: calfName, parentCowId: Value(damCowId)));
+    final cycle = await (select(
+      breedingCycles,
+    )..where((t) => t.id.equals(cycleId))).getSingleOrNull();
+    final calfId = await into(cow).insert(
+      CowCompanion.insert(
+        name: calfName,
+        parentCowId: Value(damCowId),
+        bornOn: Value(cycle?.actualCalvingDate),
+      ),
+    );
 
     await (update(breedingCycles)..where((t) => t.id.equals(cycleId))).write(
       BreedingCyclesCompanion(

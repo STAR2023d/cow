@@ -1351,8 +1351,14 @@ class L10nSw extends L10n {
   }
 
   @override
-  String ageMonths(int count) {
-    return 'miezi $count';
+  String ageMonths(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: 'miezi $months',
+      one: 'mwezi 1',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1463,4 +1469,59 @@ class L10nSw extends L10n {
 
   @override
   String get recentBuyers => 'Wanunuzi wa karibuni';
+
+  @override
+  String ageYearsOnly(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: 'miaka $years',
+      one: 'mwaka 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ageYearsMonths(int years, int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: 'miaka $years',
+      one: 'mwaka 1',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: 'miezi $months',
+      one: 'mwezi 1',
+    );
+    return '$_temp0 na $_temp1';
+  }
+
+  @override
+  String get editCow => 'Badilisha ng\'ombe';
+
+  @override
+  String get dateOfBirth => 'Tarehe ya kuzaliwa';
+
+  @override
+  String get pickDateOfBirth => 'Chagua tarehe ya kuzaliwa';
+
+  @override
+  String get dontKnowDate => 'Hujui tarehe? Andika umri kwa miaka';
+
+  @override
+  String get useDateOfBirth => 'Chagua tarehe ya kuzaliwa badala yake';
+
+  @override
+  String get ageEstimateNote =>
+      'Programu itaendelea kuhesabu umri wake kuanzia hapa.';
+
+  @override
+  String get removePhoto => 'Ondoa picha';
+
+  @override
+  String cowUpdated(String name) {
+    return '$name amebadilishwa';
+  }
 }

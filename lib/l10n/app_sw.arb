@@ -386,5 +386,16 @@
   "onMilkingListHelp": "Anaonekana kwenye karatasi ya kuandika maziwa",
   "removedFromMilkingList": "{name} ametolewa kwenye orodha ya kukamua",
   "checkFigureHint": "Ni zaidi sana ya kawaida. Hakikisha.",
-  "recentBuyers": "Wanunuzi wa karibuni"
+  "recentBuyers": "Wanunuzi wa karibuni",
+  "ageMonths": "{months, plural, =1{mwezi 1} other{miezi {months}}}",
+  "ageYearsOnly": "{years, plural, =1{mwaka 1} other{miaka {years}}}",
+  "ageYearsMonths": "{years, plural, =1{mwaka 1} other{miaka {years}}} na {months, plural, =1{mwezi 1} other{miezi {months}}}",
+  "editCow": "Badilisha ng'ombe",
+  "dateOfBirth": "Tarehe ya kuzaliwa",
+  "pickDateOfBirth": "Chagua tarehe ya kuzaliwa",
+  "dontKnowDate": "Hujui tarehe? Andika umri kwa miaka",
+  "useDateOfBirth": "Chagua tarehe ya kuzaliwa badala yake",
+  "ageEstimateNote": "Programu itaendelea kuhesabu umri wake kuanzia hapa.",
+  "removePhoto": "Ondoa picha",
+  "cowUpdated": "{name} amebadilishwa"
 }

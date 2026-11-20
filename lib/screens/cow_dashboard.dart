@@ -1,3 +1,4 @@
+import 'package:cow/models/cow_age.dart';
 import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/theme/app_theme.dart';
 import 'dart:io';
@@ -154,9 +155,10 @@ class HerdDashboard extends StatelessWidget {
                               Text(
                                 context.l10n.breedAgeLine(
                                   cow.breed ?? context.l10n.unknownBreed,
-                                  cow.age == null
-                                      ? context.l10n.notAvailable
-                                      : context.l10n.ageYears(cow.age!),
+                                  switch (ageOn(cow.bornOn, DateTime.now())) {
+                                    null => context.l10n.notAvailable,
+                                    final age => ageLabel(context.l10n, age),
+                                  },
                                 ),
                                 style: TextStyle(
                                   color: context.farm.muted,

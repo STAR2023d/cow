@@ -61,6 +61,15 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _bornOnMeta = const VerificationMeta('bornOn');
+  @override
+  late final GeneratedColumn<DateTime> bornOn = GeneratedColumn<DateTime>(
+    'born_on',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _imagePathMeta = const VerificationMeta(
     'imagePath',
   );
@@ -126,6 +135,7 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
     tag,
     breed,
     age,
+    bornOn,
     imagePath,
     parentCowId,
     inMilk,
@@ -171,6 +181,12 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
       context.handle(
         _ageMeta,
         age.isAcceptableOrUnknown(data['age']!, _ageMeta),
+      );
+    }
+    if (data.containsKey('born_on')) {
+      context.handle(
+        _bornOnMeta,
+        bornOn.isAcceptableOrUnknown(data['born_on']!, _bornOnMeta),
       );
     }
     if (data.containsKey('image_path')) {
@@ -235,6 +251,10 @@ class $CowTable extends Cow with TableInfo<$CowTable, CowData> {
         DriftSqlType.int,
         data['${effectivePrefix}age'],
       ),
+      bornOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}born_on'],
+      ),
       imagePath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_path'],
@@ -270,6 +290,7 @@ class CowData extends DataClass implements Insertable<CowData> {
   final String? tag;
   final String? breed;
   final int? age;
+  final DateTime? bornOn;
   final String? imagePath;
   final int? parentCowId;
   final bool inMilk;
@@ -281,6 +302,7 @@ class CowData extends DataClass implements Insertable<CowData> {
     this.tag,
     this.breed,
     this.age,
+    this.bornOn,
     this.imagePath,
     this.parentCowId,
     required this.inMilk,
@@ -300,6 +322,9 @@ class CowData extends DataClass implements Insertable<CowData> {
     }
     if (!nullToAbsent || age != null) {
       map['age'] = Variable<int>(age);
+    }
+    if (!nullToAbsent || bornOn != null) {
+      map['born_on'] = Variable<DateTime>(bornOn);
     }
     if (!nullToAbsent || imagePath != null) {
       map['image_path'] = Variable<String>(imagePath);
@@ -326,6 +351,9 @@ class CowData extends DataClass implements Insertable<CowData> {
           ? const Value.absent()
           : Value(breed),
       age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      bornOn: bornOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bornOn),
       imagePath: imagePath == null && nullToAbsent
           ? const Value.absent()
           : Value(imagePath),
@@ -353,6 +381,7 @@ class CowData extends DataClass implements Insertable<CowData> {
       tag: serializer.fromJson<String?>(json['tag']),
       breed: serializer.fromJson<String?>(json['breed']),
       age: serializer.fromJson<int?>(json['age']),
+      bornOn: serializer.fromJson<DateTime?>(json['bornOn']),
       imagePath: serializer.fromJson<String?>(json['imagePath']),
       parentCowId: serializer.fromJson<int?>(json['parentCowId']),
       inMilk: serializer.fromJson<bool>(json['inMilk']),
@@ -369,6 +398,7 @@ class CowData extends DataClass implements Insertable<CowData> {
       'tag': serializer.toJson<String?>(tag),
       'breed': serializer.toJson<String?>(breed),
       'age': serializer.toJson<int?>(age),
+      'bornOn': serializer.toJson<DateTime?>(bornOn),
       'imagePath': serializer.toJson<String?>(imagePath),
       'parentCowId': serializer.toJson<int?>(parentCowId),
       'inMilk': serializer.toJson<bool>(inMilk),
@@ -383,6 +413,7 @@ class CowData extends DataClass implements Insertable<CowData> {
     Value<String?> tag = const Value.absent(),
     Value<String?> breed = const Value.absent(),
     Value<int?> age = const Value.absent(),
+    Value<DateTime?> bornOn = const Value.absent(),
     Value<String?> imagePath = const Value.absent(),
     Value<int?> parentCowId = const Value.absent(),
     bool? inMilk,
@@ -394,6 +425,7 @@ class CowData extends DataClass implements Insertable<CowData> {
     tag: tag.present ? tag.value : this.tag,
     breed: breed.present ? breed.value : this.breed,
     age: age.present ? age.value : this.age,
+    bornOn: bornOn.present ? bornOn.value : this.bornOn,
     imagePath: imagePath.present ? imagePath.value : this.imagePath,
     parentCowId: parentCowId.present ? parentCowId.value : this.parentCowId,
     inMilk: inMilk ?? this.inMilk,
@@ -407,6 +439,7 @@ class CowData extends DataClass implements Insertable<CowData> {
       tag: data.tag.present ? data.tag.value : this.tag,
       breed: data.breed.present ? data.breed.value : this.breed,
       age: data.age.present ? data.age.value : this.age,
+      bornOn: data.bornOn.present ? data.bornOn.value : this.bornOn,
       imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
       parentCowId: data.parentCowId.present
           ? data.parentCowId.value
@@ -427,6 +460,7 @@ class CowData extends DataClass implements Insertable<CowData> {
           ..write('tag: $tag, ')
           ..write('breed: $breed, ')
           ..write('age: $age, ')
+          ..write('bornOn: $bornOn, ')
           ..write('imagePath: $imagePath, ')
           ..write('parentCowId: $parentCowId, ')
           ..write('inMilk: $inMilk, ')
@@ -443,6 +477,7 @@ class CowData extends DataClass implements Insertable<CowData> {
     tag,
     breed,
     age,
+    bornOn,
     imagePath,
     parentCowId,
     inMilk,
@@ -458,6 +493,7 @@ class CowData extends DataClass implements Insertable<CowData> {
           other.tag == this.tag &&
           other.breed == this.breed &&
           other.age == this.age &&
+          other.bornOn == this.bornOn &&
           other.imagePath == this.imagePath &&
           other.parentCowId == this.parentCowId &&
           other.inMilk == this.inMilk &&
@@ -471,6 +507,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
   final Value<String?> tag;
   final Value<String?> breed;
   final Value<int?> age;
+  final Value<DateTime?> bornOn;
   final Value<String?> imagePath;
   final Value<int?> parentCowId;
   final Value<bool> inMilk;
@@ -482,6 +519,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
     this.tag = const Value.absent(),
     this.breed = const Value.absent(),
     this.age = const Value.absent(),
+    this.bornOn = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.parentCowId = const Value.absent(),
     this.inMilk = const Value.absent(),
@@ -494,6 +532,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
     this.tag = const Value.absent(),
     this.breed = const Value.absent(),
     this.age = const Value.absent(),
+    this.bornOn = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.parentCowId = const Value.absent(),
     this.inMilk = const Value.absent(),
@@ -506,6 +545,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
     Expression<String>? tag,
     Expression<String>? breed,
     Expression<int>? age,
+    Expression<DateTime>? bornOn,
     Expression<String>? imagePath,
     Expression<int>? parentCowId,
     Expression<bool>? inMilk,
@@ -518,6 +558,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
       if (tag != null) 'tag': tag,
       if (breed != null) 'breed': breed,
       if (age != null) 'age': age,
+      if (bornOn != null) 'born_on': bornOn,
       if (imagePath != null) 'image_path': imagePath,
       if (parentCowId != null) 'parent_cow_id': parentCowId,
       if (inMilk != null) 'in_milk': inMilk,
@@ -532,6 +573,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
     Value<String?>? tag,
     Value<String?>? breed,
     Value<int?>? age,
+    Value<DateTime?>? bornOn,
     Value<String?>? imagePath,
     Value<int?>? parentCowId,
     Value<bool>? inMilk,
@@ -544,6 +586,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
       tag: tag ?? this.tag,
       breed: breed ?? this.breed,
       age: age ?? this.age,
+      bornOn: bornOn ?? this.bornOn,
       imagePath: imagePath ?? this.imagePath,
       parentCowId: parentCowId ?? this.parentCowId,
       inMilk: inMilk ?? this.inMilk,
@@ -569,6 +612,9 @@ class CowCompanion extends UpdateCompanion<CowData> {
     }
     if (age.present) {
       map['age'] = Variable<int>(age.value);
+    }
+    if (bornOn.present) {
+      map['born_on'] = Variable<DateTime>(bornOn.value);
     }
     if (imagePath.present) {
       map['image_path'] = Variable<String>(imagePath.value);
@@ -596,6 +642,7 @@ class CowCompanion extends UpdateCompanion<CowData> {
           ..write('tag: $tag, ')
           ..write('breed: $breed, ')
           ..write('age: $age, ')
+          ..write('bornOn: $bornOn, ')
           ..write('imagePath: $imagePath, ')
           ..write('parentCowId: $parentCowId, ')
           ..write('inMilk: $inMilk, ')
@@ -4945,6 +4992,7 @@ typedef $$CowTableCreateCompanionBuilder =
       Value<String?> tag,
       Value<String?> breed,
       Value<int?> age,
+      Value<DateTime?> bornOn,
       Value<String?> imagePath,
       Value<int?> parentCowId,
       Value<bool> inMilk,
@@ -4958,6 +5006,7 @@ typedef $$CowTableUpdateCompanionBuilder =
       Value<String?> tag,
       Value<String?> breed,
       Value<int?> age,
+      Value<DateTime?> bornOn,
       Value<String?> imagePath,
       Value<int?> parentCowId,
       Value<bool> inMilk,
@@ -5108,6 +5157,11 @@ class $$CowTableFilterComposer extends Composer<_$AppDatabase, $CowTable> {
 
   ColumnFilters<int> get age => $composableBuilder(
     column: $table.age,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get bornOn => $composableBuilder(
+    column: $table.bornOn,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5313,6 +5367,11 @@ class $$CowTableOrderingComposer extends Composer<_$AppDatabase, $CowTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get bornOn => $composableBuilder(
+    column: $table.bornOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imagePath => $composableBuilder(
     column: $table.imagePath,
     builder: (column) => ColumnOrderings(column),
@@ -5379,6 +5438,9 @@ class $$CowTableAnnotationComposer extends Composer<_$AppDatabase, $CowTable> {
 
   GeneratedColumn<int> get age =>
       $composableBuilder(column: $table.age, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get bornOn =>
+      $composableBuilder(column: $table.bornOn, builder: (column) => column);
 
   GeneratedColumn<String> get imagePath =>
       $composableBuilder(column: $table.imagePath, builder: (column) => column);
@@ -5583,6 +5645,7 @@ class $$CowTableTableManager
                 Value<String?> tag = const Value.absent(),
                 Value<String?> breed = const Value.absent(),
                 Value<int?> age = const Value.absent(),
+                Value<DateTime?> bornOn = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
                 Value<int?> parentCowId = const Value.absent(),
                 Value<bool> inMilk = const Value.absent(),
@@ -5594,6 +5657,7 @@ class $$CowTableTableManager
                 tag: tag,
                 breed: breed,
                 age: age,
+                bornOn: bornOn,
                 imagePath: imagePath,
                 parentCowId: parentCowId,
                 inMilk: inMilk,
@@ -5607,6 +5671,7 @@ class $$CowTableTableManager
                 Value<String?> tag = const Value.absent(),
                 Value<String?> breed = const Value.absent(),
                 Value<int?> age = const Value.absent(),
+                Value<DateTime?> bornOn = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
                 Value<int?> parentCowId = const Value.absent(),
                 Value<bool> inMilk = const Value.absent(),
@@ -5618,6 +5683,7 @@ class $$CowTableTableManager
                 tag: tag,
                 breed: breed,
                 age: age,
+                bornOn: bornOn,
                 imagePath: imagePath,
                 parentCowId: parentCowId,
                 inMilk: inMilk,

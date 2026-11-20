@@ -1153,5 +1153,20 @@
   "removedFromMilkingList": "{name} taken off the milking list",
   "@removedFromMilkingList": {"placeholders": {"name": {"type": "String"}}},
   "checkFigureHint": "Much more than usual. Check it.",
-  "recentBuyers": "Recent buyers"
+  "recentBuyers": "Recent buyers",
+  "ageMonths": "{months, plural, =1{1 month} other{{months} months}}",
+  "@ageMonths": {"placeholders": {"months": {"type": "int"}}},
+  "ageYearsOnly": "{years, plural, =1{1 year} other{{years} years}}",
+  "@ageYearsOnly": {"placeholders": {"years": {"type": "int"}}},
+  "ageYearsMonths": "{years, plural, =1{1 year} other{{years} years}} {months, plural, =1{1 month} other{{months} months}}",
+  "@ageYearsMonths": {"placeholders": {"years": {"type": "int"}, "months": {"type": "int"}}},
+  "editCow": "Edit cow",
+  "dateOfBirth": "Date of birth",
+  "pickDateOfBirth": "Pick date of birth",
+  "dontKnowDate": "Don't know the date? Enter age in years",
+  "useDateOfBirth": "Pick the date of birth instead",
+  "ageEstimateNote": "The app will count her age on from here.",
+  "removePhoto": "Remove photo",
+  "cowUpdated": "{name} updated",
+  "@cowUpdated": {"placeholders": {"name": {"type": "String"}}}
 }

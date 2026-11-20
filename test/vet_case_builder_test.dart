@@ -23,7 +23,9 @@ void main() {
       CowCompanion.insert(
         name: name,
         breed: breed == null ? const Value.absent() : Value(breed),
-        age: age == null ? const Value.absent() : Value(age),
+        bornOn: age == null
+            ? const Value.absent()
+            : Value(DateTime(now.year - age, 1, 1)),
       ),
     );
     final cows = await db.watchAllCow().first;

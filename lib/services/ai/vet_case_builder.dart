@@ -1,3 +1,4 @@
+import 'package:cow/models/cow_age.dart';
 import 'package:cow/breeding/breeding_labels.dart';
 import 'package:cow/breeding/breeding_logic.dart';
 import 'package:cow/database/app_database.dart';
@@ -59,7 +60,7 @@ Future<VetCase> buildVetCase({
   return VetCase(
     cowName: cow.name,
     breed: cow.breed,
-    ageYears: cow.age,
+    ageYears: ageOn(cow.bornOn, current)?.years,
     breedingStatus: breedingStatus,
     recentMilkNote: milkNote,
     symptoms: symptoms.trim(),

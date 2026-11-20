@@ -26,6 +26,7 @@ void main() {
     await db.customStatement('ALTER TABLE cow DROP COLUMN in_milk');
     await db.customStatement('ALTER TABLE cow DROP COLUMN left_on');
     await db.customStatement('ALTER TABLE cow DROP COLUMN left_reason');
+    await db.customStatement('ALTER TABLE cow DROP COLUMN born_on');
     await db.customStatement("INSERT INTO cow (id, name) VALUES (1, 'Daisy')");
     await db.customStatement(
       'INSERT INTO milk_table (id, entry_date, session, amount, cow_id) '
@@ -73,5 +74,23 @@ void main() {
     expect(calf.birthWeightKg, 32);
     expect(calf.boughtIn, isTrue);
     expect(calf.notes, isNull);
+  });
+
+  test('v12 -> v13: a fixed age becomes an estimated birth date', () async {
+    final old = AppDatabase(NativeDatabase(file));
+    await old.customStatement('ALTER TABLE cow DROP COLUMN born_on');
+    await old.customStatement(
+      "INSERT INTO cow (id, name, age) VALUES (1, 'Daisy', 3), (2, 'Bella', NULL)",
+    );
+    await old.customStatement('PRAGMA user_version = 12');
+    await old.close();
+
+    final db = AppDatabase(NativeDatabase(file));
+    addTearDown(db.close);
+    final cows = await db.allCows();
+    final now = DateTime.now();
+    final daisy = cows.firstWhere((c) => c.id == 1);
+    expect(daisy.bornOn, DateTime(now.year - 3, now.month, now.day));
+    expect(cows.firstWhere((c) => c.id == 2).bornOn, isNull);
   });
 }

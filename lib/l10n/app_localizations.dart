@@ -2242,8 +2242,8 @@ abstract class L10n {
   /// No description provided for @ageMonths.
   ///
   /// In en, this message translates to:
-  /// **'{count} months'**
-  String ageMonths(int count);
+  /// **'{months, plural, =1{1 month} other{{months} months}}'**
+  String ageMonths(int months);
 
   /// No description provided for @ageYearsLong.
   ///
@@ -2418,6 +2418,66 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Recent buyers'**
   String get recentBuyers;
+
+  /// No description provided for @ageYearsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'{years, plural, =1{1 year} other{{years} years}}'**
+  String ageYearsOnly(int years);
+
+  /// No description provided for @ageYearsMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{years, plural, =1{1 year} other{{years} years}} {months, plural, =1{1 month} other{{months} months}}'**
+  String ageYearsMonths(int years, int months);
+
+  /// No description provided for @editCow.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit cow'**
+  String get editCow;
+
+  /// No description provided for @dateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get dateOfBirth;
+
+  /// No description provided for @pickDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick date of birth'**
+  String get pickDateOfBirth;
+
+  /// No description provided for @dontKnowDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t know the date? Enter age in years'**
+  String get dontKnowDate;
+
+  /// No description provided for @useDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the date of birth instead'**
+  String get useDateOfBirth;
+
+  /// No description provided for @ageEstimateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The app will count her age on from here.'**
+  String get ageEstimateNote;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhoto;
+
+  /// No description provided for @cowUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} updated'**
+  String cowUpdated(String name);
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {
