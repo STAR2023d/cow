@@ -1420,4 +1420,25 @@ class L10nEn extends L10n {
   String cowReturned(String name) {
     return '$name is back in the herd';
   }
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get savedExpenses => 'Saved expenses';
+
+  @override
+  String get noExpensesYet => 'No expenses saved yet.';
+
+  @override
+  String get editingExpense => 'Editing expense';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get expenseUpdated => 'Expense updated';
+
+  @override
+  String get tapExpenseToEdit => 'Tap an expense to change it.';
 }

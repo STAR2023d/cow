@@ -1138,5 +1138,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "category": "Category",
+  "savedExpenses": "Saved expenses",
+  "noExpensesYet": "No expenses saved yet.",
+  "editingExpense": "Editing expense",
+  "saveChanges": "Save changes",
+  "expenseUpdated": "Expense updated",
+  "tapExpenseToEdit": "Tap an expense to change it."
 }

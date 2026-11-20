@@ -69,6 +69,13 @@ void main() {
   testWidgets('closes the drawer before opening a screen', (tester) async {
     await openDrawer(tester);
     await tester.tap(find.text('Expenses'));
+    // Expenses loads its list from the database, which needs real time.
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump();
+    }
     await tester.pumpAndSettle();
 
     final nav = tester.state<NavigatorState>(find.byType(Navigator));
@@ -77,5 +84,12 @@ void main() {
 
     expect(find.text('home'), findsOneWidget);
     expect(find.text('Expenses'), findsNothing); // drawer is closed
+
+    // Expenses keeps a live list; let it close before the database does.
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pumpAndSettle(); // runs drift's zero-length close timer
   });
 }

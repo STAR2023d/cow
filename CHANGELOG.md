@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Expenses: pick a category when logging (Feed first). Saved expenses are listed under the form; tap one to change it, delete with Undo. Totals in the statement and report follow. English and Kiswahili
 - Feeding is off the drawer and the dashboard for now (it held only kg and nothing used it); its records are kept. Log feed you buy in Expenses (Feed category). The dashboard quick action is now Expenses
 - One-time clean-up when the database upgrades to v12: records left behind by cows deleted before (milk, health, feeding, breeding, calves, ledger) are removed (`deleteOrphanRecords`)
 - Cows leaving the herd, step 2: removing a cow first asks whether she left the farm or was added by mistake. Left the farm: pick sold, died, culled or given away and the date; her records stay and she is hidden from the herd, Log milk sheet, milking list, milk holds, health reminders, breeding and vet lists. Added by mistake: the warning shows how many records will go with her. "Left the herd" (history button on My Herd) lists cows that left and can bring one back. English and Kiswahili

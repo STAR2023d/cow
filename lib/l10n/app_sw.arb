@@ -373,5 +373,12 @@
   "noCowsLeft": "Hakuna ng'ombe aliyeondoka kundini.",
   "returnToHerd": "Rudisha kundini",
   "cowMovedToLeft": "{name} amehamishwa kwa Walioondoka kundini",
-  "cowReturned": "{name} amerudi kundini"
+  "cowReturned": "{name} amerudi kundini",
+  "category": "Aina",
+  "savedExpenses": "Matumizi yaliyohifadhiwa",
+  "noExpensesYet": "Hakuna matumizi yaliyohifadhiwa bado.",
+  "editingExpense": "Unabadilisha matumizi",
+  "saveChanges": "Hifadhi mabadiliko",
+  "expenseUpdated": "Matumizi yamebadilishwa",
+  "tapExpenseToEdit": "Gusa matumizi ili kuyabadilisha."
 }

@@ -662,6 +662,13 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteExpense(int id) =>
       (delete(expenses)..where((t) => t.id.equals(id))).go();
 
+  /// Saves changes to an expense (date, description, amount, category).
+  Future<bool> updateExpense(Expense row) => update(expenses).replace(row);
+
+  /// Puts a deleted expense back (undo).
+  Future<void> restoreExpense(Expense row) =>
+      into(expenses).insertOnConflictUpdate(row);
+
   Stream<List<Expense>> watchExpenses() =>
       (select(expenses)..orderBy([(t) => OrderingTerm.desc(t.date)])).watch();
 

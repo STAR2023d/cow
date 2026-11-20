@@ -1419,4 +1419,25 @@ class L10nSw extends L10n {
   String cowReturned(String name) {
     return '$name amerudi kundini';
   }
+
+  @override
+  String get category => 'Aina';
+
+  @override
+  String get savedExpenses => 'Matumizi yaliyohifadhiwa';
+
+  @override
+  String get noExpensesYet => 'Hakuna matumizi yaliyohifadhiwa bado.';
+
+  @override
+  String get editingExpense => 'Unabadilisha matumizi';
+
+  @override
+  String get saveChanges => 'Hifadhi mabadiliko';
+
+  @override
+  String get expenseUpdated => 'Matumizi yamebadilishwa';
+
+  @override
+  String get tapExpenseToEdit => 'Gusa matumizi ili kuyabadilisha.';
 }

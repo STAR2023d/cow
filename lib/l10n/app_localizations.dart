@@ -2340,6 +2340,48 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'{name} is back in the herd'**
   String cowReturned(String name);
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @savedExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved expenses'**
+  String get savedExpenses;
+
+  /// No description provided for @noExpensesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses saved yet.'**
+  String get noExpensesYet;
+
+  /// No description provided for @editingExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing expense'**
+  String get editingExpense;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// No description provided for @expenseUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense updated'**
+  String get expenseUpdated;
+
+  /// No description provided for @tapExpenseToEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an expense to change it.'**
+  String get tapExpenseToEdit;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {
