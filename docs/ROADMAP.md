@@ -55,6 +55,8 @@ Work happens in small steps. Each step is checked with `flutter analyze` and `fl
 
 ## Later (after the roadmap)
 
+- Big farms (several workers and devices, PINs, approvals for milk changes): planned in a separate repo, `STAR2023d/cow-farm-pro` (see its docs/MULTI_USER.md)
+
 ### AI provider switching
 
 - [x] Call Gemini, Anthropic, OpenAI and OpenAI-compatible services over plain HTTP, replacing `google_generative_ai`
