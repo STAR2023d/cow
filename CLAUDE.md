@@ -35,6 +35,6 @@ Done: Settings screen (`settings_screen.dart`): farm name (`FarmNameController`,
 Done: Erase all data ( `erase_data_dialog.dart`, `lib/services/erase_data.dart`, `backupTo` VACUUM INTO + `eraseAllData`). Owner's test data erased 2026-11-20; old DB kept as `my_database.before-erase-2026-11-20.sqlite`.
 Feeding hidden (owner, 2026-11-19): off drawer and quick actions; `feeding_screen.dart`, `FeedingLog` table and data kept. Feed money = Expenses, Feed category. Making it useful is in ROADMAP Later.
 Next: check Claude/OpenAI when keys exist; then pick from Later (in-app provider settings, going public).
-Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13). Phase-4 merged into main (fast-forward, PR #1, 2026-11-20).
+Done: phase-2 and phase-3 merged into main (fast-forward, 2026-11-13). Phase-4 merged into main (fast-forward, PR #1, 2026-11-20). Milk yield card fix (today's milk counted, same-session compare, `lib/models/milk_headline.dart`) merged (fast-forward, PR #2, 2026-11-21).
 Later (owner said not now, 2026-11-14): Swahili stage 4 (AI answers in app language + Kiswahili danger phrases; needs vet review). Until then AI answers stay English (vet has its own language choice) and the danger check only knows English words.
 Later: going public with paid AI (key-holding backend proxy, phone OTP accounts, metering and spending caps, M-Pesa credits, privacy policy + Kenya DPA, app-store billing check, closed beta).
