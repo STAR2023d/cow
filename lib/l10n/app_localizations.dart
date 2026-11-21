@@ -259,6 +259,24 @@ abstract class L10n {
   /// **'MILK YIELD (LITRES)'**
   String get milkYieldTitle;
 
+  /// No description provided for @milkToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get milkToday;
+
+  /// No description provided for @milkYesterdayTodayNotLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday · today not logged yet'**
+  String get milkYesterdayTodayNotLogged;
+
+  /// No description provided for @noMilkLoggedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No milk logged yet'**
+  String get noMilkLoggedYet;
+
   /// No description provided for @noDataYesterday.
   ///
   /// In en, this message translates to:

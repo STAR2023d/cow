@@ -54,6 +54,9 @@
   "qaStatement": "Statement",
   "headerTagline": "PURE • FRESH • NATURAL",
   "milkYieldTitle": "MILK YIELD (LITRES)",
+  "milkToday": "Today",
+  "milkYesterdayTodayNotLogged": "Yesterday · today not logged yet",
+  "noMilkLoggedYet": "No milk logged yet",
   "noDataYesterday": "No data for yesterday",
   "changeFromYesterday": "{change}% from yesterday",
   "@changeFromYesterday": {

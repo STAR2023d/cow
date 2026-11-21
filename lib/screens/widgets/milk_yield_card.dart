@@ -1,6 +1,8 @@
 import 'package:cow/l10n/language_controller.dart';
 import 'package:cow/database/app_database.dart';
+import 'package:cow/models/milk_headline.dart';
 import 'package:cow/theme/app_theme.dart';
+import 'package:cow/utils/format.dart';
 import 'package:flutter/material.dart';
 
 /// Live 7-day milk yield card. One stream drives the sparkline, the
@@ -18,7 +20,12 @@ class MilkYieldCard extends StatelessWidget {
       today.month,
       today.day,
     ).subtract(const Duration(days: 6));
-    final end = DateTime(today.year, today.month, today.day);
+    // Today's entries keep the time they were saved, so go to the end of today.
+    final end = DateTime(
+      today.year,
+      today.month,
+      today.day + 1,
+    ).subtract(const Duration(seconds: 1));
 
     return Container(
       padding: const EdgeInsets.all(12.0),
@@ -26,22 +33,33 @@ class MilkYieldCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: context.farm.faint),
       ),
-      child: StreamBuilder<Map<DateTime, double>>(
-        stream: db.watchDailyTotalsInRange(start, end),
+      child: StreamBuilder<List<MilkTableData>>(
+        stream: db.watchMilkInRange(start, end),
         builder: (context, snapshot) {
-          final totals = snapshot.data ?? {};
+          final byDay = sessionTotalsByDay(
+            (snapshot.data ?? const []).map(
+              (e) => (date: e.entryDate, session: e.session, litres: e.amount),
+            ),
+          );
 
           // Seven clean midnight dates, oldest first.
           final days = List.generate(7, (i) => start.add(Duration(days: i)));
 
           // Litres per day (0 when nothing was logged).
-          final values = days.map((d) => totals[d] ?? 0.0).toList();
+          final values = days
+              .map(
+                (d) => (byDay[d] ?? const {}).values.fold<double>(
+                  0,
+                  (a, b) => a + b,
+                ),
+              )
+              .toList();
           final maxValue = values.fold<double>(0, (m, v) => v > m ? v : m);
-          final todayTotal = values.last;
-          final yesterdayTotal = values[values.length - 2];
-          final double? percentChange = yesterdayTotal > 0
-              ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100
-              : null;
+          final headline = MilkHeadline.from(
+            today: byDay[days.last] ?? const {},
+            yesterday: byDay[days[days.length - 2]] ?? const {},
+          );
+          final percentChange = headline.percentChange;
 
           // Weekday initials for the labels under the bars.
           const weekMap = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -54,7 +72,7 @@ class MilkYieldCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "MILK YIELD (LITERS)",
+                context.l10n.milkYieldTitle,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -118,21 +136,27 @@ class MilkYieldCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${todayTotal.toStringAsFixed(1)} L',
+                litres(headline.litres),
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                percentChange == null
-                    ? context.l10n.noDataYesterday
-                    : context.l10n.changeFromYesterday(
-                        '${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(0)}',
-                      ),
+                switch (headline.kind) {
+                  MilkHeadlineKind.none => context.l10n.noMilkLoggedYet,
+                  MilkHeadlineKind.yesterdayOnly =>
+                    context.l10n.milkYesterdayTodayNotLogged,
+                  MilkHeadlineKind.today =>
+                    percentChange == null
+                        ? context.l10n.milkToday
+                        : '${context.l10n.milkToday} · ${context.l10n.changeFromYesterday('${percentChange >= 0 ? '+' : ''}${percentChange.toStringAsFixed(0)}')}',
+                },
                 style: TextStyle(
                   fontSize: 11,
-                  color: (percentChange ?? 0) >= 0
+                  color: percentChange == null
+                      ? context.farm.muted
+                      : percentChange >= 0
                       ? context.farm.good
                       : context.farm.danger,
                   fontWeight: FontWeight.w500,

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Dashboard milk card: it always showed "0.0 L" and "-100% from yesterday", because milk saved today (kept with the time it was saved) was left out. Fixed. Before any milk is logged today it shows yesterday's litres with "Yesterday · today not logged yet"; once milk is logged it shows today's litres so far, and the change compares only the sessions logged today with the same sessions yesterday (a morning-only day is no longer set against a whole day). The card title is translated
 - Settings screen (drawer → Settings): change the farm name (shown on the dashboard, drawer, window title and PDF reports; "Use the default name" goes back), language and screen colours. Erase all data moved here under "Danger zone" and keeps the farm name. Language and colours left the drawer
 - Erase all data (bottom of the drawer): deletes every cow, record, expense, price and cow photo after typing ERASE / FUTA, so the app starts fresh. A backup of the database is saved next to it first. Screen colours and language stay
 - Edit a cow (pencil on each card in My Herd): change her name, tag, breed, date of birth and photo, add a photo later or remove it. The milking list and herd status are not touched. Photos are copied into the app's own folder (`cow_photos/`), so a phone clearing the picker's copy no longer loses them. Breed list: "Friesien" is now "Friesian" (a cow saved with the old spelling keeps it until edited), Guernsey added

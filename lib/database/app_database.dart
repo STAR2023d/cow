@@ -619,13 +619,17 @@ class AppDatabase extends _$AppDatabase {
     DateTime start,
     DateTime end,
   ) {
+    return watchMilkInRange(start, end).map(_groupByDay);
+  }
+
+  /// Every milk entry from [start] to [end] (both days included), live.
+  Stream<List<MilkTableData>> watchMilkInRange(DateTime start, DateTime end) {
     return (select(milkTable)..where(
           (t) =>
               t.entryDate.isBiggerOrEqualValue(start) &
               t.entryDate.isSmallerOrEqualValue(end),
         ))
-        .watch()
-        .map(_groupByDay);
+        .watch();
   }
 
   Map<DateTime, double> _groupByDay(List<MilkTableData> entries) {

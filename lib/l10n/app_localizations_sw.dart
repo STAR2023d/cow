@@ -90,6 +90,15 @@ class L10nSw extends L10n {
   String get milkYieldTitle => 'MAZIWA (LITA)';
 
   @override
+  String get milkToday => 'Leo';
+
+  @override
+  String get milkYesterdayTodayNotLogged => 'Jana · ya leo bado haijaandikwa';
+
+  @override
+  String get noMilkLoggedYet => 'Bado hakuna maziwa yaliyoandikwa';
+
+  @override
   String get noDataYesterday => 'Hakuna takwimu za jana';
 
   @override

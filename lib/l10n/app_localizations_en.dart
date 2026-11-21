@@ -90,6 +90,15 @@ class L10nEn extends L10n {
   String get milkYieldTitle => 'MILK YIELD (LITRES)';
 
   @override
+  String get milkToday => 'Today';
+
+  @override
+  String get milkYesterdayTodayNotLogged => 'Yesterday · today not logged yet';
+
+  @override
+  String get noMilkLoggedYet => 'No milk logged yet';
+
+  @override
   String get noDataYesterday => 'No data for yesterday';
 
   @override
