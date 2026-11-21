@@ -99,9 +99,6 @@ class L10nSw extends L10n {
   String get noMilkLoggedYet => 'Bado hakuna maziwa yaliyoandikwa';
 
   @override
-  String get noDataYesterday => 'Hakuna takwimu za jana';
-
-  @override
   String changeFromYesterday(String change) {
     return '$change% ukilinganisha na jana';
   }

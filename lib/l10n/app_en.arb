@@ -57,7 +57,6 @@
   "milkToday": "Today",
   "milkYesterdayTodayNotLogged": "Yesterday · today not logged yet",
   "noMilkLoggedYet": "No milk logged yet",
-  "noDataYesterday": "No data for yesterday",
   "changeFromYesterday": "{change}% from yesterday",
   "@changeFromYesterday": {
     "description": "change is like +12 or -5",

@@ -99,9 +99,6 @@ class L10nEn extends L10n {
   String get noMilkLoggedYet => 'No milk logged yet';
 
   @override
-  String get noDataYesterday => 'No data for yesterday';
-
-  @override
   String changeFromYesterday(String change) {
     return '$change% from yesterday';
   }

@@ -277,12 +277,6 @@ abstract class L10n {
   /// **'No milk logged yet'**
   String get noMilkLoggedYet;
 
-  /// No description provided for @noDataYesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'No data for yesterday'**
-  String get noDataYesterday;
-
   /// change is like +12 or -5
   ///
   /// In en, this message translates to:
